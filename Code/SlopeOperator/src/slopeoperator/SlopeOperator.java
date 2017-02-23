@@ -15,7 +15,7 @@ public class SlopeOperator {
     public static void main(String[] args){
 
       SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI();  
-      slopeOperatorInterface.showEventDemo();
+      slopeOperatorInterface.homeWindowSetup();
    } 
     
 }
