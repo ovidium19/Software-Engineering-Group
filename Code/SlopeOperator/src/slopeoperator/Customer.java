@@ -52,21 +52,26 @@ public class Customer {
         
 	public int getCustomerID() {
 	
+            return(CustomerID);
 	}
 	
-	public String getName() {
+	public String getFirstName() {
 	
+            return(FirstName);
 	}
 	
 	public String getLastName() {
 	
+            return(LastName);
 	}
 	
 	public String getEmail() {
 	
+            return(Email);
 	}
 	
 	public String getTelephone() {
 	
+            return(Telephone);
 	}
 }
