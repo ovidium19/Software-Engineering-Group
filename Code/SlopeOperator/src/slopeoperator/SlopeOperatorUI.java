@@ -26,6 +26,7 @@ public class SlopeOperatorUI {
         
     private JFrame mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
     private JFrame bookingFrame = new JFrame("Booking Session");
+    private JFrame registerFrame = new JFrame("Register a Customer");
     private JLabel headerLabel;
     private JLabel mainStatusLabel;
     private JLabel statusLabel;
@@ -104,7 +105,6 @@ public class SlopeOperatorUI {
       JButton bookButton = new JButton("Book a session");
       JButton checkInButton = new JButton("Check in customer");
       JButton viewScheduleButton = new JButton("View Schedule");
-      JButton addSessionButton = new JButton("Add a Session");
       
       registerButton.setActionCommand("Register a customer");
       bookButton.setActionCommand("Book a session");
@@ -124,7 +124,7 @@ public class SlopeOperatorUI {
 
       mainFrame.setVisible(true);
       bookingFrame.setVisible(false);
-      
+      registerFrame.setVisible(false);
    }
    
 
@@ -148,7 +148,9 @@ public class SlopeOperatorUI {
     
     public void registerCustomer() {
         
-        mainStatusLabel.setText("Register a customer clicked.");
+        setup(registerFrame);
+        
+        registerFrame.setVisible(true);
     }
     public void bookSession() {
 
