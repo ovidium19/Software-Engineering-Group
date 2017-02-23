@@ -17,28 +17,56 @@ package slopeoperator;
  * @author Genaro Bedenko
  */
 public class Customer {
-	private Integer CustomerID;
-	private String FirstName;
-	private String LastName;
-	private String Email;
-	private String Telephone;
-	public void getID() {
+    
+	public int CustomerID;
+	public String FirstName;
+	public String LastName;
+	public String Email;
+	public String Telephone;
+        
+        public void setCustomerID(int aCustomerID) {
+	
+            CustomerID = aCustomerID;
+	}
+	
+	public void setFirstName(String aFirstName) {
+	
+            FirstName = aFirstName;
+	}
+	
+	public void setLastName(String aLastName) {
+	
+            LastName = aLastName;
+	}
+	
+	public void setEmail(String anEmail) {
+	
+            Email = anEmail;
+	}
+	
+	public void setTelephone(String aPhoneNo) {
+	
+            Telephone = aPhoneNo;
+	}
+
+        
+	public int getCustomerID() {
 	
 	}
 	
-	public void getName() {
+	public String getName() {
 	
 	}
 	
-	public void getLastName() {
+	public String getLastName() {
 	
 	}
 	
-	public void getEmail() {
+	public String getEmail() {
 	
 	}
 	
-	public void getTelephone() {
+	public String getTelephone() {
 	
 	}
 }
