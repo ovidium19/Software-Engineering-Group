@@ -15,7 +15,7 @@ public class Manager {
     public static void main(String[] args){
 
       ManagerUI managerInterface = new ManagerUI();  
-      managerInterface.showEventDemo();
+      managerInterface.homeWindowSetup();
    } 
     
 }

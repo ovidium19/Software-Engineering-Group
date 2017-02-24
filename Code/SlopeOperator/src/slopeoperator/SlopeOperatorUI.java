@@ -93,7 +93,7 @@ public class SlopeOperatorUI {
       headerLabel = new JLabel(header,JLabel.CENTER );
       mainStatusLabel = new JLabel("...",JLabel.CENTER);             
       
-      mainFrame.addWindowListener(new WindowAdapter() {
+      frame.addWindowListener(new WindowAdapter() {
           
          public void windowClosing(WindowEvent windowEvent){
 	        System.exit(0);

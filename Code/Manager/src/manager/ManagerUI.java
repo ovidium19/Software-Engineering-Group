@@ -25,96 +25,83 @@ import javax.swing.*;
 public class ManagerUI {
         
     private JFrame mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
+    private JFrame viewScheduleFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
+    private JFrame addSessionFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
     private JLabel headerLabel;
     private JLabel mainStatusLabel;
     private JLabel statusLabel;
     private JPanel controlPanel;
               
-    public ManagerUI() {
-    }
-
-    
-   public void setup(){
+    public void homeWindowSetup(){
       mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
       mainFrame.setSize(500,500);
       mainFrame.setLayout(new GridLayout(4, 1));
 
-      headerLabel = new JLabel("",JLabel.CENTER );
-      mainStatusLabel = new JLabel("",JLabel.CENTER);        
-
-      mainStatusLabel.setSize(400,400);
-      
+      headerLabel = new JLabel("MANAGER WELCOME SCREEN",JLabel.CENTER );
+      mainStatusLabel = new JLabel("Choose a function",JLabel.CENTER);             
       
       mainFrame.addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent windowEvent){
 	        System.exit(0);
          }        
-      });    
+      });
+      
       controlPanel = new JPanel();
       controlPanel.setLayout(new GridLayout(5, 1));
 
+      JButton addSessionButton = new JButton("Add a Session");
+      JButton viewScheduleButton = new JButton("View Schedule");
+      
+      addSessionButton.setActionCommand("Add a Session");
+      viewScheduleButton.setActionCommand("View Schedule");
+      
+      addSessionButton.addActionListener(new ButtonClickListener());
+      viewScheduleButton.addActionListener(new ButtonClickListener()); 
+      
+      controlPanel.add(addSessionButton);
+      controlPanel.add(viewScheduleButton);
+     
       mainFrame.add(headerLabel);
       mainFrame.add(controlPanel);
-      mainFrame.add(mainStatusLabel);      
-      mainFrame.setVisible(true);  
-      
+      mainFrame.add(mainStatusLabel);
+
       mainFrame.setVisible(true);
+      viewScheduleFrame.setVisible(false);
+      addSessionFrame.setVisible(false);
    }
-    
-   public void setup(JFrame frame){
+   
+   public void setup(JFrame frame, String windowName, String header){
+       
+      frame = new JFrame(windowName);
       frame.setSize(500,500);
       frame.setLayout(new GridLayout(4, 1));
 
-      headerLabel = new JLabel("",JLabel.CENTER);
-      statusLabel = new JLabel("",JLabel.CENTER);        
-
-      statusLabel.setSize(350,100);
+      headerLabel = new JLabel(header,JLabel.CENTER );
+      mainStatusLabel = new JLabel("...",JLabel.CENTER);             
       
-      
-      frame.addWindowListener(new WindowAdapter() {
+      mainFrame.addWindowListener(new WindowAdapter() {
+          
          public void windowClosing(WindowEvent windowEvent){
 	        System.exit(0);
          }        
-      });    
+      });
+      
       controlPanel = new JPanel();
-      controlPanel.setLayout(new GridLayout(4, 1));
-
+      controlPanel.setLayout(new GridLayout(5, 1));
+     
       frame.add(headerLabel);
       frame.add(controlPanel);
-      frame.add(statusLabel);      
-      frame.setVisible(true);  
-      
+      frame.add(mainStatusLabel);
+
       frame.setVisible(true);
-   }
+      mainFrame.setVisible(false);
+    }
 
    private void setVisibility(JFrame frame, boolean bool){
       frame.setVisible(bool); 
    }
    
-   public void showEventDemo(){
-      setup();
-      
-      JLabel userText = new JLabel("MANAGER WELCOME SCREEN", SwingConstants.CENTER);
-
-      JButton viewScheduleButton = new JButton("View Schedule");
-      JButton addSessionButton = new JButton("Add Session");
-      
-      viewScheduleButton.setActionCommand("View Schedule");
-      addSessionButton.setActionCommand("Add Session");
-      
-      viewScheduleButton.addActionListener(new ButtonClickListener()); 
-      addSessionButton.addActionListener(new ButtonClickListener());
-      
-      controlPanel.add(userText);
-      
-      controlPanel.add(addSessionButton);
-      controlPanel.add(viewScheduleButton);
-     
-      mainFrame.setVisible(true);      
-   }
-   
-
-    private class ButtonClickListener implements ActionListener{
+   private class ButtonClickListener implements ActionListener{
       public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();  
          if(command.equals("View Schedule")) {
@@ -122,7 +109,7 @@ public class ManagerUI {
          }
          else if(command.equals("Add Session")) {
              
-             addSession();
+            addSession();
          }
       }		
    }
@@ -130,10 +117,51 @@ public class ManagerUI {
     
     public void addSession() {
         
-        mainStatusLabel.setText("Add Session clicked.");
+        String header = "ADD A SESSION";
+        String windowName = "Add a Session - Provided by Invotech";
+        setup(addSessionFrame, windowName, header);
+        
+        addSessionFrame.addWindowListener(new WindowAdapter() {
+          
+         public void windowClosing(WindowEvent windowEvent){
+	        System.exit(0);
+         }        
+        });
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+             
+             setVisibility(mainFrame, true);
+             setVisibility(addSessionFrame, false);
+         }        
+        });
+          
+        controlPanel.add(backButton);
     }
+    
     public void viewSchedule() {
         
-        mainStatusLabel.setText("View Schedule clicked.");
+        String header = "VIEW SCHEDULE";
+        String windowName = "View Schedule - Provided by Invotech";
+        setup(viewScheduleFrame, windowName, header);
+        
+        viewScheduleFrame.addWindowListener(new WindowAdapter() {
+          
+         public void windowClosing(WindowEvent windowEvent){
+	        System.exit(0);
+         }        
+        });
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+             
+             setVisibility(mainFrame, true);
+             setVisibility(viewScheduleFrame, false);
+         }        
+        });
+          
+        controlPanel.add(backButton);
     }
 }
