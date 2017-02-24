@@ -140,7 +140,23 @@ public class SlopeOperatorUI {
         String windowName = "Register a Customer - Provided by Invotech";
         setup(registerFrame, windowName, header);
         
-        registerFrame.setVisible(true);
+        registerFrame.addWindowListener(new WindowAdapter() {
+          
+         public void windowClosing(WindowEvent windowEvent){
+	        System.exit(0);
+         }        
+        });
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+             
+             setVisibility(mainFrame, true);
+             setVisibility(registerFrame, false);
+         }        
+        });
+          
+        controlPanel.add(backButton);
     }
     public void bookSession() {
 
@@ -149,6 +165,7 @@ public class SlopeOperatorUI {
       String header = "BOOK A SESSION";
       String windowTitle = "Book a Session - Provided by InvoTech";
       setup(bookingFrame, windowTitle, header);
+      
       
       JLabel  customerIDlabel= new JLabel("Enter the Customer's ID: ", JLabel.CENTER);
       JRadioButton radioButton1 = new JRadioButton("With Instructor");
@@ -161,7 +178,6 @@ public class SlopeOperatorUI {
 
       instructorsDropDown.setVisible(true);
     
-      
       JLabel  dateLabel = new JLabel("Choose Date: ", JLabel.CENTER);
       JLabel  timeSlotLabel = new JLabel("Choose Time Slot: ", JLabel.CENTER);
       final JTextField customerID = new JTextField(6);
@@ -196,26 +212,66 @@ public class SlopeOperatorUI {
              setVisibility(mainFrame, true);
              setVisibility(bookingFrame, false);
          }        
-      });       
+      });
+      
       controlPanel.add(customerIDlabel);
       controlPanel.add(customerID);
       controlPanel.add(radioButton1);
       controlPanel.add(radioButton2);
+      controlPanel.add(sessionTypelabel);
       controlPanel.add(instructorsDropDown);
       controlPanel.add(dateLabel);       
       controlPanel.add(date);
       controlPanel.add(addButton);
       controlPanel.add(backButton); 
-    
-      bookingFrame.setVisible(true);
-
     }  
     public void checkInCustomer() {
         
-        mainStatusLabel.setText("Check in customer clicked.");
+        String header = "CHECK-IN CUSTOMER";
+        String windowName = "Check in Customer - Provided by Invotech";
+        setup(checkInFrame, windowName, header);
+        
+        checkInFrame.addWindowListener(new WindowAdapter() {
+          
+         public void windowClosing(WindowEvent windowEvent){
+	        System.exit(0);
+         }        
+        });
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+             
+             setVisibility(mainFrame, true);
+             setVisibility(checkInFrame, false);
+         }        
+        });
+          
+        controlPanel.add(backButton);
     }
+    
     public void viewSchedule() {
         
-        mainStatusLabel.setText("View Schedule clicked.");
+        String header = "VIEW SCHEDULE";
+        String windowName = "View Schedule - Provided by Invotech";
+        setup(viewScheduleFrame, windowName, header);
+        
+        viewScheduleFrame.addWindowListener(new WindowAdapter() {
+          
+        public void windowClosing(WindowEvent windowEvent){
+	        System.exit(0);
+         }        
+        });
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+             
+             setVisibility(mainFrame, true);
+             setVisibility(viewScheduleFrame, false);
+         }        
+        });
+          
+        controlPanel.add(backButton); 
     }
 }
