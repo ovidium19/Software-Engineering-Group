@@ -11,157 +11,99 @@
 
 package manager;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.io.*;
+import java.sql.*;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import javax.swing.*;
 
-/*
- *Class that sets out the user interface
- *
- * @author Genaro Bedenko
- */
+
+
 public class ManagerUI {
+    /**
+     * @param args the command line arguments
+     */   
         
-    private JFrame mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
-    private JFrame viewScheduleFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
-    private JFrame addSessionFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
-    private JLabel headerLabel;
-    private JLabel mainStatusLabel;
-    private JLabel statusLabel;
-    private JPanel controlPanel;
-              
-    public void homeWindowSetup(){
-      mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
-      mainFrame.setSize(500,500);
-      mainFrame.setLayout(new GridLayout(4, 1));
-
-      headerLabel = new JLabel("MANAGER WELCOME SCREEN",JLabel.CENTER );
-      mainStatusLabel = new JLabel("Choose a function",JLabel.CENTER);             
-      
-      mainFrame.addWindowListener(new WindowAdapter() {
-         public void windowClosing(WindowEvent windowEvent){
-	        System.exit(0);
-         }        
-      });
-      
-      controlPanel = new JPanel();
-      controlPanel.setLayout(new GridLayout(5, 1));
-
-      JButton addSessionButton = new JButton("Add a Session");
-      JButton viewScheduleButton = new JButton("View Schedule");
-      
-      addSessionButton.setActionCommand("Add a Session");
-      viewScheduleButton.setActionCommand("View Schedule");
-      
-      addSessionButton.addActionListener(new ButtonClickListener());
-      viewScheduleButton.addActionListener(new ButtonClickListener()); 
-      
-      controlPanel.add(addSessionButton);
-      controlPanel.add(viewScheduleButton);
-     
-      mainFrame.add(headerLabel);
-      mainFrame.add(controlPanel);
-      mainFrame.add(mainStatusLabel);
-
-      mainFrame.setVisible(true);
-      viewScheduleFrame.setVisible(false);
-      addSessionFrame.setVisible(false);
-   }
-   
-   public void setup(JFrame frame, String windowName, String header){
-       
-      frame = new JFrame(windowName);
-      frame.setSize(500,500);
-      frame.setLayout(new GridLayout(4, 1));
-
-      headerLabel = new JLabel(header,JLabel.CENTER );
-      mainStatusLabel = new JLabel("...",JLabel.CENTER);             
-      
-      mainFrame.addWindowListener(new WindowAdapter() {
-          
-         public void windowClosing(WindowEvent windowEvent){
-	        System.exit(0);
-         }        
-      });
-      
-      controlPanel = new JPanel();
-      controlPanel.setLayout(new GridLayout(5, 1));
-     
-      frame.add(headerLabel);
-      frame.add(controlPanel);
-      frame.add(mainStatusLabel);
-
-      frame.setVisible(true);
-      mainFrame.setVisible(false);
-    }
-
-   private void setVisibility(JFrame frame, boolean bool){
-      frame.setVisible(bool); 
-   }
-   
-   private class ButtonClickListener implements ActionListener{
-      public void actionPerformed(ActionEvent e) {
-         String command = e.getActionCommand();  
-         if(command.equals("View Schedule")) {
-            viewSchedule();
-         }
-         else if(command.equals("Add Session")) {
-             
-            addSession();
-         }
-      }		
-   }
-    
-    
-    public void addSession() {
+    //Run the menu interface ---------
+    String demoOptions[] = {"Add a new session", "View a session", "View all session","Exit the System"};  
+    char demoChoice;          
+    Menu demoMenu= new Menu("Menu ", demoOptions, "Enter the menu option: ");          
         
-        String header = "ADD A SESSION";
-        String windowName = "Add a Session - Provided by Invotech";
-        setup(addSessionFrame, windowName, header);
+    SessionController con = new SessionController(); 
         
-        addSessionFrame.addWindowListener(new WindowAdapter() {
-          
-         public void windowClosing(WindowEvent windowEvent){
-	        System.exit(0);
-         }        
-        });
+    ArrayList list = new ArrayList();
+    Connection conn;
         
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-             
-             setVisibility(mainFrame, true);
-             setVisibility(addSessionFrame, false);
-         }        
-        });
-          
-        controlPanel.add(backButton);
+    public ManagerUI(Connection aConn, ArrayList aList) {
+        conn = aConn;
+        con.setSessionList(aList);
     }
     
-    public void viewSchedule() {
-        
-        String header = "VIEW SCHEDULE";
-        String windowName = "View Schedule - Provided by Invotech";
-        setup(viewScheduleFrame, windowName, header);
-        
-        viewScheduleFrame.addWindowListener(new WindowAdapter() {
-          
-         public void windowClosing(WindowEvent windowEvent){
-	        System.exit(0);
-         }        
-        });
-        
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-             
-             setVisibility(mainFrame, true);
-             setVisibility(viewScheduleFrame, false);
-         }        
-        });
-          
-        controlPanel.add(backButton);
-    }
-}
+
+    public void displayMenu() {
+        boolean exit = true;
+        while (exit){
+            System.out.println("----------------------------------------------");
+            demoChoice = demoMenu.offerMenu();
+            String name = "";
+            String spec = "";
+            int ref = 0;
+            
+            
+            BufferedReader keyboard;
+            switch (demoChoice){
+            case 'A': //to add a new dentist
+                try {
+                  
+                    System.out.println("Enter the startTime:"); 
+                    keyboard = new  BufferedReader(new InputStreamReader(System.in));
+                    Time startTime = Time.valueOf(keyboard.readLine());                    
+                    System.out.println("Enter the endTime:"); 
+                    Time endTime = Time.valueOf(keyboard.readLine());
+                    System.out.println("Enter the date:"); 
+                    String fromKeyboard = keyboard.readLine();
+                    Date date = Date.valueOf(fromKeyboard);
+                    System.out.println("Enter maxBookings:"); 
+                    fromKeyboard = keyboard.readLine();
+                    int maxBookings=Integer.parseInt(fromKeyboard);
+                    System.out.println("Enter slopeId:"); 
+                    fromKeyboard = keyboard.readLine();
+                    int slopeId=Integer.parseInt(fromKeyboard);
+                    System.out.println("Enter instructorId:"); 
+                    fromKeyboard = keyboard.readLine();
+                    int instructorId=Integer.parseInt(fromKeyboard);
+                    
+
+                    con.addASession(startTime,endTime,date,maxBookings,slopeId,instructorId, conn);
+                }
+                catch (java.io.IOException exception){} 
+                //-------------------------------------------                
+            break;
+
+            case 'B': //to view a dentist details 
+                try {
+                    System.out.println("Enter reference number:"); 
+                    keyboard = new  BufferedReader(new InputStreamReader(System.in));
+                    String fromKeyboard = keyboard.readLine();
+                    ref = Integer.parseInt(fromKeyboard);
+
+                    con.viewDetails(ref);
+                 }
+                catch (java.io.IOException exception){} 
+                //-------------------------------------------
+            break;       
+
+            case 'C': //to view all dentist details 
+                    con.seeAllSessions();
+                //-------------------------------------------
+            break;       
+                        
+            
+            case 'D': //to exist the system
+                
+
+	        System.out.println("You have exited the system."); 
+                exit = false;
+
+            }
+        }//end while
+      }//end 
+}     

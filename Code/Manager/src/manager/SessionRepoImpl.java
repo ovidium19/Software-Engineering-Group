@@ -25,7 +25,7 @@ public class SessionRepoImpl implements SessionRepo {
         return sessions;
     }
     public Session getSession(Session session){
-        return sessions.get(session.getId());
+        return sessions.get(session.getId()-1);
     }
     public void setSessions(ArrayList list){
         sessions=list;
@@ -80,14 +80,15 @@ public class SessionRepoImpl implements SessionRepo {
             try {   
                 Statement st = conn.createStatement();
               
-                String sql = "INSERT INTO SESSION VALUES (" + session.getId()+ ", '" + session.getStartTime() + "' , '" + session.getEndTime() + "', '"
+                String sql = "INSERT INTO SESSION VALUES (DEFAULT"+", '" + session.getStartTime() + "' , '" + session.getEndTime() + "', '"
                         +session.getDate()+"', "+ session.getMaxBookings()+", " + session.getSlopeId()+", " + session.getInstructorId()+")";
+                System.out.println(sql);
                 st.executeUpdate(sql);
 
                 st.close();
             }
             catch (SQLException ex) {
-                    System.out.println("SQLException error ");
+                    System.out.println(ex);
             }         
         
         }
