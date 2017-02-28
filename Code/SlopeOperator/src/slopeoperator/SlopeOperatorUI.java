@@ -227,28 +227,28 @@ public class SlopeOperatorUI {
     }  
     public void checkInCustomer() {
         
-        String header = "CHECK-IN CUSTOMER";
-        String windowName = "Check in Customer - Provided by Invotech";
-        setup(checkInFrame, windowName, header);
-        
-        checkInFrame.addWindowListener(new WindowAdapter() {
-          
-         public void windowClosing(WindowEvent windowEvent){
-	        System.exit(0);
-         }        
-        });
-        
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-             
+     mainFrame.setVisible(false);
+      
+      String header = "CHECK-IN CUSTOMER";
+      String windowTitle = "Check in Customer - Provided by InvoTech";
+      setup(checkInFrame, windowTitle, header);
+      
+      final JTextField searchCustomer = new JTextField(6);
+      JLabel  customerIDlabel= new JLabel("Enter the Customer's ID: ", JLabel.CENTER);
+      JButton searchButton = new JButton("Search");
+      JButton backButton = new JButton("Back");
+      backButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+           
              setVisibility(mainFrame, true);
-             setVisibility(checkInFrame, false);
+             setVisibility(bookingFrame, false);
          }        
-        });
-          
-        controlPanel.add(backButton);
-    }
+      });
+     
+      controlPanel.add(customerIDlabel);
+      controlPanel.add(searchButton);
+      controlPanel.add(backButton); 
+    }        
     
     public void viewSchedule() {
         
