@@ -43,8 +43,7 @@ public class BookingRepoImpl implements BookingRepo {
                     Booking book = new Booking();
                     book.setCustomerID(rs.getInt("CUSTOMERID"));
                     book.setSessionID(rs.getInt("SESSIONID"));
-                    boolean value = (rs.getInt("CHECKINSTATUS") == 1);
-                    book.setCheckInStatus(value);
+                    book.setCheckInStatus(rs.getBoolean("CHECKINSTATUS"));
                     
                     list.add(book);
                     //System.out.println(rs.getInt("REF")+"\t"+rs.getString("NAME")+
