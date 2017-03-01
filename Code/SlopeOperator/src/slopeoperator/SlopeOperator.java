@@ -2,6 +2,8 @@ package slopeoperator;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 /*
@@ -20,8 +22,30 @@ public class SlopeOperator {
       String uName = "admin1";
       String uPass= "admin1";
         
-      SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI();  
-      slopeOperatorInterface.homeWindowSetup();
-   } 
-    
+      //ConnectionURL, username and password should be specified in getConnection()       
+      try {             
+            Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
+            System.out.println("Connect to database..."); 
+
+            if (conn != null){ 
+                ArrayList list = bookRepo.read(conn);
+
+                SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI(conn, list);
+                slopeOperatorInterface.homeWindowSetup();    
+                        
+                conn.close();
+                System.out.println("Connection is closed.");
+                        
+                System.exit(1);
+                    
+            } 
+            else {
+                System.out.println("null");  
+            }
+       } 
+       catch (SQLException ex) {
+           
+            System.out.println("Connection failed.");         
+       }
+    }     
 }

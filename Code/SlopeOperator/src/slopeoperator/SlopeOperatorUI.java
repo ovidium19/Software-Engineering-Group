@@ -16,6 +16,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.*;
+import java.sql.*;
 
 /*
  *Class that sets out the user interface
@@ -23,6 +24,18 @@ import javax.swing.*;
  * @author Genaro Bedenko
  */
 public class SlopeOperatorUI {
+    
+    Connection connection;
+    ArrayList list = new ArrayList();
+    
+    BookingController bookingControlerConnection = new BookingController();
+    CustomerController customerControllerConnection = new CustomerController();
+    
+    public SlopeOperatorUI(Connection connectionInput, ArrayList listInput) {
+        
+        connection = connectionInput;
+        bookingControlerConnection.setBookingList(listInput);
+    }
         
     private JFrame mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
     private JFrame bookingFrame = new JFrame("Booking Session");
@@ -34,9 +47,6 @@ public class SlopeOperatorUI {
     private JLabel mainStatusLabel;
     
     private JPanel controlPanel;
-       
-    BookingController bookingControlerConnection = new BookingController();
-    CustomerController customerControllerConnection = new CustomerController();
            
    public void homeWindowSetup(){
       mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");

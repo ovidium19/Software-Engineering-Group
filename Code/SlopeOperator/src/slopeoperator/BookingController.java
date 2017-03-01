@@ -21,6 +21,7 @@ import java.util.*;
  */
 public class BookingController {
     
+        BookingRepoImpl BookingRepo = new BookingRepoImpl();
 	ArrayList list = new ArrayList();
          
          public void book(int customerID, int sessionID){
@@ -44,5 +45,9 @@ public class BookingController {
  
             }  
             return data;
-         } 
+        } 
+        
+        public void setBookingList(ArrayList bookings){
+            BookingRepo.setBookings(bookings);
+        }
 }   

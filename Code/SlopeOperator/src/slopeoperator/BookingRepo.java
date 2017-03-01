@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public interface BookingRepo {
     
-    public void createBooking(Booking booking, Connection con);
+    public void createBooking(Booking booking, Connection connection);
     public Booking getBooking(Booking booking);
     public ArrayList<Booking> getAllBookings();
     public void setBookings(ArrayList list);

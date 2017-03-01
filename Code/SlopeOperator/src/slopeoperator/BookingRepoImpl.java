@@ -22,6 +22,7 @@ public class BookingRepoImpl implements BookingRepo {
     public Booking getBooking(Booking booking){
         return bookings.get(booking.getBookingID()-1);
     }
+       
     public void setBookings(ArrayList list){
         bookings=list;
     }
