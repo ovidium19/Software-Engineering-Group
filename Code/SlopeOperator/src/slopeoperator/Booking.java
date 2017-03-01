@@ -18,9 +18,17 @@ package slopeoperator;
  */
 public class Booking {
     
+         private int bookingID = -1;
 	 private int customerID = -1;
          private int sessionID = -1;
+         private boolean checkInStatus;
         
+         public int getBookingID(){
+             return bookingID;
+         }
+         public void setBookingID(int aBookingID){
+             bookingID = aBookingID;
+         }         
          public int getCustomerID(){
              return customerID;
          }
@@ -32,5 +40,11 @@ public class Booking {
          }
          public void setSessionID(int aName){
              sessionID = aName;
+         } 
+         public boolean getCheckInStatus(){
+             return checkInStatus;
+         }
+         public void setCheckInStatus(boolean aCheckInStatus){
+             checkInStatus = aCheckInStatus;
          }     
 }

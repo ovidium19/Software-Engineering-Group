@@ -13,7 +13,13 @@ import javax.swing.*;
 public class SlopeOperator {
 
     public static void main(String[] args){
-
+        
+      BookingRepoImpl bookRepo = new BookingRepoImpl();
+      
+      String connectionURL = "jdbc:derby://localhost:1527/BookingSessionDB";
+      String uName = "admin1";
+      String uPass= "admin1";
+        
       SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI();  
       slopeOperatorInterface.homeWindowSetup();
    } 
