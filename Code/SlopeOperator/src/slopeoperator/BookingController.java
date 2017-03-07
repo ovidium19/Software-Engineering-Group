@@ -12,6 +12,8 @@
 package slopeoperator;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.Random;
 
@@ -24,7 +26,6 @@ import java.util.Random;
 public class BookingController {
     
         BookingRepoImpl BookingRepo = new BookingRepoImpl();
-	ArrayList listOfBookings = new ArrayList();
         
         public boolean checkCustomerID(Connection connection, String customerID) {
             
@@ -48,15 +49,26 @@ public class BookingController {
              book.setSessionID(sessionID);
              book.setCheckInStatus(false);
              
-             listOfBookings.add(book);
-             System.out.println(listOfBookings.size());
              BookingRepo.write(connection, "add", book);
         }          
 
-        public void viewAll(Connection connection){
-            BookingRepo.read(connection);
-        } 
+        public void viewAll(Connection connection) throws SQLException{
+            
+            ResultSet rs = BookingRepo.read(connection);
+            
+            while (rs.next()) {
+                
+                int id = rs.getInt("BOOKINGID");
+                int customerID = rs.getInt("CUSTOMERID");
+                int sessionID = rs.getInt("SESSIONID");
+                boolean checkIn = rs.getBoolean("CHECKINSTATUS");
         
+                // print the results
+                System.out.format("%s, %s, %s, %s, %s, %s\n", 
+                                  id, customerID, sessionID, checkIn);
+        } 
+       
+    }
         public void setBookingList(ArrayList bookings){
             BookingRepo.setBookings(bookings);
         }

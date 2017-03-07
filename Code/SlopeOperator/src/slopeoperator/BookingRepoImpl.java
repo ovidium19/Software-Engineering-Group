@@ -8,6 +8,7 @@ import java.sql.*;
  */
 public class BookingRepoImpl implements BookingRepo {
     private ArrayList<Booking> bookings;
+    private ResultSet rs;
     
     public BookingRepoImpl(){
         bookings = new ArrayList<Booking>();
@@ -30,24 +31,28 @@ public class BookingRepoImpl implements BookingRepo {
         write(conn,"add",booking);
     }
     
-    public ArrayList read(Connection conn){
+    public ResultSet read(Connection conn){
         System.out.println("Reading from the database... ");
-        ArrayList list = new ArrayList();
         try {   
-                Statement st = conn.createStatement();
                 
+                Statement st = conn.createStatement();
                 String sql = "SELECT * FROM BOOKINGS";
                 
-                st.executeQuery(sql);
-
-                st.close();
+                rs = st.executeQuery(sql);
+                   
+                
+                 
                 
         } catch (SQLException ex) {
                     System.out.println(ex);
                     System.out.println("SQLException failed ! ");
-        } 
+        }
+        finally{
+            st.close();
+        }
         
-        return bookings;
+        return rs; 
+        
     }
     public void write(Connection conn, String str, Booking booking){
         
@@ -83,7 +88,9 @@ public class BookingRepoImpl implements BookingRepo {
               
                 String sql = "SELECT COUNT(*) FROM CUSTOMERS WHERE CustomerID =" + customerID;
                 System.out.println(sql);
-                st.executeQuery(sql);
+                ResultSet rs = st.executeQuery(sql);
+                
+                
 
                 st.close();
             }

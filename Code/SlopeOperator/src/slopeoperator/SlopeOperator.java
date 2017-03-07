@@ -30,9 +30,8 @@ public class SlopeOperator {
             System.out.println("Connect to database..."); 
 
             if (conn != null){ 
-                ArrayList list = bookRepo.read(conn);
 
-                SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI(conn, list);
+                SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI(conn);
                 slopeOperatorInterface.homeWindowSetup();    
                         
                 //conn.close();

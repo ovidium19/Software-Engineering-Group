@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  *Class that sets out the user interface
@@ -32,10 +34,9 @@ public class SlopeOperatorUI {
     BookingController bookingControlerConnection = new BookingController();
     CustomerController customerControllerConnection = new CustomerController();
     
-    public SlopeOperatorUI(Connection connectionInput, ArrayList listInput) {
+    public SlopeOperatorUI(Connection connectionInput) {
         
         connection = connectionInput;
-        bookingControlerConnection.setBookingList(listInput);
     }
         
     private JFrame mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
@@ -184,7 +185,7 @@ public class SlopeOperatorUI {
       JRadioButton withInstructorRadioButton = new JRadioButton("With Instructor");
       JRadioButton withoutInstructorRadioButton = new JRadioButton("Without Instructor");
       JLabel  sessionTypelabel= new JLabel("Enter the Session ID:  ", JLabel.CENTER);
-      
+      JLabel instructorlabel = new JLabel("Select Session Type: ", JLabel.CENTER);
       JLabel  emptyLabel1= new JLabel("    ", JLabel.CENTER);
       JLabel  emptyLabel2= new JLabel("    ", JLabel.CENTER);
       
@@ -237,7 +238,11 @@ public class SlopeOperatorUI {
       viewButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
                       
-            bookingControlerConnection.viewAll(connection);
+             try {
+                 bookingControlerConnection.viewAll(connection);
+             } catch (SQLException ex) {
+                 Logger.getLogger(SlopeOperatorUI.class.getName()).log(Level.SEVERE, null, ex);
+             }
             
             String data = "Showing all bookings...";
             
@@ -257,12 +262,14 @@ public class SlopeOperatorUI {
       controlPanel.add(customerIDlabel);
       controlPanel.add(customerIDText);
       controlPanel.add(checkCustomerButton);
-      controlPanel.add(emptyLabel1);
+      controlPanel.add(instructorlabel);
       controlPanel.add(withInstructorRadioButton);
-      controlPanel.add(emptyLabel2);
       controlPanel.add(withoutInstructorRadioButton);
       controlPanel.add(sessionTypelabel);
       controlPanel.add(sessionIDText);
+      controlPanel.add(emptyLabel1);
+      controlPanel.add(emptyLabel1);
+      controlPanel.add(emptyLabel1);
       controlPanel.add(addButton);
       controlPanel.add(viewButton);
       controlPanel.add(backButton); 

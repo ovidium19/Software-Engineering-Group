@@ -14,7 +14,7 @@ public interface BookingRepo {
     // Interface for functions that can be implemented by BookingRepoImpl
     
     void write(Connection con, String str, Booking booking);
-    ArrayList read(Connection con);
+    ResultSet read(Connection con);
     
     boolean checkCustomerID(Connection con, String customerID);
     
