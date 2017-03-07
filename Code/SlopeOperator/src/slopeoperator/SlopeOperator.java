@@ -33,9 +33,11 @@ public class SlopeOperator {
                 SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI(conn, list);
                 slopeOperatorInterface.homeWindowSetup();    
                         
-                //conn.close();
-                //System.out.println("Connection is closed.");
-                                    
+                conn.close();
+                System.out.println("Connection is closed.");
+                        
+                System.exit(1);
+                    
             } 
             else {
                 System.out.println("null");  
@@ -43,7 +45,7 @@ public class SlopeOperator {
        } 
        catch (SQLException ex) {
            
-            System.out.println(ex);         
+            System.out.println("Connection failed.");         
        }
     }     
 }

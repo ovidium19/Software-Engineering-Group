@@ -31,7 +31,7 @@ public class CustomerController {
         public void register(int customerID, String firstName, String lastName, String Email, String phoneNo){
              
              Customer customer = new Customer();
-             customer.setCustomerID(customerID);
+             customer.setCustomerID(list.size() + 1);
              customer.setFirstName(firstName);
              customer.setLastName(lastName);
              customer.setEmail(Email);

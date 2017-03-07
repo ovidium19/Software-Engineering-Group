@@ -11,11 +11,10 @@ import java.util.ArrayList;
  */
 public interface BookingRepo {
     
-    // Interface for functions that can be implemented by BookingRepoImpl
-    
-    void write(Connection con, String str, Booking booking);
-    void read(Connection con, String str);
-    
+    public void createBooking(Booking booking, Connection connection);
+    public Booking getBooking(Booking booking);
     public ArrayList<Booking> getAllBookings();
     public void setBookings(ArrayList list);
+    void write(Connection con, String str, Booking booking);
+    public ArrayList read(Connection con);
 }

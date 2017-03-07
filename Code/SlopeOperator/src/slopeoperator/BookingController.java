@@ -11,7 +11,6 @@
 
 package slopeoperator;
 
-import java.sql.Connection;
 import java.util.*;
 
 /*
@@ -24,19 +23,15 @@ public class BookingController {
     
         BookingRepoImpl BookingRepo = new BookingRepoImpl();
 	ArrayList list = new ArrayList();
-        
-        public void book(Connection connection, int customerID, int sessionID){
+         
+         public void book(int customerID, int sessionID){
              
              Booking book = new Booking();
-             book.setBookingID(list.size() + 1);
              book.setCustomerID(customerID);
-             book.setSessionID(sessionID);
-             book.setCheckInStatus(false);
+             book.setSessionID(sessionID); 
              
              list.add(book);
-             
-             BookingRepo.write(connection, "add", book);
-        }          
+         }          
 
         public String viewAll(){
         String data  = "";
