@@ -145,59 +145,29 @@ public class SlopeOperatorUI {
    }
     
     public void registerCustomer() {
-       mainFrame.setVisible(false);
-      
-      String header = "REGISTER A CUSTOMER";
-      String windowTitle = "Register a customer - Provided by InvoTech" ;
-      setup(bookingFrame, windowTitle, header);
-      
-      
-      JLabel  FirstNamelabel= new JLabel("Enter the First name: ", JLabel.CENTER);
-      JLabel  LastNamelabel= new JLabel("Enter the Last name: ", JLabel.CENTER);
-      JLabel  Emaillabel= new JLabel("Enter the Email: ", JLabel.CENTER);
-      JLabel  TelephoneNolabel= new JLabel("Enter the Telephone number: ", JLabel.CENTER);
-   
-    
-      final JTextField FirstName = new JTextField(6);
-      final JTextField LastName = new JTextField(10);
-      final JTextField Email = new JTextField(20);      
-      final JTextField TelephoneNo = new JTextField(20);     
-
-      JButton addButton = new JButton("Register Customer");
-      addButton.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            String theFirstName = FirstName.getText();
-            String theLastName = LastName.getText();
-            String theEmail = Email.getText();
-            String theTelephoneNo = TelephoneNo.getText();
-
-            String data = "A customer has been successfully registered: ";
-            	
-            mainStatusLabel.setText(data);        
+        
+        String header = "REGISTER A CUSTOMER";
+        String windowName = "Register a Customer - Provided by Invotech";
+        setup(registerFrame, windowName, header);
+        
+        registerFrame.addWindowListener(new WindowAdapter() {
+          
+         public void windowClosing(WindowEvent windowEvent){
+	        System.exit(0);
          }        
-      }); 
-
-      JButton backButton = new JButton("Back");
-      backButton.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
+        });
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
              
              setVisibility(mainFrame, true);
-             setVisibility(bookingFrame, false);
+             setVisibility(registerFrame, false);
          }        
-      });
-      
-      controlPanel.add(FirstNamelabel);
-      controlPanel.add(FirstName);
-      controlPanel.add(LastNamelabel);
-      controlPanel.add(LastName);
-      controlPanel.add(Emaillabel);
-      controlPanel.add(Email);
-      controlPanel.add(TelephoneNolabel); 
-      controlPanel.add(TelephoneNo);
-      controlPanel.add(addButton);
-      controlPanel.add(backButton); 
-    }   
-        
+        });
+          
+        controlPanel.add(backButton);
+    }
     public void bookSession() {
 
       mainFrame.setVisible(false);
@@ -208,38 +178,39 @@ public class SlopeOperatorUI {
       
       
       JLabel  customerIDlabel= new JLabel("Enter the Customer's ID: ", JLabel.CENTER);
-      JRadioButton radioButton1 = new JRadioButton("With Instructor");
-      JRadioButton radioButton2 = new JRadioButton("Without Instructor");
-      JLabel  sessionTypelabel= new JLabel("Choose Instructor (if required): ", JLabel.CENTER);
+      //JRadioButton radioButton1 = new JRadioButton("With Instructor");
+      //JRadioButton radioButton2 = new JRadioButton("Without Instructor");
+      JLabel  sessionTypelabel= new JLabel("Enter the Session ID:  ", JLabel.CENTER);
       
-      String[] instructors = { "No Instructor", "A. Adams","B. Barry", "C. Charlie","D. Daniels"};
+      //String[] instructors = { "No Instructor", "A. Adams","B. Barry", "C. Charlie","D. Daniels"};
       
-      JComboBox<String> instructorsDropDown = new JComboBox<String>(instructors);
+      //JComboBox<String> instructorsDropDown = new JComboBox<String>(instructors);
 
-      instructorsDropDown.setVisible(true);
+      //instructorsDropDown.setVisible(true);
     
-      JLabel  dateLabel = new JLabel("Choose Date: ", JLabel.CENTER);
-      JLabel  timeSlotLabel = new JLabel("Choose Time Slot: ", JLabel.CENTER);
-      final JTextField customerID = new JTextField(6);
-      final JTextField sessionType = new JTextField(10);
-      final JTextField date = new JTextField(20);      
-      final JTextField timeSlot = new JTextField(20);     
+      //JLabel  dateLabel = new JLabel("Choose Date: ", JLabel.CENTER);
+      //JLabel  timeSlotLabel = new JLabel("Choose Time Slot: ", JLabel.CENTER);
+      final JTextField customerIDText = new JTextField(6);
+      final JTextField sessionIDText = new JTextField(10);
+      //final JTextField date = new JTextField(20);      
+      //final JTextField timeSlot = new JTextField(20);     
 
       JButton addButton = new JButton("Book Session");
       addButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            String theCustomerID = customerID.getText();
-            String theSessionType = sessionType.getText();
-            String theDate = date.getText();
-            String theTimeSlot = timeSlot.getText();
+            String theCustomerID = customerIDText.getText();
+            String theSessionID = sessionIDText.getText();
+            //String theDate = date.getText();
+            //String theTimeSlot = timeSlot.getText();
 
             int num = Integer.parseInt(theCustomerID);
-            int num2 = 123123;
-            bookingControlerConnection.book(num, num2);
+            int num2 = Integer.parseInt(theSessionID);
             
-            String data = "A session has been booked for customer: " + customerID.getText();
-            data += ", name: " + sessionType.getText();
-            data += ", speciality: "+ date.getText(); 
+            bookingControlerConnection.book(connection, num, num2);
+            
+            String data = "A session has been booked for customer: " + customerIDText.getText();
+            data += ", for session number: " + sessionIDText.getText();
+            //data += ", speciality: "+ date.getText(); 
             
             mainStatusLabel.setText(data);        
          }        
@@ -255,13 +226,14 @@ public class SlopeOperatorUI {
       });
       
       controlPanel.add(customerIDlabel);
-      controlPanel.add(customerID);
-      controlPanel.add(radioButton1);
-      controlPanel.add(radioButton2);
+      controlPanel.add(customerIDText);
+      //controlPanel.add(radioButton1);
+      //controlPanel.add(radioButton2);
       controlPanel.add(sessionTypelabel);
-      controlPanel.add(instructorsDropDown);
-      controlPanel.add(dateLabel);       
-      controlPanel.add(date);
+      controlPanel.add(sessionIDText);
+      //controlPanel.add(instructorsDropDown);
+      //controlPanel.add(dateLabel);       
+      //controlPanel.add(date);
       controlPanel.add(addButton);
       controlPanel.add(backButton); 
     }  
