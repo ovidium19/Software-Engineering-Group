@@ -26,6 +26,13 @@ public class BookingController {
         BookingRepoImpl BookingRepo = new BookingRepoImpl();
 	ArrayList listOfBookings = new ArrayList();
         
+        public boolean checkCustomerID(Connection connection, String customerID) {
+            
+            BookingRepo.checkCustomerID(connection, customerID);
+            
+            return(true);
+        }
+        
         public void book(Connection connection, int customerID, int sessionID){
              
              Booking book = new Booking();
@@ -42,7 +49,7 @@ public class BookingController {
              book.setCheckInStatus(false);
              
              listOfBookings.add(book);
-             
+             System.out.println(listOfBookings.size());
              BookingRepo.write(connection, "add", book);
         }          
 

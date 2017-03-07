@@ -114,7 +114,7 @@ public class SlopeOperatorUI {
       });
       
       controlPanel = new JPanel();
-      controlPanel.setLayout(new GridLayout(5, 1));
+      controlPanel.setLayout(new GridLayout(0, 3));
      
       frame.add(headerLabel);
       frame.add(controlPanel);
@@ -209,6 +209,30 @@ public class SlopeOperatorUI {
          }        
       });
       
+              
+      JButton checkCustomerButton = new JButton("Check Customer ID");
+      checkCustomerButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+             
+            String theCustomerID = customerIDText.getText();
+            String data;
+             
+            boolean isACustomer = bookingControlerConnection.checkCustomerID(connection, theCustomerID);
+            
+            if(isACustomer == true) {
+                
+                data = "Customer is registered";
+            }
+            else {
+                
+                data = "Customer is not registered";
+            }
+            
+            
+            mainStatusLabel.setText(data);        
+         }        
+      });
+      
       JButton viewButton = new JButton("View Bookings");
       viewButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
@@ -232,6 +256,7 @@ public class SlopeOperatorUI {
       
       controlPanel.add(customerIDlabel);
       controlPanel.add(customerIDText);
+      controlPanel.add(checkCustomerButton);
       controlPanel.add(emptyLabel1);
       controlPanel.add(withInstructorRadioButton);
       controlPanel.add(emptyLabel2);

@@ -16,6 +16,8 @@ public interface BookingRepo {
     void write(Connection con, String str, Booking booking);
     ArrayList read(Connection con);
     
+    boolean checkCustomerID(Connection con, String customerID);
+    
     public ArrayList<Booking> getAllBookings();
     public void setBookings(ArrayList list);
 }

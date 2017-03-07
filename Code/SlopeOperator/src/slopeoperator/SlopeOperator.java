@@ -20,7 +20,7 @@ public class SlopeOperator {
         
       BookingRepoImpl bookRepo = new BookingRepoImpl();
       
-      String connectionURL = "jdbc:derby://localhost:1527/BookingSessionDB";
+      String connectionURL = "jdbc:derby://localhost:1527/SlopeOperatorDB";
       String uName = "admin1";
       String uPass= "admin1";
         
