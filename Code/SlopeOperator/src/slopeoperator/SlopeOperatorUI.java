@@ -28,6 +28,7 @@ public class SlopeOperatorUI {
     Connection connection;
     ArrayList list = new ArrayList();
     
+    
     BookingController bookingControlerConnection = new BookingController();
     CustomerController customerControllerConnection = new CustomerController();
     
@@ -38,16 +39,17 @@ public class SlopeOperatorUI {
     }
         
     private JFrame mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
-    private JFrame bookingFrame = new JFrame("Booking Session");
-    private JFrame registerFrame = new JFrame("Register a Customer");
-    private JFrame checkInFrame = new JFrame("Check in Customer");
-    private JFrame viewScheduleFrame = new JFrame("View Schedule");
+    private final JFrame bookingFrame = new JFrame("Booking Session");
+    private final JFrame registerFrame = new JFrame("Register a Customer");
+    private final JFrame checkInFrame = new JFrame("Check in Customer");
+    private final JFrame viewScheduleFrame = new JFrame("View Schedule");
     
     private JLabel headerLabel;
     private JLabel mainStatusLabel;
     
     private JPanel controlPanel;
-           
+   
+   // Sets up home window user interface
    public void homeWindowSetup(){
       mainFrame = new JFrame("Sphere Booking & Checking In System - Provided by InvoTech");
       mainFrame.setSize(500,500);
@@ -93,7 +95,8 @@ public class SlopeOperatorUI {
       bookingFrame.setVisible(false);
       registerFrame.setVisible(false);
    }
-    
+   
+   // Sets up a window with user interface
    public void setup(JFrame frame, String windowName, String header){
        
       frame = new JFrame(windowName);
@@ -178,8 +181,8 @@ public class SlopeOperatorUI {
       
       
       JLabel  customerIDlabel= new JLabel("Enter the Customer's ID: ", JLabel.CENTER);
-      //JRadioButton radioButton1 = new JRadioButton("With Instructor");
-      //JRadioButton radioButton2 = new JRadioButton("Without Instructor");
+      //JRadioButton withInstructorRadioButton = new JRadioButton("With Instructor");
+      //JRadioButton withoutInstructorRadioButton = new JRadioButton("Without Instructor");
       JLabel  sessionTypelabel= new JLabel("Enter the Session ID:  ", JLabel.CENTER);
       
       //String[] instructors = { "No Instructor", "A. Adams","B. Barry", "C. Charlie","D. Daniels"};
@@ -200,8 +203,6 @@ public class SlopeOperatorUI {
          public void actionPerformed(ActionEvent e) {
             String theCustomerID = customerIDText.getText();
             String theSessionID = sessionIDText.getText();
-            //String theDate = date.getText();
-            //String theTimeSlot = timeSlot.getText();
 
             int num = Integer.parseInt(theCustomerID);
             int num2 = Integer.parseInt(theSessionID);
@@ -210,11 +211,22 @@ public class SlopeOperatorUI {
             
             String data = "A session has been booked for customer: " + customerIDText.getText();
             data += ", for session number: " + sessionIDText.getText();
-            //data += ", speciality: "+ date.getText(); 
             
             mainStatusLabel.setText(data);        
          }        
-      }); 
+      });
+      
+      JButton viewButton = new JButton("View Bookings");
+      viewButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+                      
+            bookingControlerConnection.viewAll();
+            
+            String data = "Showing all bookings...";
+            
+            mainStatusLabel.setText(data);        
+         }        
+      });
 
       JButton backButton = new JButton("Back");
       backButton.addActionListener(new ActionListener() {
@@ -227,14 +239,15 @@ public class SlopeOperatorUI {
       
       controlPanel.add(customerIDlabel);
       controlPanel.add(customerIDText);
-      //controlPanel.add(radioButton1);
-      //controlPanel.add(radioButton2);
+      //controlPanel.add(withInstructorRadioButton);
+      //controlPanel.add(withoutInstructorRadioButton);
       controlPanel.add(sessionTypelabel);
       controlPanel.add(sessionIDText);
       //controlPanel.add(instructorsDropDown);
       //controlPanel.add(dateLabel);       
       //controlPanel.add(date);
       controlPanel.add(addButton);
+      controlPanel.add(viewButton);
       controlPanel.add(backButton); 
     }  
     public void checkInCustomer() {

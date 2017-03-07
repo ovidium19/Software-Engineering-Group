@@ -13,6 +13,7 @@ package slopeoperator;
 
 import java.sql.Connection;
 import java.util.*;
+import java.util.Random;
 
 /*
  *Class that contains all of the bookings
@@ -23,29 +24,39 @@ import java.util.*;
 public class BookingController {
     
         BookingRepoImpl BookingRepo = new BookingRepoImpl();
-	ArrayList list = new ArrayList();
+	ArrayList listOfBookings = new ArrayList();
         
         public void book(Connection connection, int customerID, int sessionID){
              
              Booking book = new Booking();
-             book.setBookingID(list.size() + 1);
+                     
+             // Create a random number generator
+             Random rndGenerator = new Random();
+             
+             int randomNumber = rndGenerator.nextInt(9999);	        
+             
+             int newBookingID = 1000000 + randomNumber;
+             
+             book.setBookingID(newBookingID);
              book.setCustomerID(customerID);
              book.setSessionID(sessionID);
              book.setCheckInStatus(false);
              
-             list.add(book);
+             listOfBookings.add(book);
              
              BookingRepo.write(connection, "add", book);
         }          
 
         public String viewAll(){
-        String data  = "";
+            String data  = "";
         
-        System.out.print("list: " + list.size());
-        for (int i = 0; i<list.size(); i++){
+            System.out.print("list: " + listOfBookings.size());
+            for (int i = 0; i<listOfBookings.size(); i++){
             
-                Booking temp = (Booking)list.get(i);
-                String str = "\n Booking ref numbers: " + temp.getCustomerID() + " name: " + temp.getSessionID();
+                Booking temp = (Booking)listOfBookings.get(i);
+                String str = "\n Booking ref numbers: " + temp.getBookingID() +
+                                      " for customer: " + temp.getCustomerID() +
+                                      " and for session: " + temp.getSessionID();
                 data = data + str;
  
             }  

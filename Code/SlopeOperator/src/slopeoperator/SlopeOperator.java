@@ -14,7 +14,9 @@ import javax.swing.*;
  */
 public class SlopeOperator {
 
+    // Initialises a booking repository and connects to the SQL database
     public static void main(String[] args){
+      
         
       BookingRepoImpl bookRepo = new BookingRepoImpl();
       
