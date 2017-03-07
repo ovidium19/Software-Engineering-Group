@@ -28,19 +28,22 @@ public class Booking {
          }
          public void setBookingID(int aBookingID){
              bookingID = aBookingID;
-         }         
+         }  
+         
          public int getCustomerID(){
              return customerID;
          }
          public void setCustomerID(int aRef){
              customerID = aRef;
          }
+         
          public int getSessionID(){
              return sessionID;
          }
          public void setSessionID(int aName){
              sessionID = aName;
          } 
+         
          public boolean getCheckInStatus(){
              return checkInStatus;
          }

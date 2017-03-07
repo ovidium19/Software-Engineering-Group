@@ -2,7 +2,6 @@ package slopeoperator;
 import java.util.ArrayList;
 import java.sql.*;
 
-
 /**
  *
  * @author Genaro Bedenko
@@ -30,6 +29,7 @@ public class BookingRepoImpl implements BookingRepo {
         bookings.add(booking);
         write(conn,"add",booking);
     }
+    
     public ArrayList read(Connection conn){
         System.out.println("Reading from the database... ");
         ArrayList list = new ArrayList();
@@ -72,8 +72,10 @@ public class BookingRepoImpl implements BookingRepo {
             try {   
                 Statement st = conn.createStatement();
               
-                String sql = "INSERT INTO BOOKING VALUES (DEFAULT"+", " + booking.getCustomerID() + " , " + booking.getSessionID() + "', '"
-                        +booking.getCheckInStatus()+")";
+                String sql = "INSERT INTO BOOKING VALUES (" + booking.getBookingID() + " , "
+                                                            + booking.getCustomerID() + " , "
+                                                            + booking.getSessionID() + ", "
+                                                            + booking.getCheckInStatus() + ")";
                 System.out.println(sql);
                 st.executeUpdate(sql);
 
@@ -86,6 +88,11 @@ public class BookingRepoImpl implements BookingRepo {
         }
          
     }    
+
+    @Override
+    public void read(Connection con, String str) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }  
 
 
