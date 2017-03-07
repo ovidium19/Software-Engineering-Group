@@ -30,13 +30,12 @@ public class BookingController {
              
              Booking book = new Booking();
                      
-             // Create a random number generator
-             Random rndGenerator = new Random();
-             
-             int randomNumber = rndGenerator.nextInt(9999);	        
-             
+             // Generate a random ID number to assign to new booking object
+             Random rndGenerator = new Random();             
+             int randomNumber = rndGenerator.nextInt(9999);
              int newBookingID = 1000000 + randomNumber;
              
+             // Set attributes of the new Booking object
              book.setBookingID(newBookingID);
              book.setCustomerID(customerID);
              book.setSessionID(sessionID);
@@ -47,20 +46,8 @@ public class BookingController {
              BookingRepo.write(connection, "add", book);
         }          
 
-        public String viewAll(){
-            String data  = "";
-        
-            System.out.print("list: " + listOfBookings.size());
-            for (int i = 0; i<listOfBookings.size(); i++){
-            
-                Booking temp = (Booking)listOfBookings.get(i);
-                String str = "\n Booking ref numbers: " + temp.getBookingID() +
-                                      " for customer: " + temp.getCustomerID() +
-                                      " and for session: " + temp.getSessionID();
-                data = data + str;
- 
-            }  
-            return data;
+        public void viewAll(Connection connection){
+            BookingRepo.read(connection);
         } 
         
         public void setBookingList(ArrayList bookings){

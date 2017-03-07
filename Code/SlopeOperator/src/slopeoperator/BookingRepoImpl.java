@@ -36,30 +36,17 @@ public class BookingRepoImpl implements BookingRepo {
         try {   
                 Statement st = conn.createStatement();
                 
-                ResultSet rs=null;
-                String sql = "SELECT * FROM BOOKING";
-                rs=st.executeQuery(sql);
+                String sql = "SELECT * FROM BOOKINGS";
+                
+                st.executeQuery(sql);
 
-                while(rs.next()){ 
-                    Booking book = new Booking();
-                    book.setCustomerID(rs.getInt("CUSTOMERID"));
-                    book.setSessionID(rs.getInt("SESSIONID"));
-                    book.setCheckInStatus(rs.getBoolean("CHECKINSTATUS"));
-                    
-                    list.add(book);
-                    //System.out.println(rs.getInt("REF")+"\t"+rs.getString("NAME")+
-                    //        "\t"+rs.getString("SPECIALITY"));
-                }
-                    rs.close();
-                    st.close();
-
+                st.close();
+                
         } catch (SQLException ex) {
+                    System.out.println(ex);
                     System.out.println("SQLException failed ! ");
         } 
         
-        bookings = list;
-        
-        System.out.println("Number of bookings = " + list.size());
         return bookings;
     }
     public void write(Connection conn, String str, Booking booking){
@@ -89,10 +76,7 @@ public class BookingRepoImpl implements BookingRepo {
          
     }    
 
-    @Override
-    public void read(Connection con, String str) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }  
 
 

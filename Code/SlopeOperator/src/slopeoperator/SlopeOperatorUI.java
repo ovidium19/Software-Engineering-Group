@@ -181,22 +181,15 @@ public class SlopeOperatorUI {
       
       
       JLabel  customerIDlabel= new JLabel("Enter the Customer's ID: ", JLabel.CENTER);
-      //JRadioButton withInstructorRadioButton = new JRadioButton("With Instructor");
-      //JRadioButton withoutInstructorRadioButton = new JRadioButton("Without Instructor");
+      JRadioButton withInstructorRadioButton = new JRadioButton("With Instructor");
+      JRadioButton withoutInstructorRadioButton = new JRadioButton("Without Instructor");
       JLabel  sessionTypelabel= new JLabel("Enter the Session ID:  ", JLabel.CENTER);
       
-      //String[] instructors = { "No Instructor", "A. Adams","B. Barry", "C. Charlie","D. Daniels"};
+      JLabel  emptyLabel1= new JLabel("    ", JLabel.CENTER);
+      JLabel  emptyLabel2= new JLabel("    ", JLabel.CENTER);
       
-      //JComboBox<String> instructorsDropDown = new JComboBox<String>(instructors);
-
-      //instructorsDropDown.setVisible(true);
-    
-      //JLabel  dateLabel = new JLabel("Choose Date: ", JLabel.CENTER);
-      //JLabel  timeSlotLabel = new JLabel("Choose Time Slot: ", JLabel.CENTER);
       final JTextField customerIDText = new JTextField(6);
       final JTextField sessionIDText = new JTextField(10);
-      //final JTextField date = new JTextField(20);      
-      //final JTextField timeSlot = new JTextField(20);     
 
       JButton addButton = new JButton("Book Session");
       addButton.addActionListener(new ActionListener() {
@@ -220,7 +213,7 @@ public class SlopeOperatorUI {
       viewButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
                       
-            bookingControlerConnection.viewAll();
+            bookingControlerConnection.viewAll(connection);
             
             String data = "Showing all bookings...";
             
@@ -239,13 +232,12 @@ public class SlopeOperatorUI {
       
       controlPanel.add(customerIDlabel);
       controlPanel.add(customerIDText);
-      //controlPanel.add(withInstructorRadioButton);
-      //controlPanel.add(withoutInstructorRadioButton);
+      controlPanel.add(emptyLabel1);
+      controlPanel.add(withInstructorRadioButton);
+      controlPanel.add(emptyLabel2);
+      controlPanel.add(withoutInstructorRadioButton);
       controlPanel.add(sessionTypelabel);
       controlPanel.add(sessionIDText);
-      //controlPanel.add(instructorsDropDown);
-      //controlPanel.add(dateLabel);       
-      //controlPanel.add(date);
       controlPanel.add(addButton);
       controlPanel.add(viewButton);
       controlPanel.add(backButton); 
