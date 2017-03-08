@@ -12,6 +12,9 @@
 package slopeoperator;
 
 import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  *Class that contains all of the bookings
@@ -32,7 +35,9 @@ public class CustomerController {
              customer.setFirstName(firstName);
              customer.setLastName(lastName);
              customer.setEmail(Email);
-             customer.setTelephone(phoneNo);
+             customer.setTelephoneNo(phoneNo);
+             
+             CustomerRepo.write(connection, "add", customer);
              
              list.add(customer);
         }          

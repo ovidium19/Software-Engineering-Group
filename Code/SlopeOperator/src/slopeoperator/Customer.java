@@ -22,7 +22,7 @@ public class Customer {
 	public String FirstName;
 	public String LastName;
 	public String Email;
-	public String Telephone;
+	public String TelephoneNo;
         
         public void setCustomerID(int aCustomerID) {
 	
@@ -44,9 +44,9 @@ public class Customer {
             Email = anEmail;
 	}
 	
-	public void setTelephone(String aPhoneNo) {
+	public void setTelephoneNo(String aPhoneNo) {
 	
-            Telephone = aPhoneNo;
+            TelephoneNo = aPhoneNo;
 	}
 
         
@@ -70,8 +70,8 @@ public class Customer {
             return(Email);
 	}
 	
-	public String getTelephone() {
+	public String getTelephoneNo() {
 	
-            return(Telephone);
+            return(TelephoneNo);
 	}
 }

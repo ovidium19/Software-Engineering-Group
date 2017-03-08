@@ -61,10 +61,11 @@ public class CustomerRepoImpl implements CustomerRepo {
             try {   
                 Statement st = conn.createStatement();
               
-                String sql = "INSERT INTO CUSTOMER VALUES (" +customer.getFirstName() + " , "
-                                                            + customer.getLastName() + " , "
-                                                            + customer.getEmail() + ", "
-                                                            + customer.getTelephoneNo() + ")";
+                String sql = "INSERT INTO CUSTOMERS VALUES ("+ customer.getCustomerID() + " , '"
+                                                            + customer.getFirstName() + "' , '"
+                                                            + customer.getLastName() + "' , '"
+                                                            + customer.getEmail() + "', '"
+                                                            + customer.getTelephoneNo() + "')";
                 System.out.println(sql);
                 st.executeUpdate(sql);
 
@@ -88,7 +89,6 @@ public class CustomerRepoImpl implements CustomerRepo {
                 ResultSet rs = st.executeQuery(sql);
                 
                 
-
                 st.close();
             }
             catch (SQLException ex) {

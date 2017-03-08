@@ -174,6 +174,8 @@ public class SlopeOperatorUI {
             String theEmail = Email.getText();
             String theTelephoneNo = TelephoneNo.getText();
             
+            customerControllerConnection.register(connection, theFirstName, theLastName, theEmail, theTelephoneNo);
+            
             String data = "A customer has been successfully registered: ";
 			
             mainStatusLabel.setText(data);        
