@@ -115,7 +115,7 @@ public class SlopeOperatorUI {
       });
       
       controlPanel = new JPanel();
-      controlPanel.setLayout(new GridLayout(0, 3));
+      controlPanel.setLayout(new GridLayout(5, 5));
      
       frame.add(headerLabel);
       frame.add(controlPanel);
@@ -154,24 +154,61 @@ public class SlopeOperatorUI {
         String windowName = "Register a Customer - Provided by Invotech";
         setup(registerFrame, windowName, header);
         
+        mainFrame.setVisible(false);
+  
+      JLabel  FirstNamelabel= new JLabel("Enter the First name: ", JLabel.CENTER);
+      JLabel  LastNamelabel= new JLabel("Enter the Last name: ", JLabel.CENTER);
+      JLabel  Emaillabel= new JLabel("Enter the Email: ", JLabel.CENTER);
+      JLabel  TelephoneNolabel= new JLabel("Enter the Telephone number: ", JLabel.CENTER);
+     
+      final JTextField FirstName = new JTextField(6);
+      final JTextField LastName = new JTextField(10);
+      final JTextField Email = new JTextField(20);      
+      final JTextField TelephoneNo = new JTextField(20);     
+
+      JButton addButton = new JButton("Register Customer");
+      addButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            String theFirstName = FirstName.getText();
+            String theLastName = LastName.getText();
+            String theEmail = Email.getText();
+            String theTelephoneNo = TelephoneNo.getText();
+            
+            String data = "A customer has been successfully registered: ";
+			
+            mainStatusLabel.setText(data);        
+         }        
+      }); 
+
+      JButton backButton = new JButton("Back");
+      backButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+             
+             setVisibility(mainFrame, true);
+             setVisibility(bookingFrame, false);
+         }        
+      });
+      
+      controlPanel.add(FirstNamelabel);
+      controlPanel.add(FirstName);
+      controlPanel.add(LastNamelabel);
+      controlPanel.add(LastName);
+      controlPanel.add(Emaillabel);
+      controlPanel.add(Email);
+      controlPanel.add(TelephoneNolabel); 
+      controlPanel.add(TelephoneNo);
+      controlPanel.add(addButton);
+      controlPanel.add(backButton); 
+    
         registerFrame.addWindowListener(new WindowAdapter() {
           
          public void windowClosing(WindowEvent windowEvent){
 	        System.exit(0);
          }        
         });
-        
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-             
-             setVisibility(mainFrame, true);
-             setVisibility(registerFrame, false);
-         }        
-        });
-          
-        controlPanel.add(backButton);
-    }
+    
+    }  
+       
     public void bookSession() {
 
       mainFrame.setVisible(false);

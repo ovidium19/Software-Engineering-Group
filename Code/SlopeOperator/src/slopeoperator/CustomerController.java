@@ -23,12 +23,9 @@ public class CustomerController {
     
 	ArrayList list = new ArrayList();
         
-        public int generateID() {
-            
-            return(12313123);
-        }
-         
-        public void register(String firstName, String lastName, String Email, String phoneNo){
+        CustomerRepoImpl CustomerRepo = new CustomerRepoImpl();
+              
+        public void register(Connection connection, String firstName, String lastName, String Email, String phoneNo){
              
              Customer customer = new Customer();
              customer.setCustomerID(123);
