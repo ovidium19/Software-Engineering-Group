@@ -40,16 +40,14 @@ public class BookingRepoImpl implements BookingRepo {
                 
                 rs = st.executeQuery(sql);
                    
-                
+                st.close();
                  
                 
         } catch (SQLException ex) {
                     System.out.println(ex);
                     System.out.println("SQLException failed ! ");
         }
-        finally{
-            st.close();
-        }
+        
         
         return rs; 
         

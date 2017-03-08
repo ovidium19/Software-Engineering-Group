@@ -28,10 +28,10 @@ public class CustomerController {
             return(12313123);
         }
          
-        public void register(int customerID, String firstName, String lastName, String Email, String phoneNo){
+        public void register(String firstName, String lastName, String Email, String phoneNo){
              
              Customer customer = new Customer();
-             customer.setCustomerID(customerID);
+             customer.setCustomerID(123);
              customer.setFirstName(firstName);
              customer.setLastName(lastName);
              customer.setEmail(Email);
