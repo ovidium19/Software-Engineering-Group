@@ -176,3 +176,6 @@ ERROR XSLAQ: Cannot create log file at directory C:\Users\genar\Documents\GitHub
 Cleanup action completed
 Sat Mar 11 17:09:37 GMT 2017 Thread[DRDAConnThread_2,5,main] (DATABASE = SlopeOperatorDB), (DRDAID = {1}), Failed to start database 'SlopeOperatorDB' with class loader sun.misc.Launcher$AppClassLoader@6f94fa3e, see the next exception for details.
 Sat Mar 11 17:09:37 GMT 2017 Thread[DRDAConnThread_2,5,main] (DATABASE = SlopeOperatorDB), (DRDAID = {1}), Cannot create log file at directory C:\Users\genar\Documents\GitHub\Software-Engineering-Group\Code\SlopeOperator\SlopeOperatorDB\log.
+----------------------------------------------------------------
+Sat Mar 11 17:14:51 GMT 2017: Shutting down Derby engine
+----------------------------------------------------------------
