@@ -8,7 +8,11 @@ package managerfx;
 import java.sql.* ;  // for standard JDBC programsimport java.sql.Connection;
 import java.util.*;
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -23,10 +27,12 @@ public class ManagerFX extends Application {
     final static String connectionURL = "jdbc:derby://localhost:1527/AddSessionDB";
     final static  String uName = "ovidium";
     final static String uPass= "boculetz";
+    final static Connection conn=connectDB();
+    final static SessionController sess = new SessionController(); 
         
             //ConnectionURL, username and password should be specified in getConnection()       
             
-    public Connection connectDB(){
+    final static Connection connectDB(){
         
          try {             
                     Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
@@ -38,28 +44,43 @@ public class ManagerFX extends Application {
             }  
         
     }
-    @Override
-    public void start(Stage primaryStage) {
-            SessionController sess = new SessionController();
-            ArrayList <String> instructorNames;
-            Connection conn=connectDB();
-          
-          sess.setInstructorNames(conn);
-          instructorNames=sess.getInstructorNames();
-          for (int i=0;i<instructorNames.size();i++){
-              System.out.println(instructorNames.get(i));
-          }
+    final static Scene setDetailsScene(){
+        VBox rootDetailPage = new VBox();
+        ArrayList <String> availInstructors;
+        ArrayList <String> availSlopes;
+        sess.setInstructorNames(conn);
+        sess.setSlopeNames(conn);
+        availSlopes=sess.getSlopeNames();
+        availInstructors=sess.getInstructorNames();
         Label instructors = new Label("instructors");
-        VBox root = new VBox();
-        root.setPrefSize(350.0, 400.0);
-        root.setAlignment(Pos.CENTER);
+        Label slopes = new Label("slopes");
+        Label result =new Label("");
+        result.setId("resultLabel");
+        rootDetailPage.setPrefSize(350.0, 400.0);
+        rootDetailPage.setAlignment(Pos.CENTER);
         
         instructors.setPrefSize(120.0, 100.0);
+        slopes.setPrefSize(120.0, 130.0);
         final ComboBox instructorMenu = new ComboBox();
-        instructorMenu.getItems().addAll(instructorNames);
-        root.getChildren().addAll(instructors, instructorMenu);
-        Scene scene = new Scene(root, 300, 250);
+        final ComboBox slopeMenu = new ComboBox();
+        slopeMenu.getItems().addAll(availSlopes);
+        instructorMenu.getItems().addAll(availInstructors);
+        instructorMenu.valueProperty().addListener(new ChangeListener<String>(){
+        @Override public void changed(ObservableValue compos, String oldV, String newV){
+            result.setText(newV);
+        }});
+    
+        rootDetailPage.getChildren().addAll(instructors, instructorMenu,slopes,slopeMenu,result);
+        Scene scene=new Scene(rootDetailPage,300,250);
         
+        return scene;
+    }
+    @Override
+    public void start(Stage primaryStage) {
+        
+        
+        Scene scene = setDetailsScene();
+ 
         primaryStage.setTitle("Title");
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -27,14 +27,17 @@ public class SessionRepoImpl implements SessionRepo {
     public Session getSession(Session session){
         return sessions.get(session.getId()-1);
     }
+    @Override
     public void setSessions(ArrayList list){
         sessions=list;
     }
+    @Override
     public void addSession(Session session, Connection conn){
         sessions.add(session);
         write(conn,"add",session);
     }
-    public ArrayList read(Connection conn){
+    @Override
+    public ArrayList readInstructors(Connection conn){
         System.out.println("Reading instructor names from db...");
         ArrayList list = new ArrayList();
         try
@@ -42,6 +45,29 @@ public class SessionRepoImpl implements SessionRepo {
             Statement st = conn.createStatement();
             ResultSet rs=null;
             String sql = "SELECT name from INSTRUCTOR";
+            rs=st.executeQuery(sql);
+            
+            while (rs.next()){
+                list.add(rs.getString("NAME"));
+                
+            }
+            rs.close();
+            st.close();
+            
+        }
+        catch (SQLException ex){
+            System.out.println(ex);
+        }
+        return list;
+    }
+    public ArrayList readSlopes(Connection conn){
+        System.out.println("Reading slopes names from db...");
+        ArrayList list = new ArrayList();
+        try
+        {
+            Statement st = conn.createStatement();
+            ResultSet rs=null;
+            String sql = "SELECT name from SLOPE";
             rs=st.executeQuery(sql);
             
             while (rs.next()){

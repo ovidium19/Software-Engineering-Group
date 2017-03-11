@@ -16,12 +16,19 @@ import java.util.ArrayList;
 public class SessionController {
     SessionRepoImpl SessionRepo = new SessionRepoImpl();
     private ArrayList<String> instructorNames;
+    private ArrayList <String> slopeNames;
     
     public void setInstructorNames(Connection con){
-        instructorNames=SessionRepo.read(con);
+        instructorNames=SessionRepo.readInstructors(con);
     }
     public ArrayList getInstructorNames(){
         return instructorNames;
+    }
+    public void setSlopeNames(Connection con){
+        slopeNames=SessionRepo.readSlopes(con);
+    }
+    public ArrayList getSlopeNames(){
+        return slopeNames;
     }
     public void addASession(Time startTime,Time endTime, Date date, int maxBookings,int slopeID,int instructorId,Connection conn){
         Session sess = new Session();
