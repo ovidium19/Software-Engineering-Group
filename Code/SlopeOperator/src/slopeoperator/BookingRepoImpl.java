@@ -79,25 +79,7 @@ public class BookingRepoImpl implements BookingRepo {
          
     }    
 
-    public boolean checkCustomerID(Connection conn, String customerID) {
-        
-       try {   
-                Statement st = conn.createStatement();
-              
-                String sql = "SELECT COUNT(*) FROM CUSTOMERS WHERE CustomerID =" + customerID;
-                System.out.println(sql);
-                ResultSet rs = st.executeQuery(sql);
-                
-                
-
-                st.close();
-            }
-            catch (SQLException ex) {
-                    System.out.println(ex);
-            }
-       return(true);
-    }
-    
+      
 }  
 
 

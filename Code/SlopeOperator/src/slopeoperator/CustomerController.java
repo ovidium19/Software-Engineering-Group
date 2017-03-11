@@ -5,7 +5,7 @@
 //  @ Project : SlopeOperator
 //  @ File Name : CustomerController.java
 //  @ Date : 15/02/2017
-//  @ Author : Rishi Mehnagra
+//  @ Author : Genaro Bedenko
 //
 //
 
@@ -20,13 +20,23 @@ import java.sql.SQLException;
  *Class that contains all of the bookings
  *and performs the actions on the booking entity
  *
- * @author Rishi Mehangra
+ * @author Genaro Bedenko
  */
 public class CustomerController {
     
 	ArrayList list = new ArrayList();
         
         CustomerRepoImpl CustomerRepo = new CustomerRepoImpl();
+        
+        // Takes in a customerID and calls the BookingRepo to execute an SQL statement to 
+        // return whether the customerID exists or not
+        // Returns a boolean for whethere the customer has been registered or not
+        public boolean checkCustomerID(Connection connection, String customerID) {
+            
+            boolean isACustomer = CustomerRepo.checkCustomerID(connection, customerID);
+            
+            return(isACustomer);
+        }
               
         public void register(Connection connection, String firstName, String lastName, String Email, String phoneNo){
              

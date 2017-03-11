@@ -79,22 +79,42 @@ public class CustomerRepoImpl implements CustomerRepo {
          
     }    
 
+    // Function that checks if a given customerID exists in the Customers database table
+    // Using a SQL statement it finds the count for the customerID, count will be at least 1 if the
+    // customer exists, and therefore returns true
+    // Otherwise, it returns false as the customer has not been 
     public boolean checkCustomerID(Connection conn, String customerID) {
         
-       try {   
+        try {   
                 Statement st = conn.createStatement();
               
-                String sql = "SELECT COUNT(*) FROM CUSTOMERS WHERE CustomerID =" + customerID;
+                String sql = "SELECT COUNT(*) AS total FROM CUSTOMERS WHERE CustomerID =" + customerID;
                 System.out.println(sql);
                 ResultSet rs = st.executeQuery(sql);
                 
+                int result = rs.getInt("total");
                 
                 st.close();
-            }
-            catch (SQLException ex) {
+                
+                System.out.println(rs);
+                
+                if(result >= 1) {
+                    
+                    return(true);
+                }
+                else {
+                    
+                    return(false);
+                }
+
+        }
+        
+        catch (SQLException ex) {
+            
                     System.out.println(ex);
-            }
-       return(true);
+        }
+       
+       return(false);
     }
     
 }  

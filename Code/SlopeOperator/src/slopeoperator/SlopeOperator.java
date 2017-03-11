@@ -16,10 +16,7 @@ public class SlopeOperator {
 
     // Initialises a booking repository and connects to the SQL database
     public static void main(String[] args){
-      
-        
-      BookingRepoImpl bookRepo = new BookingRepoImpl();
-      
+            
       String connectionURL = "jdbc:derby://localhost:1527/SlopeOperatorDB";
       String uName = "admin1";
       String uPass= "admin1";

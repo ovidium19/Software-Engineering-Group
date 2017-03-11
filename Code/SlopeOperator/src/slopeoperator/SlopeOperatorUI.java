@@ -120,9 +120,10 @@ public class SlopeOperatorUI {
       frame.add(headerLabel);
       frame.add(controlPanel);
       frame.add(mainStatusLabel);
-
-      frame.setVisible(true);
+      
       mainFrame.setVisible(false);
+      frame.setVisible(true);
+      
     }
 
    private void setVisibility(JFrame frame, boolean bool){
@@ -185,9 +186,10 @@ public class SlopeOperatorUI {
       JButton backButton = new JButton("Back");
       backButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
+            
+            setVisibility(registerFrame, false);
+            setVisibility(mainFrame, true);
              
-             setVisibility(mainFrame, true);
-             setVisibility(bookingFrame, false);
          }        
       });
       
@@ -257,7 +259,7 @@ public class SlopeOperatorUI {
             String theCustomerID = customerIDText.getText();
             String data;
              
-            boolean isACustomer = bookingControlerConnection.checkCustomerID(connection, theCustomerID);
+            boolean isACustomer = customerControllerConnection.checkCustomerID(connection, theCustomerID);
             
             if(isACustomer == true) {
                 

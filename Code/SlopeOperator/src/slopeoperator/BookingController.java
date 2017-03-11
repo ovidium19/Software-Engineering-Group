@@ -27,12 +27,7 @@ public class BookingController {
     
         BookingRepoImpl BookingRepo = new BookingRepoImpl();
         
-        public boolean checkCustomerID(Connection connection, String customerID) {
-            
-            BookingRepo.checkCustomerID(connection, customerID);
-            
-            return(true);
-        }
+        
         
         public void book(Connection connection, int customerID, int sessionID){
              
