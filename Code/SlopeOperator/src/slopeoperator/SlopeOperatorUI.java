@@ -221,19 +221,29 @@ public class SlopeOperatorUI {
       String windowTitle = "Book a Session - Provided by InvoTech";
       setup(bookingFrame, windowTitle, header);
       
+      mainStatusLabel.setText("Check that Customer has been registered..."); 
+      
       
       JLabel  customerIDlabel= new JLabel("Enter the Customer's ID: ", JLabel.CENTER);
-      JRadioButton withInstructorRadioButton = new JRadioButton("With Instructor");
-      JRadioButton withoutInstructorRadioButton = new JRadioButton("Without Instructor");
-      JLabel  sessionTypelabel= new JLabel("Enter the Session ID:  ", JLabel.CENTER);
-      JLabel instructorlabel = new JLabel("Select Session Type: ", JLabel.CENTER);
-      JLabel  emptyLabel1= new JLabel("    ", JLabel.CENTER);
-      JLabel  emptyLabel2= new JLabel("    ", JLabel.CENTER);
-      
       final JTextField customerIDText = new JTextField(6);
+      
+      
+      JLabel  sessionTypeLabel= new JLabel("Enter the Session ID:  ", JLabel.CENTER);
+      sessionTypeLabel.setVisible(false);
       final JTextField sessionIDText = new JTextField(10);
-
+      sessionIDText.setVisible(false);
+      JLabel instructorlabel = new JLabel("Select Session Type: ", JLabel.CENTER);
+      instructorlabel.setVisible(false);
+      JRadioButton withInstructorRadioButton = new JRadioButton("With Instructor");
+      withInstructorRadioButton.setVisible(false);
+      JRadioButton withoutInstructorRadioButton = new JRadioButton("Without Instructor");
+      withoutInstructorRadioButton.setVisible(false);
+      
+      JLabel  emptyLabel= new JLabel("    ", JLabel.CENTER);
+      
+      
       JButton addButton = new JButton("Book Session");
+      addButton.setVisible(false);
       addButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             String theCustomerID = customerIDText.getText();
@@ -251,7 +261,7 @@ public class SlopeOperatorUI {
          }        
       });
       
-              
+      
       JButton checkCustomerButton = new JButton("Check Customer ID");
       checkCustomerButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
@@ -263,17 +273,28 @@ public class SlopeOperatorUI {
             
             if(isACustomer==true) {
                 
-                data = "Customer is registered";
+                data = "Customer is registered... Continue with booking";
+                sessionTypeLabel.setVisible(true);
+                sessionIDText.setVisible(true);
+                instructorlabel.setVisible(true);
+                withInstructorRadioButton.setVisible(true);
+                withoutInstructorRadioButton.setVisible(true);
+                addButton.setVisible(true);
             }
             else {
                 
-                data = "Customer is not registered";
+                data = "Customer is not registered.. Cannot continue with booking";
             }
             
             
             mainStatusLabel.setText(data);        
          }        
       });
+
+      
+      
+              
+      
       
       JButton viewButton = new JButton("View Bookings");
       viewButton.addActionListener(new ActionListener() {
@@ -306,11 +327,11 @@ public class SlopeOperatorUI {
       controlPanel.add(instructorlabel);
       controlPanel.add(withInstructorRadioButton);
       controlPanel.add(withoutInstructorRadioButton);
-      controlPanel.add(sessionTypelabel);
+      controlPanel.add(sessionTypeLabel);
       controlPanel.add(sessionIDText);
-      controlPanel.add(emptyLabel1);
-      controlPanel.add(emptyLabel1);
-      controlPanel.add(emptyLabel1);
+      controlPanel.add(emptyLabel);
+      controlPanel.add(emptyLabel);
+      controlPanel.add(emptyLabel);
       controlPanel.add(addButton);
       controlPanel.add(viewButton);
       controlPanel.add(backButton); 
