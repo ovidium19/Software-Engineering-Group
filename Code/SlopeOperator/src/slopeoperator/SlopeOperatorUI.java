@@ -11,14 +11,20 @@
 
 package slopeoperator;
 
+import com.toedter.calendar.JDateChooser;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 /*
  *Class that sets out the user interface
@@ -115,7 +121,7 @@ public class SlopeOperatorUI {
       });
       
       controlPanel = new JPanel();
-      controlPanel.setLayout(new GridLayout(5, 5));
+      controlPanel.setLayout(new GridLayout(6, 6));
      
       frame.add(headerLabel);
       frame.add(controlPanel);
@@ -241,23 +247,44 @@ public class SlopeOperatorUI {
       
       JLabel  emptyLabel= new JLabel("    ", JLabel.CENTER);
       
+      JComboBox timeDropDown = new JComboBox();
+      timeDropDown.addItem("1");
+      timeDropDown.addItem("2");
+      timeDropDown.addItem("3");
+      timeDropDown.addItem("4");
+      timeDropDown.addItem("5");
+      
+      
+      timeDropDown.setVisible(false);
+      
+      JDateChooser dateChooser = new JDateChooser();
+      dateChooser.setVisible(false);
+
+      JLabel status1 = new JLabel("");
+      JLabel status2 = new JLabel("");
+      JLabel status3 = new JLabel("");
       
       JButton addButton = new JButton("Book Session");
       addButton.setVisible(false);
       addButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             String theCustomerID = customerIDText.getText();
-            String theSessionID = sessionIDText.getText();
+            
+            Object selectedItem = timeDropDown.getSelectedItem();
+            String theSessionID = selectedItem.toString();
 
             int num = Integer.parseInt(theCustomerID);
             int num2 = Integer.parseInt(theSessionID);
             
-            bookingControlerConnection.book(connection, num, num2);
+            Booking newBooking = bookingControlerConnection.book(connection, num, num2);
             
-            String data = "A session has been booked for customer: " + customerIDText.getText();
-            data += ", for session number: " + sessionIDText.getText();
+            String data = "A session has been booked for the customer";
             
-            mainStatusLabel.setText(data);        
+            mainStatusLabel.setText(data);
+            
+            status1.setText("Booking ID: " + newBooking.getBookingID());
+            status2.setText("Customer ID: " + customerIDText.getText());
+            status3.setText("Session ID: " + selectedItem.toString());
          }        
       });
       
@@ -280,6 +307,8 @@ public class SlopeOperatorUI {
                 withInstructorRadioButton.setVisible(true);
                 withoutInstructorRadioButton.setVisible(true);
                 addButton.setVisible(true);
+                timeDropDown.setVisible(true);
+                dateChooser.setVisible(true);
             }
             else {
                 
@@ -328,13 +357,18 @@ public class SlopeOperatorUI {
       controlPanel.add(withInstructorRadioButton);
       controlPanel.add(withoutInstructorRadioButton);
       controlPanel.add(sessionTypeLabel);
-      controlPanel.add(sessionIDText);
-      controlPanel.add(emptyLabel);
-      controlPanel.add(emptyLabel);
-      controlPanel.add(emptyLabel);
+      controlPanel.add(timeDropDown);
+      controlPanel.add(dateChooser);
       controlPanel.add(addButton);
       controlPanel.add(viewButton);
-      controlPanel.add(backButton); 
+      controlPanel.add(backButton);
+      controlPanel.add(status1);
+      controlPanel.add(emptyLabel);
+      controlPanel.add(emptyLabel);
+      controlPanel.add(status2);
+      controlPanel.add(emptyLabel);
+      controlPanel.add(emptyLabel);
+      controlPanel.add(status3);
     }  
     public void checkInCustomer() {
         

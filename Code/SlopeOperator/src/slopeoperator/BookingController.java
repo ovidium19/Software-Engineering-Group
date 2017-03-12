@@ -29,7 +29,7 @@ public class BookingController {
         
         
         
-        public void book(Connection connection, int customerID, int sessionID){
+        public Booking book(Connection connection, int customerID, int sessionID){
              
              Booking book = new Booking();
                      
@@ -45,6 +45,8 @@ public class BookingController {
              book.setCheckInStatus(false);
              
              BookingRepo.write(connection, "add", book);
+             
+             return(book);
         }          
 
         public void viewAll(Connection connection) throws SQLException{
