@@ -1,6 +1,8 @@
 package slopeoperator;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.List;
 
 /**
  *
@@ -31,27 +33,47 @@ public class BookingRepoImpl implements BookingRepo {
         write(conn,"add",booking);
     }
     
-    public ResultSet read(Connection conn){
+    public List read(Connection conn){
+        
         System.out.println("Reading from the database... ");
+        
+        List resultsList = new ArrayList();
+        
         try {   
                 
                 Statement st = conn.createStatement();
                 String sql = "SELECT * FROM BOOKINGS";
                 
                 rs = st.executeQuery(sql);
-                   
-                st.close();
-                 
                 
-        } catch (SQLException ex) {
+                while (rs.next()) {
+                
+                    int bookingID = rs.getInt("BOOKINGID");
+                    int customerID = rs.getInt("CUSTOMERID");
+                    int sessionID = rs.getInt("SESSIONID");
+                    boolean checkIn = rs.getBoolean("CHECKINSTATUS");
+        
+                // Save the results                
+                String result = bookingID + "," + customerID+ "," +sessionID+ "," + checkIn;
+                
+                
+                resultsList.add(result);
+                result = "";
+                
+                } 
+                st.close();     
+                
+        } 
+        
+        catch (SQLException ex) {
+            
                     System.out.println(ex);
                     System.out.println("SQLException failed ! ");
         }
         
-        
-        return rs; 
-        
+        return(resultsList);
     }
+    
     public void write(Connection conn, String str, Booking booking){
         
         ArrayList list = getAllBookings();

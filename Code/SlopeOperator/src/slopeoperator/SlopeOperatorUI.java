@@ -261,7 +261,7 @@ public class SlopeOperatorUI {
              
             boolean isACustomer = customerControllerConnection.checkCustomerID(connection, theCustomerID);
             
-            if(isACustomer == true) {
+            if(isACustomer==true) {
                 
                 data = "Customer is registered";
             }

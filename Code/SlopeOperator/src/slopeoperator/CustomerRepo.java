@@ -16,7 +16,7 @@ public interface CustomerRepo {
     void write(Connection con, String str, Customer customer);
     ResultSet read(Connection con);
     
-    boolean checkCustomerID(Connection con, String customerID);
+    boolean checkCustomerID(Connection con, int customerID);
     
     public ArrayList<Customer> getAllCustomers();
     public void setCustomers(ArrayList list);

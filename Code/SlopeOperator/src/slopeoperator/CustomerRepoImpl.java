@@ -83,22 +83,24 @@ public class CustomerRepoImpl implements CustomerRepo {
     // Using a SQL statement it finds the count for the customerID, count will be at least 1 if the
     // customer exists, and therefore returns true
     // Otherwise, it returns false as the customer has not been 
-    public boolean checkCustomerID(Connection conn, String customerID) {
+    public boolean checkCustomerID(Connection conn, int customerID) {
         
         try {   
+            
                 Statement st = conn.createStatement();
-              
-                String sql = "SELECT COUNT(*) AS total FROM CUSTOMERS WHERE CustomerID =" + customerID;
+                
+                int count = 0;
+                String sql = "SELECT * FROM CUSTOMERS WHERE CustomerID =" + customerID;
                 System.out.println(sql);
                 ResultSet rs = st.executeQuery(sql);
                 
-                int result = rs.getInt("total");
-                
+                while(rs.next()){
+                    count++;
+                }
+                                
                 st.close();
                 
-                System.out.println(rs);
-                
-                if(result >= 1) {
+                if(count == 1) {
                     
                     return(true);
                 }

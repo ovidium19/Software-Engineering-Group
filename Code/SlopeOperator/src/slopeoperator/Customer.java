@@ -23,7 +23,7 @@ public class Customer {
 	public String LastName;
 	public String Email;
 	public String TelephoneNo;
-        
+               
         public void setCustomerID(int aCustomerID) {
 	
             CustomerID = aCustomerID;
@@ -52,7 +52,7 @@ public class Customer {
         
 	public int getCustomerID() {
 	
-            return(CustomerID);
+            return(this.CustomerID);
 	}
 	
 	public String getFirstName() {

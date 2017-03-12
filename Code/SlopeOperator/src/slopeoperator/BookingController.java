@@ -49,21 +49,15 @@ public class BookingController {
 
         public void viewAll(Connection connection) throws SQLException{
             
-            ResultSet rs = BookingRepo.read(connection);
+            List bookingsList = BookingRepo.read(connection);
             
-            while (rs.next()) {
+            System.out.println("BOOKINGID  -  CUSTOMERID  -  SESSIONID  -  CHECKINSTATUS");
+            for(int i=0; i< bookingsList.size(); i++){
                 
-                int id = rs.getInt("BOOKINGID");
-                int customerID = rs.getInt("CUSTOMERID");
-                int sessionID = rs.getInt("SESSIONID");
-                boolean checkIn = rs.getBoolean("CHECKINSTATUS");
-        
-                // print the results
-                System.out.format("%s, %s, %s, %s, %s, %s\n", 
-                                  id, customerID, sessionID, checkIn);
-        } 
-       
-    }
+                System.out.println(bookingsList.get(i));
+            }
+                   
+        }
         public void setBookingList(ArrayList bookings){
             BookingRepo.setBookings(bookings);
         }

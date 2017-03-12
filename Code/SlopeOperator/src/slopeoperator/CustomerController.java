@@ -24,7 +24,7 @@ import java.sql.SQLException;
  */
 public class CustomerController {
     
-	ArrayList list = new ArrayList();
+	ArrayList<Customer> list = new ArrayList();
         
         CustomerRepoImpl CustomerRepo = new CustomerRepoImpl();
         
@@ -33,7 +33,11 @@ public class CustomerController {
         // Returns a boolean for whethere the customer has been registered or not
         public boolean checkCustomerID(Connection connection, String customerID) {
             
-            boolean isACustomer = CustomerRepo.checkCustomerID(connection, customerID);
+            boolean isACustomer = false;
+            
+            int customerIDInt = Integer.parseInt(customerID);
+            
+            isACustomer = CustomerRepo.checkCustomerID(connection, customerIDInt);
             
             return(isACustomer);
         }

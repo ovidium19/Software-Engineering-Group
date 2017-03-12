@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,7 @@ public interface BookingRepo {
     // Interface for functions that can be implemented by BookingRepoImpl
     
     void write(Connection con, String str, Booking booking);
-    ResultSet read(Connection con);
+    List read(Connection con);
     
     
     
