@@ -31,12 +31,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -125,7 +130,11 @@ public class ManagerFX extends Application {
     final static Scene setCalendarScene(){
         BorderPane rootCal = new BorderPane();
         rootCal.setStyle("-fx-padding:20");
-        Label pageTitle = new Label("Add a Session - Step 1");
+        Label pageTitle = new Label("Add a Session - Step 1  ");
+        //pageTitle.setTextAlignment(TextAlignment.CENTER);
+        pageTitle.setAlignment(Pos.CENTER);
+        pageTitle.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        pageTitle.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         //AnchorPane centerContent = new AnchorPane();
         //centerContent.setPadding(new Insets(25,25,25,25));
         
@@ -137,8 +146,10 @@ public class ManagerFX extends Application {
         Button nextPage = new Button("Next");
         
         
+        
 
         DatePicker addSessionDatePicker = new DatePicker();
+        addSessionDatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         addSessionDatePicker.setId("datepicker");
         addSessionDatePicker.setOnAction(new EventHandler() {
             @Override
@@ -149,12 +160,17 @@ public class ManagerFX extends Application {
     });
         //Creating the GridPane that contains calendar and time pickers.
         GridPane gridPane = new GridPane();
-            ColumnConstraints column1 = new ColumnConstraints(130);
-            ColumnConstraints column2 = new ColumnConstraints(200);
-            ColumnConstraints column3 = new ColumnConstraints(130);
+            ColumnConstraints column1 = new ColumnConstraints();
+            column1.setHgrow(Priority.ALWAYS);
+            ColumnConstraints column2 = new ColumnConstraints();
+            column2.setHgrow(Priority.ALWAYS);
+            ColumnConstraints column3 = new ColumnConstraints();
+            column3.setHgrow(Priority.ALWAYS);
             gridPane.getColumnConstraints().addAll(column1,column2,column3);
         gridPane.setHgap(10);
         gridPane.setVgap(10);
+        
+        
         //gridPane.setPadding(new Insets(25,25,25,25));
         
         Label checkInlabel = new Label("Select Date:");
@@ -162,14 +178,17 @@ public class ManagerFX extends Application {
         Button endButton=new Button("Choose end time");
         
         //time HBoxes
-        final ObservableList<Integer> hours = FXCollections.observableArrayList();
-        final ObservableList<Integer> minutes = FXCollections.observableArrayList();
-        hours.addAll(9,10,11,12,13,14,15,16,17,18,19,20);
-        minutes.addAll(00,15,30,45);
+        final ObservableList hours = FXCollections.observableArrayList();
+        final ObservableList minutes = FXCollections.observableArrayList();
+        hours.addAll("9","10","11","12","13","14","15","16","17","18","19","20");
+        minutes.addAll("00","15","30","45");
         
         //startTime HBox
         HBox startTime = new HBox();
-        startTime.setSpacing(5);
+        startTime.setAlignment(Pos.CENTER);
+        //startTime.prefWidthProperty().bind(gridPane.widthProperty().divide(3));
+        //startTime.prefHeightProperty().bind(gridPane.heightProperty().divide(5));
+        //startTime.setSpacing(5);
         //startTime.setPrefSize();
         final ComboBox startHours = new ComboBox(hours);
         
@@ -184,7 +203,10 @@ public class ManagerFX extends Application {
         
         //endTime HBox
         HBox endTime = new HBox();
-        endTime.setSpacing(5);
+        endTime.setAlignment(Pos.CENTER);
+        //endTime.prefWidthProperty().bind(gridPane.widthProperty().divide(3));
+        //endTime.prefHeightProperty().bind(gridPane.heightProperty().divide(5));
+        //endTime.setSpacing(5);
         //startTime.setPrefSize();
         final ComboBox endHours = new ComboBox(hours);
         //startHours.setMinHeight(startTime.getHeight()*2);
@@ -216,29 +238,7 @@ public class ManagerFX extends Application {
                 else
                 endTime.setVisible(true);
             }});
-        /*
-        startHours.setCellFactory(
-        new Callback<ListView<String>, ListCell<String>>() {
-                @Override 
-                public ListCell<String> call(ListView<String> param) {
-                    final ListCell<String> cell = new ListCell<String>() {
-                        
-                        @Override public void updateItem(String item, 
-                            boolean empty) {
-                                super.updateItem(item, empty);
-                                if (item!=null){
-                                    setText(item);
-                                }
-                                if ((endHours.getValue()!=null) && (endHours.getValue().toString().compareTo(item)<0)){
-                                    setDisable(true);
-                                    setStyle("-fx-background-color: #ffc0cb");
-                                }
-                            }
-                };
-                return cell;
-            }
-        });
-        */
+        
          nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
@@ -268,8 +268,7 @@ public class ManagerFX extends Application {
         GridPane.setHalignment(addSessionDatePicker, HPos.CENTER);
         GridPane.setHalignment(startButton,HPos.CENTER);
         GridPane.setHalignment(endButton, HPos.CENTER);
-        GridPane.setHalignment(endTime, HPos.RIGHT);
-        
+        gridPane.setStyle("-fx-background-color: #FFE0B2");
         //centerContent.getChildren().add(gridPane);
         //centerContent.setTopAnchor(gridPane,0.0);
         //centerContent.setLeftAnchor(gridPane,50.0);
@@ -280,10 +279,14 @@ public class ManagerFX extends Application {
         rootCal.setTop(pageTitle);
         rootCal.setCenter(gridPane);
         rootCal.setBottom(nextPage);
-        rootCal.setMargin(gridPane,new Insets(12,0,12,25));
-        
+        rootCal.setMargin(gridPane,new Insets(12,15,12,15));
+        rootCal.setMargin(nextPage,new Insets(0,15,12,0));
+        rootCal.setStyle("-fx-background-color: #FF9800");
+        //rootCal.setStyle("-fx-background-color:#FFA726");
         
         Scene scene = new Scene(rootCal, 550, 400);
+        rootCal.prefWidthProperty().bind(scene.widthProperty());
+        rootCal.prefHeightProperty().bind(scene.widthProperty());
         
         
         //rootCalendar.add(gridPane, 0, 0, 2, 1);
@@ -303,7 +306,7 @@ public class ManagerFX extends Application {
       
         primaryStage.setTitle("Title");
         primaryStage.setScene(mainScene);
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
         primaryStage.show();
     }
 
