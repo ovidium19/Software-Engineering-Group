@@ -61,3 +61,5 @@ ERROR 08004: Connection authentication failure occurred.  Reason: Invalid authen
 ============= end nested exception, level (1) ===========
 Cleanup action completed
 Tue Mar 14 21:09:40 GMT 2017 Thread[DRDAConnThread_2,5,main] (DATABASE = SphereDB), (DRDAID = {1}), Connection authentication failure occurred.  Reason: Invalid authentication..
+----------------------------------------------------------------
+Tue Mar 14 22:45:09 GMT 2017: Shutting down Derby engine
