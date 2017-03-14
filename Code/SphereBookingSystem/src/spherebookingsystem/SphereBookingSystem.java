@@ -92,16 +92,66 @@ public class SphereBookingSystem extends Application {
     
     private Scene makeSlopeOperatorScreen() {
         
-        Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
+        Label slopeOperatorLabel = new Label();
+        slopeOperatorLabel.setText("SLOPE OPERATOR FUNCTIONS");
+        
+        Button registerButton = new Button();
+        registerButton.setText("Register A Customer");
+        registerButton.setAlignment(Pos.TOP_CENTER);
+        registerButton.setPrefSize(250, 30);
+        registerButton.setMaxSize(usernameText.getPrefWidth(), usernameText.getPrefHeight());
+        registerButton.setTextAlignment(TextAlignment.CENTER);
+        registerButton.setPadding(new Insets(12,5,20,5));
+        
+        Button bookButton = new Button();
+        bookButton.setText("Book A Session");
+        bookButton.setAlignment(Pos.TOP_CENTER);
+        bookButton.setPrefSize(250, 30);
+        bookButton.setMaxSize(usernameText.getPrefWidth(), usernameText.getPrefHeight());
+        bookButton.setTextAlignment(TextAlignment.CENTER);
+        bookButton.setPadding(new Insets(12,5,20,5));
+        
+        Button checkInButton = new Button();
+        checkInButton.setText("Check In A Customer");
+        checkInButton.setAlignment(Pos.TOP_CENTER);
+        checkInButton.setPrefSize(250, 30);
+        checkInButton.setMaxSize(usernameText.getPrefWidth(), usernameText.getPrefHeight());
+        checkInButton.setTextAlignment(TextAlignment.CENTER);
+        checkInButton.setPadding(new Insets(12,5,20,5));
+        
+        Button viewScheduleButton = new Button();
+        viewScheduleButton.setText("View Schedule");
+        viewScheduleButton.setAlignment(Pos.TOP_CENTER);
+        viewScheduleButton.setPrefSize(250, 30);
+        viewScheduleButton.setMaxSize(usernameText.getPrefWidth(), usernameText.getPrefHeight());
+        viewScheduleButton.setTextAlignment(TextAlignment.CENTER);
+        viewScheduleButton.setPadding(new Insets(12,5,20,5));
+        
+        Button backButton = new Button();
+        backButton.setText("Back");
+        backButton.setAlignment(Pos.TOP_CENTER);
+        backButton.setPrefSize(250, 30);
+        backButton.setMaxSize(usernameText.getPrefWidth(), usernameText.getPrefHeight());
+        backButton.setTextAlignment(TextAlignment.CENTER);
+        backButton.setPadding(new Insets(12,5,20,5));
+        
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                Scene temp = makeWelcomeScreen();
+                theStage.setScene(temp);
+            }
+        });
         
         VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
+        root.getChildren().addAll(slopeOperatorLabel, registerButton, bookButton,
+                                  checkInButton, viewScheduleButton, backButton);
+        root.setPadding(new Insets(50,50,50,50));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(25);
         
-        Scene scene = new Scene(root, 500, 450);
+        Scene scene = new Scene(root, 500, 500);
         
         return(scene); 
     }
@@ -156,16 +206,18 @@ public class SphereBookingSystem extends Application {
     
     private Scene makeBookingScreen() {
         
-        Label welcomeText = new Label();
-        welcomeText.setText("BOOKING SCREEN");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
+        Label bookingTitleText = new Label();
+        bookingTitleText.setText("BOOKING SCREEN");
+        bookingTitleText.setAlignment(Pos.TOP_CENTER);
+        bookingTitleText.setTextAlignment(TextAlignment.CENTER);
+        bookingTitleText.setPadding(new Insets(12,5,20,5));
         
         VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
+        root.getChildren().addAll(bookingTitleText);
         
         Scene scene = new Scene(root, 500, 450);
+        
+        theStage.show();        
         
         return(scene); 
     }
