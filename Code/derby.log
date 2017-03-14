@@ -1,7 +1,7 @@
-Mon Mar 13 10:36:26 GMT 2017 : Apache Derby Network Server - 10.11.1.2 - (1629631) started and ready to accept connections on port 1527
+Tue Mar 14 09:10:37 GMT 2017 : Apache Derby Network Server - 10.11.1.2 - (1629631) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Mon Mar 13 10:36:26 GMT 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): instance a816c00e-015a-c73d-947e-000038f50bf1 
+Tue Mar 14 09:10:37 GMT 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): instance a816c00e-015a-cc15-5fb3-000038f50bf1 
 on database directory H:\260CT\GroupProject\Software-Engineering-Group\Code\AddSessionDB with class loader sun.misc.Launcher$AppClassLoader@1d44bcfa 
 Loaded from file:/C:/Program%20Files/Java/jdk1.8.0_102/db/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,7 +12,7 @@ os.arch=amd64
 os.version=6.1
 derby.system.home=H:\260CT\GroupProject\Software-Engineering-Group\Code
 Database Class Loader started - derby.database.classpath=''
-Mon Mar 13 10:36:29 GMT 2017 Thread[DRDAConnThread_2,5,main] (XID = 1413), (SESSIONID = 0), (DATABASE = AddSessionDB), (DRDAID = {1}), Cleanup action starting
+Tue Mar 14 09:10:38 GMT 2017 Thread[DRDAConnThread_2,5,main] (XID = 1414), (SESSIONID = 0), (DATABASE = AddSessionDB), (DRDAID = {1}), Cleanup action starting
 java.sql.SQLNonTransientConnectionException: Connection authentication failure occurred.  Reason: Invalid authentication..
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
@@ -60,4 +60,4 @@ ERROR 08004: Connection authentication failure occurred.  Reason: Invalid authen
 	at org.apache.derby.impl.drda.DRDAConnThread.run(Unknown Source)
 ============= end nested exception, level (1) ===========
 Cleanup action completed
-Mon Mar 13 10:36:29 GMT 2017 Thread[DRDAConnThread_2,5,main] (DATABASE = AddSessionDB), (DRDAID = {1}), Connection authentication failure occurred.  Reason: Invalid authentication..
+Tue Mar 14 09:10:38 GMT 2017 Thread[DRDAConnThread_2,5,main] (DATABASE = AddSessionDB), (DRDAID = {1}), Connection authentication failure occurred.  Reason: Invalid authentication..

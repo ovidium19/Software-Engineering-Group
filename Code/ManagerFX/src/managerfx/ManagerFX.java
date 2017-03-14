@@ -9,6 +9,8 @@ import java.sql.* ;  // for standard JDBC programsimport java.sql.Connection;
 import java.time.LocalDate;
 import java.util.*;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -54,13 +56,20 @@ public class ManagerFX extends Application {
     final static  String uName = "ovidium";
     final static String uPass= "boculetz";
     final static Connection conn=connectDB();
-    final static SessionController sess = new SessionController();   
-    static Scene mainScene;    
-    static Stage theStage;
-    static LocalDate dateP;
-    static String startTimePicked, endTimePicked;
+    private SessionController sess = new SessionController();   
+    private Scene mainScene;    
+    private Stage theStage;
+    private LocalDate dateP;
+    private String startTimePicked, endTimePicked;
+    private ComboBox endHours = new ComboBox();
+    private ComboBox startHours = new ComboBox();
+    private ComboBox instructorMenu = new ComboBox();
+    private ComboBox slopeMenu = new ComboBox();
+    private DatePicker addSessionDatePicker = new DatePicker();
+    private ObservableList hours = FXCollections.observableArrayList();//
+    private ObservableList minutes = FXCollections.observableArrayList();//
     
-    final static Connection connectDB(){
+     final static Connection connectDB(){
         
          try {             
                     Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
@@ -72,8 +81,54 @@ public class ManagerFX extends Application {
             }  
         
     }
+     private class StartHoursCell extends ListCell<String> {
+            StartHoursCell() {
+                endHours.valueProperty().addListener((obs,oldEndHours,newEndHours) -> updateDisableState());
+            }
+            @Override
+            protected void updateItem(String val, boolean empty){
+                super.updateItem(val, empty);
+                if (empty){
+                    setText(null);
+                }
+                else{
+                    setText(val);
+                    updateDisableState();
+                }
+            }
+            private void updateDisableState(){
+                boolean disable = getItem() != null && endHours.getValue() != null && 
+                    Integer.parseInt(getItem())>=Integer.parseInt((String)endHours.getValue());
+                setDisable(disable) ;
+                setOpacity(disable ? 0.5 : 1);
+            }
+        }
+     private class EndHoursCell extends ListCell<String> {
+            EndHoursCell() {
+                startHours.valueProperty().addListener((obs,oldStartHours,newStartHours) -> updateDisableState());
+            }
+            @Override
+            protected void updateItem(String val, boolean empty){
+                super.updateItem(val, empty);
+                if (empty){
+                    setText(null);
+                }
+                else{
+                    setText(val);
+                    updateDisableState();
+                }
+            }
+            private void updateDisableState(){
+                boolean disable = getItem() != null && startHours.getValue() != null && 
+                    Integer.parseInt(getItem())<=Integer.parseInt((String)startHours.getValue());;
+                setDisable(disable) ;
+                setOpacity(disable ? 0.5 : 1);
+            }
+        }
+        
+        
     
-    final static Scene setDetailsScene(){
+    private Scene setDetailsScene(){
         BorderPane root = new BorderPane();
         root.setStyle("-fx-padding: 20");
         //TOP
@@ -100,13 +155,13 @@ public class ManagerFX extends Application {
         Label sessDescription = new Label("Write a short description of the session");
         TextArea description = new TextArea();
         description.setPrefColumnCount(100);
+        description.setPromptText(uName);
         description.setPrefRowCount(5);
         description.setWrapText(true);
         //Label result =new Label("");
         //result.setId("resultLabel");
         
-        final ComboBox instructorMenu = new ComboBox();
-        final ComboBox slopeMenu = new ComboBox();
+        
         slopeMenu.getItems().addAll(availSlopes);
         instructorMenu.getItems().addAll(availInstructors);
         //instructorMenu.valueProperty().addListener(new ChangeListener<String>(){
@@ -127,37 +182,25 @@ public class ManagerFX extends Application {
         return scene;
     }
     
-    final static Scene setCalendarScene(){
+    private Scene setCalendarScene(){
+        hours.clear();
+        hours.addAll("9","10","11","12","13","14","15","16","17","18","19","20");
+        minutes.clear();
+        minutes.addAll("00","15","30","45");
+        
+        
         BorderPane rootCal = new BorderPane();
         rootCal.setStyle("-fx-padding:20");
+        
         Label pageTitle = new Label("Add a Session - Step 1  ");
-        //pageTitle.setTextAlignment(TextAlignment.CENTER);
         pageTitle.setAlignment(Pos.CENTER);
         pageTitle.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         pageTitle.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        //AnchorPane centerContent = new AnchorPane();
-        //centerContent.setPadding(new Insets(25,25,25,25));
         
-        //GridPane rootCalendar = new GridPane();
-        //rootCalendar.setStyle("-fx-padding: 50;");
-        //rootCalendar.setHgap(10.0);
-        //rootCalendar.setVgap(10.0);
-        //rootCalendar.setGridLinesVisible(true);
-        Button nextPage = new Button("Next");
-        
-        
-        
-
-        DatePicker addSessionDatePicker = new DatePicker();
         addSessionDatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         addSessionDatePicker.setId("datepicker");
-        addSessionDatePicker.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event e){
-            String datePicked = addSessionDatePicker.getValue().toString();
-            System.out.println(datePicked);
-            nextPage.setDisable(false);}
-    });
+       
+        
         //Creating the GridPane that contains calendar and time pickers.
         GridPane gridPane = new GridPane();
             ColumnConstraints column1 = new ColumnConstraints();
@@ -170,55 +213,33 @@ public class ManagerFX extends Application {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         
-        
-        //gridPane.setPadding(new Insets(25,25,25,25));
-        
         Label checkInlabel = new Label("Select Date:");
         Button startButton=new Button("Choose start time");
         Button endButton=new Button("Choose end time");
-        
+        Button nextPage=new Button("NEXT");
         //time HBoxes
-        final ObservableList hours = FXCollections.observableArrayList();
-        final ObservableList minutes = FXCollections.observableArrayList();
-        hours.addAll("9","10","11","12","13","14","15","16","17","18","19","20");
-        minutes.addAll("00","15","30","45");
+        
         
         //startTime HBox
         HBox startTime = new HBox();
-        startTime.setAlignment(Pos.CENTER);
-        //startTime.prefWidthProperty().bind(gridPane.widthProperty().divide(3));
-        //startTime.prefHeightProperty().bind(gridPane.heightProperty().divide(5));
-        //startTime.setSpacing(5);
-        //startTime.setPrefSize();
-        final ComboBox startHours = new ComboBox(hours);
-        
-        //startHours.setMinHeight(startTime.getHeight()*2);
-        final ComboBox startMinutes = new ComboBox(minutes);
-        //startMinutes.setMinHeight(startTime.getHeight()*2);
+        startTime.setAlignment(Pos.CENTER);    
+        startHours.getItems().addAll(hours);     
+        final ComboBox startMinutes = new ComboBox(minutes);     
         final Label colon = new Label(":");
-        //colon.setPrefSize(startTime.getWidth()/3,startTime.getHeight());
         startTime.getChildren().addAll(startHours,colon,startMinutes);
         startTime.setVisible(false);
         //--------------------------------------------------
         
         //endTime HBox
         HBox endTime = new HBox();
-        endTime.setAlignment(Pos.CENTER);
-        //endTime.prefWidthProperty().bind(gridPane.widthProperty().divide(3));
-        //endTime.prefHeightProperty().bind(gridPane.heightProperty().divide(5));
-        //endTime.setSpacing(5);
-        //startTime.setPrefSize();
-        final ComboBox endHours = new ComboBox(hours);
-        //startHours.setMinHeight(startTime.getHeight()*2);
+        endTime.setAlignment(Pos.CENTER);    
+        endHours.getItems().clear();
+        endHours.getItems().addAll(hours);
+        
         final ComboBox endMinutes = new ComboBox(minutes);
-        //startMinutes.setMinHeight(startTime.getHeight()*2);
         final Label colon2 = new Label(":");
-        //colon.setPrefSize(startTime.getWidth()/3,startTime.getHeight());
         endTime.getChildren().addAll(endHours,colon2,endMinutes);
         endTime.setVisible(false);
-        //GridPane timePicker = new GridPane();
-        //timePicker.setHgap(10);
-        //timePicker.setVgap(10);
         
         startButton.setOnAction(new EventHandler(){
             @Override
@@ -239,6 +260,11 @@ public class ManagerFX extends Application {
                 endTime.setVisible(true);
             }});
         
+        //Adding cell factories to the Time Pickers
+        startHours.setCellFactory(lv -> new StartHoursCell());
+        endHours.setCellFactory(lv -> new EndHoursCell());
+       
+        
          nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
@@ -249,14 +275,20 @@ public class ManagerFX extends Application {
                 theStage.setScene(mainScene);
             }
         });
+        BooleanBinding dateValid = Bindings.createBooleanBinding(() -> {
+           if  (addSessionDatePicker.getValue()!=null) return true;
+           else return false;
+        },addSessionDatePicker.valueProperty());
+        BooleanBinding startTimeValid = Bindings.createBooleanBinding(() -> {
+           if  ((startHours.getValue()!=null)&&(startMinutes.getValue()!=null)) return true;
+           else return false;
+        },startHours.valueProperty(),endHours.valueProperty());
+        BooleanBinding endTimeValid = Bindings.createBooleanBinding(() -> {
+           if  ((endHours.getValue()!=null)&&(endMinutes.getValue()!=null)) return true;
+           else return false;},endHours.valueProperty(),endMinutes.valueProperty());
+        nextPage.disableProperty().bind((dateValid.and(startTimeValid).and(endTimeValid)).not());
         
         
-        
-      
-        //GridPane.setHalignment(startLabel,HPos.LEFT);
-        //timePicker.add(startLabel,0,0);
-        //timePicker.add(endLabel,1,0);
-        //gridPane.setGridLinesVisible(true);
         gridPane.add(checkInlabel, 1, 0);
         GridPane.setHalignment(checkInlabel, HPos.CENTER);
         gridPane.add(addSessionDatePicker, 1,1);
@@ -269,36 +301,29 @@ public class ManagerFX extends Application {
         GridPane.setHalignment(startButton,HPos.CENTER);
         GridPane.setHalignment(endButton, HPos.CENTER);
         gridPane.setStyle("-fx-background-color: #FFE0B2");
-        //centerContent.getChildren().add(gridPane);
-        //centerContent.setTopAnchor(gridPane,0.0);
-        //centerContent.setLeftAnchor(gridPane,50.0);
+        
        
         rootCal.setAlignment(nextPage, Pos.BOTTOM_RIGHT);
         rootCal.setAlignment(pageTitle, Pos.TOP_CENTER);
-        //rootCal.setAlignment(gridPane,Pos.CENTER);
         rootCal.setTop(pageTitle);
         rootCal.setCenter(gridPane);
         rootCal.setBottom(nextPage);
         rootCal.setMargin(gridPane,new Insets(12,15,12,15));
         rootCal.setMargin(nextPage,new Insets(0,15,12,0));
         rootCal.setStyle("-fx-background-color: #FF9800");
-        //rootCal.setStyle("-fx-background-color:#FFA726");
         
         Scene scene = new Scene(rootCal, 550, 400);
         rootCal.prefWidthProperty().bind(scene.widthProperty());
         rootCal.prefHeightProperty().bind(scene.widthProperty());
         
-        
-        //rootCalendar.add(gridPane, 0, 0, 2, 1);
-        //rootCalendar.add(nextPage,2,5);
        
-        nextPage.setDisable(true);
+        
         
         return scene;
     }
     @Override
     public void start(Stage primaryStage){
-        
+       
         theStage=primaryStage;
         mainScene = setCalendarScene();
         DatePicker dp = (DatePicker) mainScene.lookup("#datepicker");
