@@ -7,6 +7,7 @@ package spherebookingsystem;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.sql.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -34,7 +35,9 @@ import javafx.stage.Stage;
 public class SphereBookingSystem extends Application {
     
     private Stage theStage;
-    
+    private Stage managerStage;
+    private final static Connection conn = connectDB();
+    //------------------------------------------------------------
     /*
     properties used in Welcome Screen
     */
@@ -49,8 +52,21 @@ public class SphereBookingSystem extends Application {
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
     //-------------------------------------------------------------
-    
-    
+    //Method to connect to our DB
+    final static Connection connectDB(){
+         String connectionURL = "jdbc:derby://localhost:1527/SphereDB";
+         String uName = "admin1";
+         String uPass = "admin1";
+         try {             
+                    Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
+                    System.out.println("Connect to database..."); 
+                    return conn;
+            } catch (SQLException ex) {             
+                System.out.println("Connection failed."); 
+                return null;
+            }
+    }
+    //-------------------------------------------------------------
     private Scene makeWelcomeScreen(){
         
         Label welcomeText = new Label();
@@ -80,6 +96,8 @@ public class SphereBookingSystem extends Application {
             
             @Override
             public void handle(ActionEvent event) {
+                String uName=usernameText.getText();
+                String uPass=passwordText.getText();
                 Scene temp = makeSlopeOperatorScreen();
                 theStage.setScene(temp);
             }
@@ -180,18 +198,8 @@ public class SphereBookingSystem extends Application {
     }
     
     private Scene makeManagerScreen() {
-        
-        Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
-        
         VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
-        
-        Scene scene = new Scene(root, 500, 450);
-        
+        Scene scene = new Scene(root, 500, 450); 
         return(scene); 
     }
     
@@ -440,20 +448,13 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
-    private Scene makeAddSessionScreen() {
+    private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
+        ManagerUI mui = new ManagerUI(primaryManagerStage,conn);
+        theStage.hide();
+        primaryManagerStage.setScene(mui.setCalendarScene());
+        primaryManagerStage.show();
         
-        Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
-        
-        VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
-        
-        Scene scene = new Scene(root, 500, 450);
-        
-        return(scene); 
+        //Scene scene = new Scene(root, 500, 450);
     }
     
     @Override
