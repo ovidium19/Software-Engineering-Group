@@ -117,6 +117,15 @@ public class SphereBookingSystem extends Application {
         registerButton.setTextAlignment(TextAlignment.CENTER);
         registerButton.setPadding(new Insets(12,5,20,5));
         
+        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                Scene temp = makeRegisterScreen();
+                theStage.setScene(temp);
+            }
+        });
+        
         Button bookButton = new Button();
         bookButton.setText("Book A Session");
         bookButton.setAlignment(Pos.TOP_CENTER);
@@ -213,14 +222,97 @@ public class SphereBookingSystem extends Application {
     
     private Scene makeRegisterScreen() {
         
-        Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
+        Label TitleText = new Label();
+        TitleText.setText("Customer Registration");
+        TitleText.setAlignment(Pos.TOP_CENTER);
+        TitleText.setTextAlignment(TextAlignment.CENTER);
+        TitleText.setPadding(new Insets(12,5,20,5));
+        
+        Label FirstNameLabel = new Label();
+        FirstNameLabel.setText("First Name:  ");
+        FirstNameLabel.setAlignment(Pos.TOP_CENTER);
+        FirstNameLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        TextField FirstNameText = new TextField();
+        FirstNameText.setAlignment(Pos.TOP_CENTER);
+        
+        HBox FirstNameHBox = new HBox();
+        FirstNameHBox.getChildren().addAll(FirstNameLabel, FirstNameText);
+        FirstNameHBox.setAlignment(Pos.TOP_CENTER);
+        
+        
+        
+        Label LastNameLabel = new Label();
+        LastNameLabel.setText("Last Name:  ");
+        LastNameLabel.setAlignment(Pos.TOP_CENTER);
+        LastNameLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        TextField LastNameText = new TextField();
+        LastNameText.setAlignment(Pos.TOP_CENTER);
+        
+        HBox LastNameHBox = new HBox();
+        LastNameHBox.getChildren().addAll(LastNameLabel, LastNameText);
+        LastNameHBox.setAlignment(Pos.TOP_CENTER);
+        
+        
+        
+        Label EmailLabel = new Label();
+        EmailLabel.setText("Email:           ");
+        EmailLabel.setAlignment(Pos.TOP_CENTER);
+        EmailLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        TextField EmailText = new TextField();
+        EmailText.setAlignment(Pos.TOP_CENTER);
+        
+        HBox EmailHBox = new HBox();
+        EmailHBox.getChildren().addAll(EmailLabel, EmailText);
+        EmailHBox.setAlignment(Pos.TOP_CENTER);
+        
+        
+        
+        Label phoneNoLabel = new Label();
+        phoneNoLabel.setText("Phone Number:   ");
+        phoneNoLabel.setAlignment(Pos.TOP_CENTER);
+        phoneNoLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        TextField phoneNoText = new TextField();
+        phoneNoText.setAlignment(Pos.TOP_CENTER);
+        
+        HBox phoneNoHBox = new HBox();
+        phoneNoHBox.getChildren().addAll(phoneNoLabel, phoneNoText);
+        phoneNoHBox.setAlignment(Pos.TOP_CENTER);
+        
+        Label MemberLabel = new Label();
+        MemberLabel.setText("Membership Type:   ");
+        MemberLabel.setAlignment(Pos.TOP_CENTER);
+        MemberLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        RadioButton MemberButton = new RadioButton();
+        MemberButton.setText("Free Membership   ");
+        MemberButton.setAlignment(Pos.TOP_CENTER);
+        MemberButton.setTextAlignment(TextAlignment.CENTER);
+        
+        RadioButton MemberButton2 = new RadioButton();
+        MemberButton2.setText("Paid Membership   ");
+        MemberButton2.setAlignment(Pos.TOP_CENTER);
+        MemberButton2.setTextAlignment(TextAlignment.CENTER);
+        
+        HBox MemberHBox = new HBox();
+        MemberHBox.getChildren().addAll(MemberLabel, MemberButton, MemberButton2);
+        MemberHBox.setAlignment(Pos.TOP_CENTER);
+        
+        Button ConfirmButton = new Button();
+        ConfirmButton.setText("Confirm");
+        ConfirmButton.setAlignment(Pos.TOP_CENTER);
+        ConfirmButton.setTextAlignment(TextAlignment.CENTER);
+        
+        
         
         VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
+        root.getChildren().addAll(TitleText, FirstNameHBox, LastNameHBox, EmailHBox, phoneNoHBox, MemberHBox, ConfirmButton);
+        root.setPadding(new Insets(50,50,50,50));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(25);
         
         Scene scene = new Scene(root, 500, 450);
         
