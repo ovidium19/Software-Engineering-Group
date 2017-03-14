@@ -61,7 +61,7 @@ public class CustomerRepoImpl implements CustomerRepo {
             try {   
                 Statement st = conn.createStatement();
               
-                String sql = "INSERT INTO CUSTOMERS VALUES ("+ customer.getCustomerID() + " , '"
+                String sql = "INSERT INTO CUSTOMERS VALUES (DEFAULT,'"
                                                             + customer.getFirstName() + "' , '"
                                                             + customer.getLastName() + "' , '"
                                                             + customer.getEmail() + "', '"

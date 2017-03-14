@@ -33,13 +33,8 @@ public class BookingController {
              
              Booking book = new Booking();
                      
-             // Generate a random ID number to assign to new booking object
-             Random rndGenerator = new Random();             
-             int randomNumber = rndGenerator.nextInt(9999);
-             int newBookingID = 1000000 + randomNumber;
-             
+                         
              // Set attributes of the new Booking object
-             book.setBookingID(newBookingID);
              book.setCustomerID(customerID);
              book.setSessionID(sessionID);
              book.setCheckInStatus(false);
