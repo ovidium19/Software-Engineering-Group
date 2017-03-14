@@ -496,7 +496,7 @@ public class SphereBookingSystem extends Application {
                 int theCustomerIDInteger = Integer.parseInt(theCustomerID);
                 int theSessionIDInteger = 123;
             
-                bookingControllerConnection.book(connection, theCustomerIDInteger, theSessionIDInteger);            
+                bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);            
             }
         });
         
