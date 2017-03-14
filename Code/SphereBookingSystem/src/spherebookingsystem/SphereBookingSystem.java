@@ -29,9 +29,16 @@ import javafx.stage.Stage;
  */
 public class SphereBookingSystem extends Application {
     
-    @Override
-    public void start(Stage primaryStage) {
-             
+    private Stage theStage;
+    
+    private TextField firstNameText = new TextField();
+    
+    private PasswordField passwordText = new PasswordField();
+    private TextField usernameText = new TextField();
+    
+    
+    private Scene makeWelcomeScreen(){
+        
         Label welcomeText = new Label();
         welcomeText.setText("Welcome to Sphere Booking & Checking In System");
         welcomeText.setAlignment(Pos.TOP_CENTER);
@@ -41,7 +48,7 @@ public class SphereBookingSystem extends Application {
         Label usernameLabel = new Label();
         usernameLabel.setText("Enter Username...");
         
-        TextField usernameText = new TextField();
+        
         usernameText.setAlignment(Pos.TOP_CENTER);
         usernameText.setPrefSize(250, 30);
         usernameText.setMaxSize(usernameText.getPrefWidth(), usernameText.getPrefHeight());
@@ -49,7 +56,6 @@ public class SphereBookingSystem extends Application {
         Label passwordLabel = new Label();
         passwordLabel.setText("Enter Password...");
         
-        PasswordField passwordText = new PasswordField();
         passwordText.setAlignment(Pos.TOP_CENTER);
         passwordText.setPrefSize(250, 30);
         passwordText.setMaxSize(passwordText.getPrefWidth(), passwordText.getPrefHeight());
@@ -60,7 +66,8 @@ public class SphereBookingSystem extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
+                Scene temp = makeSlopeOperatorScreen();
+                theStage.setScene(temp);
             }
         });
         
@@ -78,9 +85,144 @@ public class SphereBookingSystem extends Application {
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
         
-                
+        Scene scene = new Scene(root,500,450);
         
-        Scene WelcomeScene = new Scene(root, 500, 500);
+        return scene;
+    }
+    
+    private Scene makeSlopeOperatorScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeManagerScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeSkiInstructorScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeRegisterScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeBookingScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeCheckInScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeViewScheduleScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    private Scene makeAddSessionScreen() {
+        
+        Label welcomeText = new Label();
+        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setAlignment(Pos.TOP_CENTER);
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+        welcomeText.setPadding(new Insets(12,5,20,5));
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(welcomeText);
+        
+        Scene scene = new Scene(root, 500, 450);
+        
+        return(scene); 
+    }
+    
+    @Override
+    public void start(Stage primaryStage) {
+        
+        theStage = primaryStage;     
+        Scene WelcomeScene = makeWelcomeScreen();
         
         primaryStage.setTitle("Sphere Booking & Checking In System - Provided by InvoTech");
         primaryStage.setScene(WelcomeScene);
