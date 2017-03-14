@@ -5,6 +5,10 @@
  */
 package spherebookingsystem;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import javafx.application.Application;
@@ -50,6 +54,9 @@ public class SphereBookingSystem extends Application {
     private HBox confirmationInfo = new HBox();
     //-------------------------------------------------------------
     
+    Connection connection;   
+    
+    BookingController bookingControllerConnection = new BookingController();
     
     private Scene makeWelcomeScreen(){
         
@@ -344,6 +351,8 @@ public class SphereBookingSystem extends Application {
             @Override
             public void handle(ActionEvent event) {
                 
+                String theCustomerID = enterCustomerText.getText();
+                System.out.println(theCustomerID);
                 sessionPickerInfo.setVisible(true);                
             }
         });
@@ -470,6 +479,20 @@ public class SphereBookingSystem extends Application {
         Button cancelBookingButton = new Button();
         cancelBookingButton.setText("CANCEL BOOKING");
         
+        confirmBookingButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                String theCustomerID = enterCustomerText.getText();
+            
+                int theCustomerIDInteger = Integer.parseInt(theCustomerID);
+                int theSessionIDInteger = 123;
+            
+                bookingControllerConnection.book(connection, theCustomerIDInteger, theSessionIDInteger);            
+            }
+        });
+        
         HBox finalButtonInfo = new HBox();
         finalButtonInfo.getChildren().addAll(confirmBookingButton, cancelBookingButton);
         finalButtonInfo.setAlignment(Pos.CENTER);
@@ -563,7 +586,36 @@ public class SphereBookingSystem extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+        
+       String connectionURL = "jdbc:derby://localhost:1527/SphereDB";
+       String uName = "admin1";
+       String uPass= "admin1";
+        
+       //ConnectionURL, username and password should be specified in getConnection()       
+       try {             
+            Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
+            System.out.println("Connect to database..."); 
+
+            if (conn != null){ 
+
+                //SlopeOperatorUI slopeOperatorInterface = new SlopeOperatorUI(conn);
+                //slopeOperatorInterface.homeWindowSetup();    
+                        
+                //conn.close();
+                //System.out.println("Connection is closed.");
+                                    
+            } 
+            else {
+                System.out.println("null");  
+            }
+       } 
+       catch (SQLException ex) {
+           
+            System.out.println(ex);         
+       }
+        
+       launch(args);
+        
     }
     
 }
