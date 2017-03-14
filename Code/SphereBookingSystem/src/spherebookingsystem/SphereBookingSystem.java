@@ -157,7 +157,7 @@ public class SphereBookingSystem extends Application {
     private Scene makeBookingScreen() {
         
         Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
+        welcomeText.setText("BOOKING SCREEN");
         welcomeText.setAlignment(Pos.TOP_CENTER);
         welcomeText.setTextAlignment(TextAlignment.CENTER);
         welcomeText.setPadding(new Insets(12,5,20,5));
