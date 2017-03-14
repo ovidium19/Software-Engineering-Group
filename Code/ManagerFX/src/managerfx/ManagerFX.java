@@ -273,25 +273,7 @@ public class ManagerFX extends Application {
         endTime.getChildren().addAll(endHours,colon2,endMinutes);
         endTime.visibleProperty().bind(endLabel.visibleProperty());
         
-        /*startButton.setOnAction(new EventHandler(){
-            @Override
-            public void handle(Event e){
-                if (startTime.isVisible())
-                    startTime.setVisible(false);
-                else
-                    startTime.setVisible(true);
-                       
-            }
-        });
-        //endButton.setOnAction(new EventHandler(){
-            @Override
-            public void handle(Event e){
-                if (endTime.isVisible())
-                        endTime.setVisible(false);
-                else
-                endTime.setVisible(true);
-            }});
-        */
+       
         //Adding cell factories to the Time Pickers
         startHours.setCellFactory(lv -> new StartHoursCell());
         endHours.setCellFactory(lv -> new EndHoursCell());

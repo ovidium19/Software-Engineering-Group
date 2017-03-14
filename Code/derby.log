@@ -12,3 +12,5 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=C:\Student\260CT\Software-Engineering-Group\Code
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Mar 14 12:41:24 GMT 2017: Shutting down Derby engine
