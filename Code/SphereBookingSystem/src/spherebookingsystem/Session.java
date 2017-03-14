@@ -98,10 +98,10 @@ public class Session {
         this.slopeId = slopeId;
     }
     
-    public int getPrice(){
+    public float getPrice(){
         return this.price;
     }
-    public void setPrice(int price){
+    public void setPrice(float price){
         this.price=price;
     }
     public String getDescription(){

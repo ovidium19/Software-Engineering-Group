@@ -23,22 +23,29 @@ public class SessionRepoImpl implements SessionRepo {
     public SessionRepoImpl(ArrayList list){
         sessions=list;
     }
+    
+    @Override
     public ArrayList<Session> getAllSessions(){
         return sessions;
     }
+    
+    @Override
     public Session getSession(Session session){
         Session temp = new Session();
         return sessions.get(session.getId()-1);
     }
+    
     @Override
     public void setSessions(ArrayList list){
         sessions=list;
     }
+    
     @Override
     public void addSession(Session session, Connection conn){
         sessions.add(session);
         write(conn,"add",session);
     }
+    
     @Override
     public Session readSessionByID(Connection conn,int id){
         Session temp = new Session();
@@ -68,6 +75,7 @@ public class SessionRepoImpl implements SessionRepo {
         }
         return temp;
     }
+    
     @Override
     public ArrayList readInstructors(Connection conn){
         System.out.println("Reading instructor names from db...");
@@ -92,6 +100,8 @@ public class SessionRepoImpl implements SessionRepo {
         }
         return list;
     }
+    
+    @Override
     public ArrayList readSlopes(Connection conn){
         System.out.println("Reading slopes names from db...");
         ArrayList list = new ArrayList();
@@ -153,6 +163,7 @@ public class SessionRepoImpl implements SessionRepo {
         return sessions;
     }
 */
+    @Override
     public void write(Connection conn, String str, Session session){
         
         ArrayList list = getAllSessions();
@@ -164,7 +175,8 @@ public class SessionRepoImpl implements SessionRepo {
                 Statement st = conn.createStatement();
               
                 String sql = "INSERT INTO SESSION VALUES (DEFAULT"+", '" + session.getStartTime() + "' , '" + session.getEndTime() + "', '"
-                        +session.getDate()+"', "+ session.getMaxBookings()+", " + session.getSlopeId()+", " + session.getInstructorId()+")";
+                        +session.getDate()+"', "+ session.getMaxBookings()+", " + session.getSlopeId()+", " + session.getInstructorId()+
+                        ", "+session.getPrice()+", '"+session.getDescription()+ "')";
                 System.out.println(sql);
                 st.executeUpdate(sql);
 
