@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -63,6 +64,8 @@ public class ManagerFX extends Application {
     private String startTimePicked, endTimePicked;
     private ComboBox endHours = new ComboBox();
     private ComboBox startHours = new ComboBox();
+    private ComboBox startMinutes = new ComboBox();
+    private ComboBox endMinutes = new ComboBox();
     private ComboBox instructorMenu = new ComboBox();
     private ComboBox slopeMenu = new ComboBox();
     private DatePicker addSessionDatePicker = new DatePicker();
@@ -199,6 +202,27 @@ public class ManagerFX extends Application {
         
         addSessionDatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         addSessionDatePicker.setId("datepicker");
+        //Date Picker cell factory to disable days before today
+        final Callback<DatePicker, DateCell> dayCellFactory = 
+            new Callback<DatePicker, DateCell>() {
+                @Override
+                public DateCell call(final DatePicker datePicker) {
+                    return new DateCell() {
+                        @Override
+                        public void updateItem(LocalDate item, boolean empty) {
+                            super.updateItem(item, empty);
+                           
+                            if (item.isBefore(
+                                    LocalDate.now())
+                                ) {
+                                    setDisable(true);
+                                    setStyle("-fx-background-color: #ffc0cb;");
+                            }   
+                    }
+                };
+            }
+        };
+        addSessionDatePicker.setDayCellFactory(dayCellFactory);
        
         
         //Creating the GridPane that contains calendar and time pickers.
@@ -214,20 +238,28 @@ public class ManagerFX extends Application {
         gridPane.setVgap(10);
         
         Label checkInlabel = new Label("Select Date:");
-        Button startButton=new Button("Choose start time");
-        Button endButton=new Button("Choose end time");
+        Label startLabel=new Label("Choose start time");
+        Label dayConfirmedLabel= new Label();
+        addSessionDatePicker.valueProperty().addListener((obs,o,n)->{
+           dayConfirmedLabel.setText(n.getDayOfWeek().toString()); 
+        });
+        
+        Label endLabel=new Label("Choose end time");
         Button nextPage=new Button("NEXT");
         //time HBoxes
         
         
         //startTime HBox
         HBox startTime = new HBox();
-        startTime.setAlignment(Pos.CENTER);    
-        startHours.getItems().addAll(hours);     
-        final ComboBox startMinutes = new ComboBox(minutes);     
+        startTime.setAlignment(Pos.CENTER);   
+        startHours.getItems().clear();
+        startHours.getItems().addAll(hours);
+        startMinutes.getItems().clear();
+        startMinutes.getItems().addAll(minutes);
         final Label colon = new Label(":");
         startTime.getChildren().addAll(startHours,colon,startMinutes);
-        startTime.setVisible(false);
+        startTime.visibleProperty().bind(startLabel.visibleProperty());
+        
         //--------------------------------------------------
         
         //endTime HBox
@@ -235,13 +267,13 @@ public class ManagerFX extends Application {
         endTime.setAlignment(Pos.CENTER);    
         endHours.getItems().clear();
         endHours.getItems().addAll(hours);
-        
-        final ComboBox endMinutes = new ComboBox(minutes);
+        endMinutes.getItems().clear();
+        endMinutes.getItems().addAll(minutes);
         final Label colon2 = new Label(":");
         endTime.getChildren().addAll(endHours,colon2,endMinutes);
-        endTime.setVisible(false);
+        endTime.visibleProperty().bind(endLabel.visibleProperty());
         
-        startButton.setOnAction(new EventHandler(){
+        /*startButton.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
                 if (startTime.isVisible())
@@ -251,7 +283,7 @@ public class ManagerFX extends Application {
                        
             }
         });
-        endButton.setOnAction(new EventHandler(){
+        //endButton.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
                 if (endTime.isVisible())
@@ -259,13 +291,13 @@ public class ManagerFX extends Application {
                 else
                 endTime.setVisible(true);
             }});
-        
+        */
         //Adding cell factories to the Time Pickers
         startHours.setCellFactory(lv -> new StartHoursCell());
         endHours.setCellFactory(lv -> new EndHoursCell());
        
         
-         nextPage.setOnAction(new EventHandler(){
+        nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
                 dateP = addSessionDatePicker.getValue();
@@ -275,31 +307,35 @@ public class ManagerFX extends Application {
                 theStage.setScene(mainScene);
             }
         });
-        BooleanBinding dateValid = Bindings.createBooleanBinding(() -> {
-           if  (addSessionDatePicker.getValue()!=null) return true;
-           else return false;
-        },addSessionDatePicker.valueProperty());
-        BooleanBinding startTimeValid = Bindings.createBooleanBinding(() -> {
-           if  ((startHours.getValue()!=null)&&(startMinutes.getValue()!=null)) return true;
-           else return false;
-        },startHours.valueProperty(),endHours.valueProperty());
-        BooleanBinding endTimeValid = Bindings.createBooleanBinding(() -> {
-           if  ((endHours.getValue()!=null)&&(endMinutes.getValue()!=null)) return true;
-           else return false;},endHours.valueProperty(),endMinutes.valueProperty());
-        nextPage.disableProperty().bind((dateValid.and(startTimeValid).and(endTimeValid)).not());
         
+        BooleanBinding dateValid = Bindings.createBooleanBinding(() -> 
+            (addSessionDatePicker.getValue()!=null),addSessionDatePicker.valueProperty());
+        BooleanBinding startTimeHoursValid = Bindings.createBooleanBinding(() -> 
+            (startHours.getValue()!=null),startHours.valueProperty());
+        BooleanBinding startTimeMinutesValid=Bindings.createBooleanBinding(()->
+                (startMinutes.getValue()!=null),startMinutes.valueProperty());
+        BooleanBinding endTimeHoursValid = Bindings.createBooleanBinding(() -> 
+            (endHours.getValue()!=null),endHours.valueProperty());
+        BooleanBinding endTimeMinutesValid=Bindings.createBooleanBinding(()->
+                (endMinutes.getValue()!=null),endMinutes.valueProperty());
         
+        nextPage.disableProperty().bind(endTimeHoursValid.and(endTimeMinutesValid).not());
+        startLabel.visibleProperty().bind(dateValid);
+        endLabel.visibleProperty().bind(startTimeHoursValid.and(startTimeMinutesValid));
+        dayConfirmedLabel.visibleProperty().bind(endTimeHoursValid.and(endTimeMinutesValid));
         gridPane.add(checkInlabel, 1, 0);
         GridPane.setHalignment(checkInlabel, HPos.CENTER);
         gridPane.add(addSessionDatePicker, 1,1);
-        gridPane.add(startButton,0,3);
-        gridPane.add(endButton,2,3);
+        gridPane.add(startLabel,0,3);
+        gridPane.add(endLabel,2,3);
         gridPane.add(startTime,0,4);
         gridPane.add(endTime,2,4);
+        gridPane.add(dayConfirmedLabel,1,6);
         GridPane.setHalignment(startTime, HPos.LEFT);
         GridPane.setHalignment(addSessionDatePicker, HPos.CENTER);
-        GridPane.setHalignment(startButton,HPos.CENTER);
-        GridPane.setHalignment(endButton, HPos.CENTER);
+        GridPane.setHalignment(startLabel,HPos.CENTER);
+        GridPane.setHalignment(endLabel, HPos.CENTER);
+        GridPane.setHalignment(dayConfirmedLabel, HPos.CENTER);
         gridPane.setStyle("-fx-background-color: #FFE0B2");
         
        
@@ -315,9 +351,6 @@ public class ManagerFX extends Application {
         Scene scene = new Scene(rootCal, 550, 400);
         rootCal.prefWidthProperty().bind(scene.widthProperty());
         rootCal.prefHeightProperty().bind(scene.widthProperty());
-        
-       
-        
         
         return scene;
     }
