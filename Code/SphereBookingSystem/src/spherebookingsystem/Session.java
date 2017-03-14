@@ -19,7 +19,7 @@ public class Session {
     private int maxBookings;
     private int slopeId;
     private int instructorId;
-    private int price;
+    private float price;
     private String description;
     
     public Session(){
