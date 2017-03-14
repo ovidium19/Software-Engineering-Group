@@ -35,16 +35,20 @@ public class SphereBookingSystem extends Application {
     
     private Stage theStage;
     
-    private TextField firstNameText = new TextField();
-    
+    /*
+    properties used in Welcome Screen
+    */
     private PasswordField passwordText = new PasswordField();
     private TextField usernameText = new TextField();
+    //-------------------------------------------------------------
     
+    private TextField firstNameText = new TextField();
     private Label customerStatusLabel = new Label();
     private VBox sessionPickerInfo = new VBox();
     private DatePicker sessionPicker = new DatePicker();
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
+    //-------------------------------------------------------------
     
     
     private Scene makeWelcomeScreen(){
