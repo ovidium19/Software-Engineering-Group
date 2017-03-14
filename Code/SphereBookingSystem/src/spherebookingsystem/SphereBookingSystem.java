@@ -359,9 +359,9 @@ public class SphereBookingSystem extends Application {
         Label bookingCustomer = new Label();
         bookingCustomer.setText("Booking Customer: " + "CUSTOMER ID HERE");
         Label bookingDate = new Label();
-        bookingDate.setText("Session Date: " + "SESSION DATE HERE");
+        bookingDate.setText("Booking Date: " + "SESSION DATE HERE");
         Label bookingTime = new Label();
-        bookingTime.setText("Session Time: " + "SESSION TIME HERE");
+        bookingTime.setText("Booking Time: " + "SESSION TIME HERE");
         Label bookingPrice = new Label();
         bookingPrice.setText("Booking Price: " + "SESSION PRICE HERE");
         
@@ -376,7 +376,7 @@ public class SphereBookingSystem extends Application {
         
         HBox finalButtonInfo = new HBox();
         finalButtonInfo.getChildren().addAll(confirmBookingButton, cancelBookingButton);
-        finalButtonInfo.setAlignment(Pos.TOP_RIGHT);
+        finalButtonInfo.setAlignment(Pos.CENTER);
         
         confirmationInfo.getChildren().addAll(confirmationDetailsInfo, finalButtonInfo);
         confirmationInfo.setAlignment(Pos.TOP_CENTER);
