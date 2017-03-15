@@ -199,11 +199,10 @@ public class SessionRepoImpl implements SessionRepo {
         try {   
                 Statement st = conn.createStatement();
                 
-                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  InstructorID IS NOT NULL";
+                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "'"; // AND  InstructorID IS NOT NULL";
                 System.out.println(sql);
                 sessionsForThisDay = st.executeQuery(sql);
 
-                st.close();
         }
         catch (SQLException ex) {
                     System.out.println(ex);

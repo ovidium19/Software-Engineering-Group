@@ -8,6 +8,7 @@ package spherebookingsystem;
 import java.util.ArrayList;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 import javafx.scene.control.Toggle;
 
 /**
@@ -73,19 +74,20 @@ public class SessionController {
         SessionRepo.setSessions(sessions);
     }
     
-    public ArrayList checkDate(Connection conn, LocalDate date, String sessionType) throws SQLException {
+    public List checkDate(Connection conn, LocalDate date, String sessionType) throws SQLException {
         
-            ArrayList sessions = new ArrayList();
+            
+            List<String> sessions = new ArrayList<String>();
         
             ResultSet sessionsResults = SessionRepo.checkDate(conn, date, sessionType);
-            
+                        
             while (sessionsResults.next()) {
                 
                     String startTime = sessionsResults.getString("STARTTIME");
                     String endTime = sessionsResults.getString("ENDTIME");
         
                     String overallTime = startTime + " - " + endTime;
-                             
+                    System.out.println(overallTime);
                     sessions.add(overallTime);
             }
             

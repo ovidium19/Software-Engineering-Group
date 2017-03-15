@@ -13,11 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -67,7 +69,8 @@ public class SphereBookingSystem extends Application {
     private DatePicker sessionPicker = new DatePicker();
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
-    private ArrayList sessionsListContent = new ArrayList();
+    private List sessionsListContent = new ArrayList();
+    ComboBox sessionsDropDown = new ComboBox();
 
     private RadioButton selectedToggle = new RadioButton();
 
@@ -510,12 +513,18 @@ public class SphereBookingSystem extends Application {
                 String theSessionType = selectedToggle.getText();
                         
                 try {
-                    ArrayList sessionsListContent = sessionControllerConnection.checkDate(conn, theDate, theSessionType);
+                    sessionsListContent = sessionControllerConnection.checkDate(conn, theDate, theSessionType);
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                
+                Object[] sessionsArray = sessionsListContent.toArray();
+        
+                for(int i = 0; i < sessionsListContent.size(); i++) {
+            
+                    sessionsDropDown.getItems().addAll(sessionsArray[i]);
+                }
+                sessionsDropDown.getItems().addAll("1","2","3");
                 availableSessionsInfo.setVisible(true);                
             }
         });
@@ -541,8 +550,10 @@ public class SphereBookingSystem extends Application {
         availableSessionsLabel.setAlignment(Pos.TOP_CENTER);
         availableSessionsLabel.setTextAlignment(TextAlignment.CENTER);
         
-        ComboBox sessionsDropDown = new ComboBox();
         
+        
+        
+                
         Button submitChosenSessionButton = new Button();
         submitChosenSessionButton.setText("Submit");
         
