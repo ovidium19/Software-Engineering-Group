@@ -524,7 +524,6 @@ public class SphereBookingSystem extends Application {
             
                     sessionsDropDown.getItems().addAll(sessionsArray[i]);
                 }
-                sessionsDropDown.getItems().addAll("1","2","3");
                 availableSessionsInfo.setVisible(true);                
             }
         });

@@ -196,17 +196,38 @@ public class SessionRepoImpl implements SessionRepo {
         
         System.out.println("Reading from database...");
         
-        try {   
+        if(sessionType == "With Instructor ") {
+        // If they ask for an instructor, run the SQL command with Instructor ID NOT NULL
+        
+            try {   
                 Statement st = conn.createStatement();
                 
-                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "'"; // AND  InstructorID IS NOT NULL";
+                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  InstructorID IS NOT NULL";
                 System.out.println(sql);
                 sessionsForThisDay = st.executeQuery(sql);
 
-        }
-        catch (SQLException ex) {
+            }
+            catch (SQLException ex) {
                     System.out.println(ex);
-        } 
+            } 
+            
+        }
+        else {
+        // Otherwise, they don't want an instructor, so the SQL command has InstructorID IS NULL
+            
+           try {   
+                Statement st = conn.createStatement();
+                
+                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  InstructorID IS NULL";
+                System.out.println(sql);
+                sessionsForThisDay = st.executeQuery(sql);
+
+            }
+            catch (SQLException ex) {
+                    System.out.println(ex);
+            } 
+        }
+        
         
         return(sessionsForThisDay);
     }
