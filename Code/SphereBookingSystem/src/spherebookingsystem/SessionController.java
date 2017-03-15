@@ -8,6 +8,7 @@ package spherebookingsystem;
 import java.util.ArrayList;
 import java.sql.*;
 import java.time.LocalDate;
+import javafx.scene.control.Toggle;
 
 /**
  *
@@ -70,6 +71,11 @@ public class SessionController {
     }
     public void setSessionList(ArrayList sessions){
         SessionRepo.setSessions(sessions);
+    }
+    
+    public void checkDate(Connection conn, LocalDate date, Toggle toggle) {
+        
+        
     }
     
 }

@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.*;
+import java.time.LocalDate;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -26,6 +29,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -43,6 +48,8 @@ public class SphereBookingSystem extends Application {
     private Stage managerStage;
     private final static Connection conn = connectDB();
     private BookingController bookingControllerConnection = new BookingController();
+    private CustomerController customerControllerConnection = new CustomerController();
+    private SessionController sessionControllerConnection = new SessionController();
     private static LoginRepoImpl loginRepoImpl = new LoginRepoImpl();
     //------------------------------------------------------------
     /*
@@ -376,8 +383,18 @@ public class SphereBookingSystem extends Application {
             public void handle(ActionEvent event) {
                 
                 String theCustomerID = enterCustomerText.getText();
-                System.out.println(theCustomerID);
-                sessionPickerInfo.setVisible(true);                
+                
+                boolean isACustomer = customerControllerConnection.checkCustomerID(conn, theCustomerID);
+            
+                if(isACustomer==true) {
+                    
+                    customerStatusLabel.setText("Customer is Registered. Continue with Booking.");
+                    sessionPickerInfo.setVisible(true);
+                }
+                else {
+                    
+                    customerStatusLabel.setText("Customer is not Registered. Unable to complete Booking.");
+                }
             }
         });
         
@@ -385,7 +402,7 @@ public class SphereBookingSystem extends Application {
         checkCustomerInfo.getChildren().addAll(enterCustomerLabel, enterCustomerText, checkCustomerButton);
         checkCustomerInfo.setAlignment(Pos.TOP_CENTER);
 
-        customerStatusLabel.setText("Check that the Customer is Registered...");
+        customerStatusLabel.setText("Check that the Customer is Registered");
         
         HBox customerStatusInfo = new HBox();
         customerStatusInfo.getChildren().add(customerStatusLabel);
@@ -408,15 +425,30 @@ public class SphereBookingSystem extends Application {
         sessionTypeLabel.setAlignment(Pos.TOP_CENTER);
         sessionTypeLabel.setTextAlignment(TextAlignment.CENTER);
         
+        ToggleGroup sessionTypeToggle = new ToggleGroup();
+        
         RadioButton withInstructorRadioButton = new RadioButton();
         withInstructorRadioButton.setText("With Instructor ");
         withInstructorRadioButton.setAlignment(Pos.TOP_CENTER);
         withInstructorRadioButton.setTextAlignment(TextAlignment.CENTER);
+        withInstructorRadioButton.setToggleGroup(sessionTypeToggle);
         
         RadioButton withoutInstructorRadioButton = new RadioButton();
         withoutInstructorRadioButton.setText("Without Instructor ");
         withoutInstructorRadioButton.setAlignment(Pos.TOP_CENTER);
         withoutInstructorRadioButton.setTextAlignment(TextAlignment.CENTER);
+        withoutInstructorRadioButton.setToggleGroup(sessionTypeToggle);
+        
+        sessionTypeToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
+
+                RadioButton chk = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
+                System.out.println("Selected Radio Button - "+chk.getText());
+
+            }
+        });
+        
         
         HBox datePickerInfo = new HBox();
         datePickerInfo.getChildren().add(sessionPicker);
@@ -435,6 +467,10 @@ public class SphereBookingSystem extends Application {
             @Override
             public void handle(ActionEvent event) {
                 
+                LocalDate theDate = sessionPicker.getValue();
+                Toggle theSessionType = sessionTypeToggle.getSelectedToggle();
+                        
+                sessionControllerConnection.checkDate(conn, theDate, theSessionType);
                 availableSessionsInfo.setVisible(true);                
             }
         });
@@ -513,6 +549,7 @@ public class SphereBookingSystem extends Application {
                 int theCustomerIDInteger = Integer.parseInt(theCustomerID);
                 int theSessionIDInteger = 123;
             
+                // Send entered info to controller to run function for book()
                 bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);            
             }
         });
