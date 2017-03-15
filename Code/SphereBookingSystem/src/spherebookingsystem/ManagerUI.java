@@ -55,8 +55,7 @@ public class ManagerUI {
     private static SessionController sess = new SessionController();   
     private static Scene mainScene;    
     private static Stage theStage;
-    private LocalDate dateP;
-    private String startTimePicked, endTimePicked;
+    private Session tempSession; 
     private ComboBox endHours = new ComboBox();
     private ComboBox startHours = new ComboBox();
     private ComboBox startMinutes = new ComboBox();
@@ -70,6 +69,7 @@ public class ManagerUI {
     public ManagerUI(Stage primaryStage, Connection con){
         theStage=primaryStage;
         conn=con;
+        tempSession=new Session();
     }
     private class StartHoursCell extends ListCell<String> {
             StartHoursCell() {
@@ -120,7 +120,7 @@ public class ManagerUI {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-padding: 20");
         //TOP
-        Label dateAndTimePicked = new Label(dateP.toString()+" "+startTimePicked+"-"+endTimePicked);
+        Label dateAndTimePicked = new Label(tempSession.getDate().toString()+" "+tempSession.getStartTime()+"-"+tempSession.getEndTime());
         root.setTop(dateAndTimePicked);
         BorderPane.setAlignment(dateAndTimePicked, Pos.TOP_CENTER);
         
@@ -146,8 +146,40 @@ public class ManagerUI {
         description.setPromptText("Enter text here...");
         description.setPrefRowCount(5);
         description.setWrapText(true);
-        //Label result =new Label("");
-        //result.setId("resultLabel");
+        
+        Label priceEnter = new Label("Price");
+        TextField priceText = new TextField();
+        priceText.setPromptText("xxx.xx");
+        priceText.setPrefWidth(60);
+        priceText.setMaxWidth(60);
+        priceText.textProperty().addListener((obs,o,n)->{
+            try{
+                Float a = Float.parseFloat(n);
+                if (a<=0){
+                    priceText.setText("");
+                }
+            }
+            catch (NumberFormatException ex){
+                priceText.setText("");
+            }
+        });
+        
+        Label setMaxBookings = new Label ("Max Bookings: ");
+        TextField bookingText = new TextField();
+        bookingText.setPromptText("xx");
+        bookingText.setPrefWidth(60);
+        bookingText.setMaxWidth(60);
+        bookingText.textProperty().addListener((obs,o,n)->{
+            try{
+                int a = Integer.parseInt(n);
+                if (a<=0){
+                    bookingText.setText("");
+                }
+            }
+            catch (NumberFormatException ex){
+                bookingText.setText("");
+            }
+        });
         
         
         slopeMenu.getItems().addAll(availSlopes);
@@ -160,11 +192,30 @@ public class ManagerUI {
         gridPane.add(instructorMenu,1,0);
         gridPane.add(slopes,0,1);
         gridPane.add(slopeMenu,1,1);
-        gridPane.add(sessDescription,0,3,2,1);
-        gridPane.add(description,0,4,2,2);
+        gridPane.add(priceEnter,0,2);
+        gridPane.add(priceText,1,2);
+        gridPane.add(setMaxBookings,0,3);
+        gridPane.add(bookingText,1,3);
+        gridPane.add(sessDescription,0,5,2,1);
+        gridPane.add(description,0,6,2,2);
         
+        //BOTTOM
+        Button nextPage = new Button("NEXT");
+        /*nextPage.setOnAction(new EventHandler(){
+            @Override
+            public void handle(Event e){
+                tempSession.setInstructorId(addSessionDatePicker.getValue());
+                tempSession.setStartTime(startHours.getValue().toString()+":"+startMinutes.getValue().toString()+":00");
+                tempSession.setEndTime(endHours.getValue().toString()+":"+endMinutes.getValue().toString()+":00"); 
+                mainScene=setDetailsScene();
+                theStage.setScene(mainScene);
+            }
+        });*/
         
         root.setCenter(gridPane);
+        root.setBottom(nextPage);
+        root.setMargin(nextPage,new Insets(0,15,12,0));
+        BorderPane.setAlignment(nextPage, Pos.BOTTOM_RIGHT);
         Scene scene=new Scene(root,550,400);
         return scene;
     }
@@ -265,9 +316,9 @@ public class ManagerUI {
         nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
-                dateP = addSessionDatePicker.getValue();
-                startTimePicked = startHours.getValue().toString()+":"+startMinutes.getValue().toString()+":00";
-                endTimePicked = endHours.getValue().toString()+":"+endMinutes.getValue().toString()+":00";
+                tempSession.setDate(addSessionDatePicker.getValue());
+                tempSession.setStartTime(startHours.getValue().toString()+":"+startMinutes.getValue().toString()+":00");
+                tempSession.setEndTime(endHours.getValue().toString()+":"+endMinutes.getValue().toString()+":00"); 
                 mainScene=setDetailsScene();
                 theStage.setScene(mainScene);
             }
