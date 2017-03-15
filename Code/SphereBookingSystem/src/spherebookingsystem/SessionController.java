@@ -73,9 +73,10 @@ public class SessionController {
         SessionRepo.setSessions(sessions);
     }
     
-    public void checkDate(Connection conn, LocalDate date, Toggle toggle) {
+    public void checkDate(Connection conn, LocalDate date, String sessionType) {
         
         
+            SessionRepo.checkDate(conn, date, sessionType);
     }
     
 }

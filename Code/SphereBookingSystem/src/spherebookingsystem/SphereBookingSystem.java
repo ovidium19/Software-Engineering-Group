@@ -65,6 +65,7 @@ public class SphereBookingSystem extends Application {
     private DatePicker sessionPicker = new DatePicker();
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
+    private RadioButton selectedToggle = new RadioButton();
     //-------------------------------------------------------------
     //Method to connect to our DB
     final static Connection connectDB(){
@@ -443,9 +444,8 @@ public class SphereBookingSystem extends Application {
             @Override
             public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
 
-                RadioButton chk = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
-                System.out.println("Selected Radio Button - "+chk.getText());
-
+                RadioButton selectedToggle = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
+                
             }
         });
         
@@ -468,7 +468,7 @@ public class SphereBookingSystem extends Application {
             public void handle(ActionEvent event) {
                 
                 LocalDate theDate = sessionPicker.getValue();
-                Toggle theSessionType = sessionTypeToggle.getSelectedToggle();
+                String theSessionType = selectedToggle.getText();
                         
                 sessionControllerConnection.checkDate(conn, theDate, theSessionType);
                 availableSessionsInfo.setVisible(true);                
