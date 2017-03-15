@@ -29,6 +29,12 @@ public class Login {
         password=uPass;
         usertype=uType;
     }
+    public Login(String uName,String uPass){
+        username=uName;
+        password=uPass;
+        loginid=-1;
+        usertype=null;
+    }
 
     public void setLoginid(int loginid) {
         this.loginid = loginid;

@@ -30,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -42,6 +43,7 @@ public class SphereBookingSystem extends Application {
     private Stage managerStage;
     private final static Connection conn = connectDB();
     private BookingController bookingControllerConnection = new BookingController();
+    private static LoginRepoImpl loginRepoImpl = new LoginRepoImpl();
     //------------------------------------------------------------
     /*
     properties used in Welcome Screen
@@ -96,6 +98,8 @@ public class SphereBookingSystem extends Application {
         passwordText.setPrefSize(250, 30);
         passwordText.setMaxSize(passwordText.getPrefWidth(), passwordText.getPrefHeight());
         
+        Label errorMessage = new Label("Username or password incorrect. Try again!");
+        errorMessage.setVisible(false);
         Button submitButton = new Button();
         submitButton.setText("Submit");
         submitButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -104,8 +108,21 @@ public class SphereBookingSystem extends Application {
             public void handle(ActionEvent event) {
                 String uName=usernameText.getText();
                 String uPass=passwordText.getText();
-                Scene temp = makeSlopeOperatorScreen();
-                theStage.setScene(temp);
+                Login tempLogin=loginRepoImpl.read(conn, new Login(uName,uPass));
+                if (tempLogin.getLoginid()==-1){
+                    System.out.println("no login");
+                    errorMessage.setVisible(true);
+                    passwordText.setText("");
+                    usernameText.setText("");
+                }
+                else if (tempLogin.getUsertype().equals("slopeoperator")){
+                    Scene temp=makeSlopeOperatorScreen();
+                    theStage.setScene(temp);
+                    
+                }
+                else if (tempLogin.getUsertype().equals("manager")){
+                    makeAddSessionScreen(theStage, conn);
+                }  
             }
         });
         
@@ -118,7 +135,7 @@ public class SphereBookingSystem extends Application {
         passwordInfo.setAlignment(Pos.TOP_CENTER);
         
         VBox root = new VBox();
-        root.getChildren().addAll(welcomeText, userInfo, passwordInfo, submitButton);
+        root.getChildren().addAll(welcomeText, userInfo, passwordInfo, submitButton,errorMessage);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -564,8 +581,9 @@ public class SphereBookingSystem extends Application {
     
     private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
         ManagerUI mui = new ManagerUI(primaryManagerStage,conn);
-        theStage.hide();
+        
         primaryManagerStage.setScene(mui.setCalendarScene());
+        //primaryManagerStage.initModality(Modality.APPLICATION_MODAL);
         primaryManagerStage.show();
         
         //Scene scene = new Scene(root, 500, 450);

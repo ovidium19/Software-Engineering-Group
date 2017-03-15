@@ -50,8 +50,9 @@ public class LoginRepoImpl implements LoginRepo {
        try{
            
        Statement st=conn.createStatement();
-       String query="Select * from Login where username='"+temp.getUsername()+"' and password='"+
-                    temp.getPassword()+"';";
+       String query="Select * from Logins where username='"+temp.getUsername()+"' and password='"+
+                    temp.getPassword()+"'";
+       System.out.println(query);
        ResultSet rs=null;
        rs=st.executeQuery(query);
        login=new Login();
