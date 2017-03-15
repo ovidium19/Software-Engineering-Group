@@ -63,6 +63,7 @@ public class SphereBookingSystem extends Application {
     private TextField usernameText = new TextField();
     //-------------------------------------------------------------
     
+    //Global attributes used in Booking a Session (Genaro)
     private TextField firstNameText = new TextField();
     private Label customerStatusLabel = new Label();
     private VBox sessionPickerInfo = new VBox();
@@ -70,10 +71,12 @@ public class SphereBookingSystem extends Application {
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
     private List sessionsListContent = new ArrayList();
-    ComboBox sessionsDropDown = new ComboBox();
-
+    private ComboBox sessionsDropDown = new ComboBox();
+    private String theTimeSlot = new String();
     private RadioButton selectedToggle = new RadioButton();
-
+    private TextField enterCustomerText = new TextField();
+    
+    //-------------------------------------------------------------
     private RadioButton chk = new RadioButton();
 
     //-------------------------------------------------------------
@@ -412,7 +415,7 @@ public class SphereBookingSystem extends Application {
         enterCustomerLabel.setAlignment(Pos.TOP_CENTER);
         enterCustomerLabel.setTextAlignment(TextAlignment.CENTER);
         
-        TextField enterCustomerText = new TextField();
+        enterCustomerText = new TextField();
         enterCustomerText.setAlignment(Pos.TOP_CENTER);     
         
         Button checkCustomerButton = new Button();
@@ -545,14 +548,10 @@ public class SphereBookingSystem extends Application {
         sessionPickerInfo.setVisible(false);
         
         Label availableSessionsLabel = new Label();
-        availableSessionsLabel.setText("Avaiable Sessions: ");
+        availableSessionsLabel.setText("Available Sessions: ");
         availableSessionsLabel.setAlignment(Pos.TOP_CENTER);
         availableSessionsLabel.setTextAlignment(TextAlignment.CENTER);
-        
-        
-        
-        
-                
+              
         Button submitChosenSessionButton = new Button();
         submitChosenSessionButton.setText("Submit");
         
@@ -560,6 +559,8 @@ public class SphereBookingSystem extends Application {
             
             @Override
             public void handle(ActionEvent event) {
+                
+                theTimeSlot = sessionsDropDown.getValue().toString(); 
                 
                 confirmationInfo.setVisible(true);                
             }
@@ -575,20 +576,7 @@ public class SphereBookingSystem extends Application {
                                        "-fx-border-radius: 5;" + 
                                        "-fx-border-color: blue;");
         availableSessionsInfo.setVisible(false);
-        
-        Label bookingCustomer = new Label();
-        bookingCustomer.setText("Booking Customer: " + "CUSTOMER ID HERE");
-        Label bookingDate = new Label();
-        bookingDate.setText("Booking Date: " + "SESSION DATE HERE");
-        Label bookingTime = new Label();
-        bookingTime.setText("Booking Time: " + "SESSION TIME HERE");
-        Label bookingPrice = new Label();
-        bookingPrice.setText("Booking Price: " + "SESSION PRICE HERE");
-        
-        VBox confirmationDetailsInfo = new VBox();
-        confirmationDetailsInfo.getChildren().addAll(bookingCustomer, bookingDate, bookingTime, bookingPrice);
-        confirmationDetailsInfo.setAlignment(Pos.TOP_LEFT);
-        
+                
         Button confirmBookingButton = new Button();
         confirmBookingButton.setText("CONFIRM BOOKING");
         Button cancelBookingButton = new Button();
@@ -610,10 +598,10 @@ public class SphereBookingSystem extends Application {
         });
         
         HBox finalButtonInfo = new HBox();
-        finalButtonInfo.getChildren().addAll(confirmBookingButton, cancelBookingButton);
+        finalButtonInfo.getChildren().addAll(confirmBookingButton);
         finalButtonInfo.setAlignment(Pos.CENTER);
         
-        confirmationInfo.getChildren().addAll(confirmationDetailsInfo, finalButtonInfo);
+        confirmationInfo.getChildren().addAll(finalButtonInfo);
         confirmationInfo.setAlignment(Pos.TOP_CENTER);
         confirmationInfo.setSpacing(25);
         confirmationInfo.setStyle("-fx-padding: 10;" + 
