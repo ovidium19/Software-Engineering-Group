@@ -42,14 +42,14 @@ public class CustomerController {
             return(isACustomer);
         }
               
-        public void register(Connection connection, String firstName, String lastName, String Email, String phoneNo){
+        public void register(Connection connection, String firstName, String lastName, String Email, String phoneNo, String Membership){
              
              Customer customer = new Customer();
-             customer.setCustomerID(123);
              customer.setFirstName(firstName);
              customer.setLastName(lastName);
              customer.setEmail(Email);
              customer.setTelephoneNo(phoneNo);
+             customer.setMembership(Membership);
              
              CustomerRepo.write(connection, "add", customer);
              

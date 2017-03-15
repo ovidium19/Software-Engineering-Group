@@ -65,7 +65,11 @@ public class SphereBookingSystem extends Application {
     private DatePicker sessionPicker = new DatePicker();
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
+<<<<<<< HEAD
     private RadioButton selectedToggle = new RadioButton();
+=======
+    private RadioButton chk = new RadioButton();
+>>>>>>> origin/master
     //-------------------------------------------------------------
     //Method to connect to our DB
     final static Connection connectDB(){
@@ -326,15 +330,31 @@ public class SphereBookingSystem extends Application {
         MemberLabel.setAlignment(Pos.TOP_CENTER);
         MemberLabel.setTextAlignment(TextAlignment.CENTER);
         
+        ToggleGroup MemToggle = new ToggleGroup();
+        
         RadioButton MemberButton = new RadioButton();
         MemberButton.setText("Free Membership   ");
         MemberButton.setAlignment(Pos.TOP_CENTER);
         MemberButton.setTextAlignment(TextAlignment.CENTER);
         
+        MemberButton.setToggleGroup(MemToggle);
+        
         RadioButton MemberButton2 = new RadioButton();
         MemberButton2.setText("Paid Membership   ");
         MemberButton2.setAlignment(Pos.TOP_CENTER);
         MemberButton2.setTextAlignment(TextAlignment.CENTER);
+        
+        MemberButton2.setToggleGroup(MemToggle);
+        
+         MemToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
+
+                chk = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
+                
+
+            }
+        });
         
         HBox MemberHBox = new HBox();
         MemberHBox.getChildren().addAll(MemberLabel, MemberButton, MemberButton2);
@@ -345,6 +365,22 @@ public class SphereBookingSystem extends Application {
         ConfirmButton.setAlignment(Pos.TOP_CENTER);
         ConfirmButton.setTextAlignment(TextAlignment.CENTER);
         
+        ConfirmButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                String theFirstName = FirstNameText.getText();
+                String theLastName = LastNameText.getText();
+                String theEmail = EmailText.getText();
+                String thePhoneNo = phoneNoText.getText();
+                String theMembership = chk.getText();
+                        
+                        
+                customerControllerConnection.register(conn, theFirstName, theLastName, theEmail, thePhoneNo, theMembership);
+            
+            }
+        });
         
         
         VBox root = new VBox();
