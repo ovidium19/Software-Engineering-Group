@@ -16,6 +16,7 @@ import java.time.LocalDate;
  */
 public class SessionRepoImpl implements SessionRepo {
     private ArrayList<Session> sessions;
+    private ResultSet sessionsForThisDay;
     
     public SessionRepoImpl(){
         sessions = new ArrayList<Session>();
@@ -188,5 +189,26 @@ public class SessionRepoImpl implements SessionRepo {
         
         }
          
-    }    
+    }
+
+    public ResultSet checkDate(Connection conn, LocalDate date, String sessionType) {
+               
+        
+        System.out.println("Reading from database...");
+        
+        try {   
+                Statement st = conn.createStatement();
+                
+                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  InstructorID IS NOT NULL";
+                System.out.println(sql);
+                sessionsForThisDay = st.executeQuery(sql);
+
+                st.close();
+        }
+        catch (SQLException ex) {
+                    System.out.println(ex);
+        } 
+        
+        return(sessionsForThisDay);
+    }
 }  

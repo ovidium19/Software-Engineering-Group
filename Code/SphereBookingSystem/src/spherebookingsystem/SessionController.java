@@ -73,10 +73,23 @@ public class SessionController {
         SessionRepo.setSessions(sessions);
     }
     
-    public void checkDate(Connection conn, LocalDate date, String sessionType) {
+    public ArrayList checkDate(Connection conn, LocalDate date, String sessionType) throws SQLException {
         
+            ArrayList sessions = new ArrayList();
         
-            SessionRepo.checkDate(conn, date, sessionType);
+            ResultSet sessionsResults = SessionRepo.checkDate(conn, date, sessionType);
+            
+            while (sessionsResults.next()) {
+                
+                    String startTime = sessionsResults.getString("STARTTIME");
+                    String endTime = sessionsResults.getString("ENDTIME");
+        
+                    String overallTime = startTime + " - " + endTime;
+                             
+                    sessions.add(overallTime);
+            }
+            
+            return(sessions);
     }
     
 }

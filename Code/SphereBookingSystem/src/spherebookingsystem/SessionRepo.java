@@ -6,6 +6,7 @@
 package spherebookingsystem;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -21,4 +22,5 @@ public interface SessionRepo {
     public Session readSessionByID(Connection con,int id);
     public ArrayList readInstructors(Connection con);
     public ArrayList readSlopes(Connection con);
+    public ResultSet checkDate(Connection con, LocalDate date, String sessionType);
 }

@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -65,11 +67,12 @@ public class SphereBookingSystem extends Application {
     private DatePicker sessionPicker = new DatePicker();
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
-<<<<<<< HEAD
+    private ArrayList sessionsListContent = new ArrayList();
+
     private RadioButton selectedToggle = new RadioButton();
-=======
+
     private RadioButton chk = new RadioButton();
->>>>>>> origin/master
+
     //-------------------------------------------------------------
     //Method to connect to our DB
     final static Connection connectDB(){
@@ -480,7 +483,7 @@ public class SphereBookingSystem extends Application {
             @Override
             public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
 
-                RadioButton selectedToggle = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
+                selectedToggle = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
                 
             }
         });
@@ -506,7 +509,13 @@ public class SphereBookingSystem extends Application {
                 LocalDate theDate = sessionPicker.getValue();
                 String theSessionType = selectedToggle.getText();
                         
-                sessionControllerConnection.checkDate(conn, theDate, theSessionType);
+                try {
+                    ArrayList sessionsListContent = sessionControllerConnection.checkDate(conn, theDate, theSessionType);
+                } catch (SQLException ex) {
+                    Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
                 availableSessionsInfo.setVisible(true);                
             }
         });
