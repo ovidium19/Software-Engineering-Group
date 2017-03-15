@@ -84,9 +84,9 @@ public class BookingRepoImpl implements BookingRepo {
             try {   
                 Statement st = conn.createStatement();
               
-                String sql = "INSERT INTO BOOKINGS VALUES (DEFAULT, '"
-                                                            + booking.getCustomerID() + "' , '"
-                                                            + booking.getSessionID() + "', '"
+                String sql = "INSERT INTO BOOKINGS VALUES (DEFAULT, "
+                                                            + booking.getCustomerID() + " , "
+                                                            + booking.getSessionID() + " , '"
                                                             + booking.getCheckInStatus() + "')";
                 System.out.println(sql);
                 st.executeUpdate(sql);
