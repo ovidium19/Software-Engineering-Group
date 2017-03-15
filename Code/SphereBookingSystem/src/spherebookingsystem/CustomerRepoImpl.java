@@ -62,7 +62,8 @@ public class CustomerRepoImpl implements CustomerRepo {
                                                             + customer.getFirstName() + "' , '"
                                                             + customer.getLastName() + "' , '"
                                                             + customer.getEmail() + "', '"
-                                                            + customer.getTelephoneNo() + "')";
+                                                            + customer.getTelephoneNo() + "', '"
+                                                            + customer.getMembership() + "')";
                 System.out.println(sql);
                 st.executeUpdate(sql);
 

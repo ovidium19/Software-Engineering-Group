@@ -23,6 +23,7 @@ public class Customer {
 	public String LastName;
 	public String Email;
 	public String TelephoneNo;
+        public String Membership;
                
         public void setCustomerID(int aCustomerID) {
 	
@@ -49,6 +50,10 @@ public class Customer {
             TelephoneNo = aPhoneNo;
 	}
 
+        public void setMembership(String aMembership) {
+            
+            Membership = aMembership;
+        }
         
 	public int getCustomerID() {
 	
@@ -74,4 +79,9 @@ public class Customer {
 	
             return(TelephoneNo);
 	}
+        
+        public String getMembership() {
+            
+            return(Membership);
+        }
 }
