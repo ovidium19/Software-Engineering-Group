@@ -27,6 +27,10 @@ public class BookingController {
     
         BookingRepoImpl BookingRepo = new BookingRepoImpl();
         
+        
+        // Function that takes in a customer id and session id
+        // Creates a new instance of Booking() with the new attributes
+        // Passes the object to the booking repo to write this to the database table
         public Booking book(Connection connection, int customerID, int sessionID){
              
              Booking book = new Booking();   
@@ -36,6 +40,7 @@ public class BookingController {
              book.setSessionID(sessionID);
              book.setCheckInStatus(false);
              
+             // Perform write in booking repo to add a new record
              BookingRepo.write(connection, "add", book);
              
              return(book);

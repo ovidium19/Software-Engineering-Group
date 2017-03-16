@@ -74,20 +74,26 @@ public class SessionController {
         SessionRepo.setSessions(sessions);
     }
     
+    // Function that takes in a date and session type
+    // Calls the session repo to retieve a resultset from the SQL database table
+    // Returns a list of strings for all sessions that match the entered date and session type
     public List checkDate(Connection conn, LocalDate date, String sessionType) throws SQLException {
-        
-            
+                    
             List<String> sessions = new ArrayList<String>();
         
             ResultSet sessionsResults = SessionRepo.checkDate(conn, date, sessionType);
                         
             while (sessionsResults.next()) {
-                
+            // While there is a next record on the resultset, add it to the array of timeslots
+            
+                    int sessionID = sessionsResults.getInt("ID");
+                    Integer.toString(sessionID);
+                    
                     String startTime = sessionsResults.getString("STARTTIME");
                     String endTime = sessionsResults.getString("ENDTIME");
                     String price = sessionsResults.getString("PRICE");
                     
-                    String overallTime = startTime + " - " + endTime + " (£" + price + ")";
+                    String overallTime = sessionID + ": " + startTime + " - " + endTime + " (£" + price + ")";
                     System.out.println(overallTime);
                     sessions.add(overallTime);
             }

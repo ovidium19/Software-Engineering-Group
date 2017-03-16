@@ -44,10 +44,13 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Genaro
+ * @author Genaro Bedenko
  */
 public class SphereBookingSystem extends Application {
     
+    //-------------------------------------------------------------
+    
+    // Global attributes used in everyone's functionality (Shared)
     private Stage theStage;
     private Stage managerStage;
     private final static Connection conn = connectDB();
@@ -55,15 +58,11 @@ public class SphereBookingSystem extends Application {
     private CustomerController customerControllerConnection = new CustomerController();
     private SessionController sessionControllerConnection = new SessionController();
     private static LoginRepoImpl loginRepoImpl = new LoginRepoImpl();
-    //------------------------------------------------------------
-    /*
-    properties used in Welcome Screen
-    */
     private PasswordField passwordText = new PasswordField();
     private TextField usernameText = new TextField();
     //-------------------------------------------------------------
     
-    //Global attributes used in Booking a Session (Genaro)
+    // Global attributes used in Booking a Session (Genaro)
     private TextField firstNameText = new TextField();
     private Label customerStatusLabel = new Label();
     private VBox sessionPickerInfo = new VBox();
@@ -77,25 +76,34 @@ public class SphereBookingSystem extends Application {
     private TextField enterCustomerText = new TextField();
     
     //-------------------------------------------------------------
+    // Global attributes used in Registering a Customer (Rick)
     private RadioButton chk = new RadioButton();
 
     //-------------------------------------------------------------
-    //Method to connect to our DB
-    final static Connection connectDB(){
-         String connectionURL = "jdbc:derby://localhost:1527/SphereDB";
-         String uName = "admin1";
-         String uPass = "admin1";
-         try {             
-                    Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
-                    System.out.println("Connect to database..."); 
-                    return conn;
-            } catch (SQLException ex) {             
-                System.out.println("Connection failed."); 
-                return null;
-            }
-    }
-    //-------------------------------------------------------------
     
+    // Method to connect to our DB
+    // Database is saved locally and is in a different location depending where each user saves it
+    final static Connection connectDB(){
+        
+        String connectionURL = "jdbc:derby://localhost:1527/SphereDB";
+        String uName = "admin1";
+        String uPass = "admin1";
+        
+        try {             
+                Connection conn = DriverManager.getConnection(connectionURL, uName, uPass);
+                System.out.println("Connected to database..."); // Prints this is connection to DB is successful
+                return conn;
+        } 
+        catch (SQLException ex) {             
+                System.out.println("Connection failed."); // Prints this is connection to DB failed
+                return null;
+        }
+    }
+    
+    //-------------------------------------------------------------
+    // Below functions are for creating each of the screens that will be in the system
+    
+    // Creates the user interface for the welcome screen login
     private Scene makeWelcomeScreen(){
         
         Label welcomeText = new Label();
@@ -166,6 +174,7 @@ public class SphereBookingSystem extends Application {
         return scene;
     }
     
+    // Creates the user interface for the slope operator's functions
     private Scene makeSlopeOperatorScreen() {
         
         Label slopeOperatorLabel = new Label();
@@ -250,12 +259,14 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
+    // Creates the user interface for the manager's function
     private Scene makeManagerScreen() {
         VBox root = new VBox();
         Scene scene = new Scene(root, 500, 450); 
         return(scene); 
     }
     
+    // Creates the user interface for the ski instructor's function
     private Scene makeSkiInstructorScreen() {
         
         Label welcomeText = new Label();
@@ -272,6 +283,7 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
+    // Creates the user interface for registering a customer
     private Scene makeRegisterScreen() {
         
         Label TitleText = new Label();
@@ -403,61 +415,81 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
+    // Creates the user interface for booking a session
     private Scene makeBookingScreen() {
         
+        // Create title text label
         Label bookingTitleText = new Label();
         bookingTitleText.setText("BOOKING SCREEN");
         bookingTitleText.setAlignment(Pos.TOP_CENTER);
         bookingTitleText.setTextAlignment(TextAlignment.CENTER);
         
+        // Create enter customer ID text label
         Label enterCustomerLabel = new Label();
         enterCustomerLabel.setText("Enter Customer ID: ");
         enterCustomerLabel.setAlignment(Pos.TOP_CENTER);
         enterCustomerLabel.setTextAlignment(TextAlignment.CENTER);
         
+        // Create text field to enter customer ID
         enterCustomerText = new TextField();
         enterCustomerText.setAlignment(Pos.TOP_CENTER);     
         
+        // Create button to submit customer ID
         Button checkCustomerButton = new Button();
         checkCustomerButton.setText("Check Customer ID");
         checkCustomerButton.setAlignment(Pos.TOP_CENTER);
         checkCustomerButton.setTextAlignment(TextAlignment.CENTER);
         
+        // When button is pressed, recieves a boolean from the customer controller, to see
+        // whether the customer exists or not. If they are registered, rest of the UI is shown
         checkCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 
-                String theCustomerID = enterCustomerText.getText();
+                // Retrieve the customer ID that was typed in
+                String theCustomerID = enterCustomerText.getText(); 
                 
+                // Return a boolean for whether or not the customer ID is registered or not
                 boolean isACustomer = customerControllerConnection.checkCustomerID(conn, theCustomerID);
             
                 if(isACustomer==true) {
+                // If they are registered, continue with the booking and display next section of the UI
                     
                     customerStatusLabel.setText("Customer is Registered. Continue with Booking.");
                     sessionPickerInfo.setVisible(true);
                 }
                 else {
+                // Otherwise, display text to say that the customer is not registered
                     
                     customerStatusLabel.setText("Customer is not Registered. Unable to complete Booking.");
                 }
             }
         });
         
+        // All above UI elements added to a HBox for layout reasons
         HBox checkCustomerInfo = new HBox();
         checkCustomerInfo.getChildren().addAll(enterCustomerLabel, enterCustomerText, checkCustomerButton);
         checkCustomerInfo.setAlignment(Pos.TOP_CENTER);
 
+        // Set the label text to check the customer is registered, this label is changed 
+        // depending on result of checkCustomerButton
         customerStatusLabel.setText("Check that the Customer is Registered");
         
+        // Label added to a HBox for layout reasons
         HBox customerStatusInfo = new HBox();
         customerStatusInfo.getChildren().add(customerStatusLabel);
         customerStatusInfo.setAlignment(Pos.TOP_CENTER);
         
+        // Above HBoxes are added to VBox for layout reasons
         VBox totalCustomerInfo = new VBox();
         totalCustomerInfo.getChildren().addAll(checkCustomerInfo, customerStatusInfo);
         totalCustomerInfo.setAlignment(Pos.TOP_CENTER);
         totalCustomerInfo.setSpacing(25);
+        
+        // Using a border to clearly show each section of the interface, don't want the
+        // user to move to the next section until one is complete, and then it shows 
+        // the other sections of the UI
         totalCustomerInfo.setStyle("-fx-padding: 10;" + 
                                    "-fx-border-style: solid inside;" + 
                                    "-fx-border-width: 2;" +
@@ -465,26 +497,33 @@ public class SphereBookingSystem extends Application {
                                    "-fx-border-radius: 5;" + 
                                    "-fx-border-color: blue;");
         
-                
+        // Create label to ask for session type        
         Label sessionTypeLabel = new Label();
         sessionTypeLabel.setText("Choose Session Type: ");        
         sessionTypeLabel.setAlignment(Pos.TOP_CENTER);
         sessionTypeLabel.setTextAlignment(TextAlignment.CENTER);
         
+        // Create toggle group for radio buttons to be added to so that they act
+        // dependantly of each other, and not like 2 individual radio buttons
         ToggleGroup sessionTypeToggle = new ToggleGroup();
         
+        // Create radio button for if they want an instructor
         RadioButton withInstructorRadioButton = new RadioButton();
         withInstructorRadioButton.setText("With Instructor ");
         withInstructorRadioButton.setAlignment(Pos.TOP_CENTER);
         withInstructorRadioButton.setTextAlignment(TextAlignment.CENTER);
+        // Add radio button to the toggle group
         withInstructorRadioButton.setToggleGroup(sessionTypeToggle);
         
+        // Create radio button for if they don't want an instructor
         RadioButton withoutInstructorRadioButton = new RadioButton();
         withoutInstructorRadioButton.setText("Without Instructor ");
         withoutInstructorRadioButton.setAlignment(Pos.TOP_CENTER);
         withoutInstructorRadioButton.setTextAlignment(TextAlignment.CENTER);
+        // Add radio button to the toggle group
         withoutInstructorRadioButton.setToggleGroup(sessionTypeToggle);
         
+        // Create listener to save the selected radio button from the toggle group
         sessionTypeToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
@@ -494,48 +533,61 @@ public class SphereBookingSystem extends Application {
             }
         });
         
-        
+        // Create a HBox for the date picker to be saved to
         HBox datePickerInfo = new HBox();
         datePickerInfo.getChildren().add(sessionPicker);
         datePickerInfo.setAlignment(Pos.TOP_CENTER);
         
+        // Create a HBox for session type label and radio buttons to be added to
         HBox sessionTypeInfo = new HBox();
         sessionTypeInfo.getChildren().addAll(sessionTypeLabel, withInstructorRadioButton,
                                              withoutInstructorRadioButton);
         sessionTypeInfo.setAlignment(Pos.TOP_CENTER);
         
+        // Create button to submit the session type information
         Button submitSessionButton = new Button();
         submitSessionButton.setText("Submit");
         
+        // When the button is pressed, it recieves an array of available time slots for
+        // the chosen date and session, this is then saved to the drop down menu
         submitSessionButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 
+                // Save to an attribute the date that the user picked
                 LocalDate theDate = sessionPicker.getValue();
+                
+                // Save to an attribute the radio button that the user picked
                 String theSessionType = selectedToggle.getText();
                         
                 try {
+                    // Sends details to the session controller, which returns a list of timeslots as strings
                     sessionsListContent = sessionControllerConnection.checkDate(conn, theDate, theSessionType);
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
+                // List of timeslot strings is converted to an array
                 Object[] sessionsArray = sessionsListContent.toArray();
-        
+                
+                // For every timeslot in the array, add it to the drop down combobox
                 for(int i = 0; i < sessionsListContent.size(); i++) {
             
                     sessionsDropDown.getItems().addAll(sessionsArray[i]);
                 }
+                
+                // Display the next part of the UI
                 availableSessionsInfo.setVisible(true);                
             }
         });
         
-        
+        // Create HBox for layout reasons
         HBox submitSessionInfo = new HBox();
         submitSessionInfo.getChildren().add(submitSessionButton);
         submitSessionInfo.setAlignment(Pos.TOP_CENTER);
         
+        // Add above elements into HBox for layout reasons
         sessionPickerInfo.getChildren().addAll(datePickerInfo, sessionTypeInfo, submitSessionInfo);
         sessionPickerInfo.setAlignment(Pos.TOP_CENTER);
         sessionPickerInfo.setSpacing(25);
@@ -547,25 +599,31 @@ public class SphereBookingSystem extends Application {
                       "-fx-border-color: blue;");
         sessionPickerInfo.setVisible(false);
         
+        // Create a text label which is shown next to the dropdown
         Label availableSessionsLabel = new Label();
         availableSessionsLabel.setText("Available Sessions: ");
         availableSessionsLabel.setAlignment(Pos.TOP_CENTER);
         availableSessionsLabel.setTextAlignment(TextAlignment.CENTER);
-              
+        
+        // Create button to click when submitting the chosen timeslot
         Button submitChosenSessionButton = new Button();
         submitChosenSessionButton.setText("Submit");
         
+        // When this button is pressed, retrieve the chosen timeslot from the dropdown menu
         submitChosenSessionButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 
+                // Gets the value of the selected item in the drop down
                 theTimeSlot = sessionsDropDown.getValue().toString(); 
                 
+                // After submitting the time slot, display the next part of the UI
                 confirmationInfo.setVisible(true);                
             }
         });
         
+        // Add above elements to a HBox for layout reasons
         availableSessionsInfo.getChildren().addAll(availableSessionsLabel, sessionsDropDown, submitChosenSessionButton);
         availableSessionsInfo.setAlignment(Pos.TOP_CENTER);
         availableSessionsInfo.setSpacing(25);
@@ -576,31 +634,40 @@ public class SphereBookingSystem extends Application {
                                        "-fx-border-radius: 5;" + 
                                        "-fx-border-color: blue;");
         availableSessionsInfo.setVisible(false);
-                
+        
+        // Create button for confirming all above details
         Button confirmBookingButton = new Button();
         confirmBookingButton.setText("CONFIRM BOOKING");
-        Button cancelBookingButton = new Button();
-        cancelBookingButton.setText("CANCEL BOOKING");
         
+        // When the confirm button is pressed, the booking information sent to booking controller
         confirmBookingButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 
+                // Retrieve the customer ID from what the user typed in
                 String theCustomerID = enterCustomerText.getText();
-            
+                
+                // Change the customer ID into an integer so that the controller can use it
                 int theCustomerIDInteger = Integer.parseInt(theCustomerID);
-                int theSessionIDInteger = 123;
-            
+                
+                // Retrieve the session ID from the timeslot the user picked
+                String theSessionID = theTimeSlot.substring(0, 4);
+                
+                // Change the session ID into an integer so that the controller can use it
+                int theSessionIDInteger = Integer.parseInt(theSessionID);
+                            
                 // Send entered info to controller to run function for book()
                 bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);            
             }
         });
         
+        // Create a HBox for button to go into
         HBox finalButtonInfo = new HBox();
         finalButtonInfo.getChildren().addAll(confirmBookingButton);
         finalButtonInfo.setAlignment(Pos.CENTER);
         
+        // Above button goes into a HBox for layout reasons
         confirmationInfo.getChildren().addAll(finalButtonInfo);
         confirmationInfo.setAlignment(Pos.TOP_CENTER);
         confirmationInfo.setSpacing(25);
@@ -613,13 +680,14 @@ public class SphereBookingSystem extends Application {
         confirmationInfo.setVisible(false);
         
         
-        
+        // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
         root.getChildren().addAll(bookingTitleText, totalCustomerInfo, sessionPickerInfo, availableSessionsInfo, confirmationInfo);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
         
+        // Root is passed as a parameter to create the scene
         Scene scene = new Scene(root, 800, 600);
         
         theStage.show();        
@@ -627,6 +695,7 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
+    // Creates the user interface for checking in a customer
     private Scene makeCheckInScreen() {
         
         Label welcomeText = new Label();
@@ -643,6 +712,7 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
+    // Creates the user interface for viewing the schedule of sessions
     private Scene makeViewScheduleScreen() {
         
         Label welcomeText = new Label();
@@ -659,6 +729,7 @@ public class SphereBookingSystem extends Application {
         return(scene); 
     }
     
+    // Creates the user interface for adding a session
     private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
         ManagerUI mui = new ManagerUI(primaryManagerStage,conn);
         
@@ -669,6 +740,7 @@ public class SphereBookingSystem extends Application {
         //Scene scene = new Scene(root, 500, 450);
     }
     
+    // Sets up the stage for scenes to be shown in
     @Override
     public void start(Stage primaryStage) {
         
@@ -685,6 +757,5 @@ public class SphereBookingSystem extends Application {
      */
     public static void main(String[] args) {    
        launch(args);      
-    }
-    
+    }   
 }
