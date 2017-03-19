@@ -17,7 +17,7 @@ public interface SessionRepo {
     public void addSession(Session session, Connection con);
     public Session getSession(Session session);
     public ArrayList<Session> getAllSessions();
-    public void setSessions(ArrayList list);
+    public void setSessions(ArrayList<Session> list);
     void write(Connection con,String str,Session session);
     public Session readSessionByID(Connection con,int id);
     public ArrayList readInstructors(Connection con);

@@ -16,11 +16,11 @@ import javafx.scene.control.Toggle;
  * @author BOCU
  */
 public class SessionController {
-    private SessionRepoImpl SessionRepo = new SessionRepoImpl();
-    private ArrayList<String> instructorNames;
-    private ArrayList <String> slopeNames;
+    private SessionRepoImpl sessionRepo = new SessionRepoImpl();
     private ArrayList<Instructor> availInstructors;
+    private ArrayList<Slope> availSlopes;
     private InstructorRepoImpl insRepo = new InstructorRepoImpl();
+    private SlopeRepoImpl slopeRepo=new SlopeRepoImpl();
     
     
     public void setInstructorList(Connection con,LocalDate date,String start,String end){
@@ -30,17 +30,12 @@ public class SessionController {
     public ArrayList<Instructor> getInstructors(){
         return availInstructors;
     }
-    public void setInstructorNames(Connection con){
-        instructorNames=SessionRepo.readInstructors(con);
+    public void setSlopeList(Connection con,LocalDate date,String start,String end){
+        slopeRepo.read(con,date,start,end);
+        availSlopes=slopeRepo.getSlopes();
     }
-    public ArrayList getInstructorNames(){
-        return instructorNames;
-    }
-    public void setSlopeNames(Connection con){
-        slopeNames=SessionRepo.readSlopes(con);
-    }
-    public ArrayList getSlopeNames(){
-        return slopeNames;
+    public ArrayList<Slope> getSlopes(){
+        return availSlopes;
     }
     public void addASession(String startTime,String endTime, LocalDate date, int maxBookings,int slopeID,int instructorId, int price, 
                             String description, Connection conn){
@@ -53,11 +48,14 @@ public class SessionController {
         sess.setInstructorId(instructorId);
         sess.setPrice(price);
         sess.setDescription(description);
-        SessionRepo.addSession(sess, conn);
+        sessionRepo.addSession(sess, conn);
         
     }
+    public void addSession(Connection con,Session session){
+        sessionRepo.addSession(session, con);
+    }
     public void viewDetails(int id){
-        ArrayList list = SessionRepo.getAllSessions();
+        ArrayList list = sessionRepo.getAllSessions();
                  boolean found  = false;
          int i = 0;
          while (i<list.size() && !found){
@@ -73,7 +71,7 @@ public class SessionController {
 
     }
     public void seeAllSessions(){
-        ArrayList list = SessionRepo.getAllSessions();
+        ArrayList list = sessionRepo.getAllSessions();
         for (int i=0;i<list.size();i++){
             Session temp = (Session)list.get(i);
             System.out.print("Session details: \n startTime: " + temp.getStartTime()+ 
@@ -81,7 +79,7 @@ public class SessionController {
         }
     }
     public void setSessionList(ArrayList sessions){
-        SessionRepo.setSessions(sessions);
+        sessionRepo.setSessions(sessions);
     }
     
     // Function that takes in a date and session type
@@ -91,7 +89,7 @@ public class SessionController {
                     
             List<String> sessions = new ArrayList<String>();
         
-            ResultSet sessionsResults = SessionRepo.checkDate(conn, date, sessionType);
+            ResultSet sessionsResults = sessionRepo.checkDate(conn, date, sessionType);
                         
             while (sessionsResults.next()) {
             // While there is a next record on the resultset, add it to the array of timeslots
