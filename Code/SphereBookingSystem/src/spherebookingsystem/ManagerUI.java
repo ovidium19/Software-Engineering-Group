@@ -52,10 +52,12 @@ import javafx.util.Callback;
  */
 public class ManagerUI {
     private static Connection conn;
-    private static SessionController sess = new SessionController();   
+    private static SessionController sess = new SessionController(); 
     private static Scene mainScene;    
     private static Stage theStage;
-    private Session tempSession; 
+    private Session tempSession;
+    private ArrayList<Instructor> availInstructors;
+   // private ArrayList<Slope>
     private ComboBox endHours = new ComboBox();
     private ComboBox startHours = new ComboBox();
     private ComboBox startMinutes = new ComboBox();
@@ -132,12 +134,16 @@ public class ManagerUI {
             ColumnConstraints column2 = new ColumnConstraints(200);
             gridPane.getColumnConstraints().addAll(column1,column2);
         gridPane.setPadding(new Insets(12,0,20,25));
-        ArrayList <String> availInstructors;
+        //ArrayList <String> availInstructors;
         ArrayList <String> availSlopes;
-        sess.setInstructorNames(conn);
-        sess.setSlopeNames(conn);
+        //sess.setInstructorNames(conn);
+        //sess.setSlopeNames(conn);
         availSlopes=sess.getSlopeNames();
-        availInstructors=sess.getInstructorNames();
+        System.out.println("Got here!");
+        sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
+        System.out.println("Got here!");
+        availInstructors=sess.getInstructors();
+        System.out.println("Got here!");
         Label instructors = new Label("instructors");
         Label slopes = new Label("slopes");
         Label sessDescription = new Label("Write a short description of the session");
@@ -182,8 +188,12 @@ public class ManagerUI {
         });
         
         
-        slopeMenu.getItems().addAll(availSlopes);
+        //slopeMenu.getItems().addAll(availSlopes);
+        for (Instructor i : availInstructors){
+            System.out.println(i);
+        }
         instructorMenu.getItems().addAll(availInstructors);
+        System.out.println("Got here!");
         //instructorMenu.valueProperty().addListener(new ChangeListener<String>(){
         //@Override public void changed(ObservableValue compos, String oldV, String newV){
         //   result.setText(newV);

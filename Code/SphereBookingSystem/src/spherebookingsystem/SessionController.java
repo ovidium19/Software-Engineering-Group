@@ -16,10 +16,20 @@ import javafx.scene.control.Toggle;
  * @author BOCU
  */
 public class SessionController {
-    SessionRepoImpl SessionRepo = new SessionRepoImpl();
+    private SessionRepoImpl SessionRepo = new SessionRepoImpl();
     private ArrayList<String> instructorNames;
     private ArrayList <String> slopeNames;
+    private ArrayList<Instructor> availInstructors;
+    private InstructorRepoImpl insRepo = new InstructorRepoImpl();
     
+    
+    public void setInstructorList(Connection con,LocalDate date,String start,String end){
+        insRepo.read(con, date, start, end);
+        availInstructors=insRepo.getInstructors();
+    }
+    public ArrayList<Instructor> getInstructors(){
+        return availInstructors;
+    }
     public void setInstructorNames(Connection con){
         instructorNames=SessionRepo.readInstructors(con);
     }
