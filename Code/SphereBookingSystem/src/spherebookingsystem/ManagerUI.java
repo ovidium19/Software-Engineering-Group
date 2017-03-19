@@ -132,10 +132,15 @@ public class ManagerUI {
         sIconView.setImage(sIcon);
         Label confirmText=new Label("Session succesfully added");
         Image dIcon=new Image ("file:src/dIcon.png",60,60,true,true);
-        
+        Button finish=new Button("Finish Process");
         bottomLayer.setId("botbox");
        
-        
+        finish.setOnAction(new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                theStage.setScene(setCalendarScene());
+            }
+        });
         addDb.setId("addButton");
         addDb.setOnAction(new EventHandler() {
             @Override
@@ -156,8 +161,9 @@ public class ManagerUI {
         Label price=new Label(String.valueOf(tempSession.getPrice()));
         Label desc=new Label(tempSession.getDescription());
         topLayer.getChildren().addAll(date,time,instructor,slope,maxB,price,desc);
+        root.setAlignment(Pos.CENTER);
         
-        root.getChildren().addAll(topLayer,addDb,bottomLayer);
+        root.getChildren().addAll(topLayer,addDb,bottomLayer,finish);
         Scene scene=new Scene(root,500,500);
         scene.getStylesheets().add(getClass().getResource("ManagerUIRSScene.css").toExternalForm());
         return scene;
@@ -280,7 +286,7 @@ public class ManagerUI {
         pageTitle.setAlignment(Pos.CENTER);
         pageTitle.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         pageTitle.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        
+        addSessionDatePicker.setValue(null);
         addSessionDatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         addSessionDatePicker.setId("datepicker");
         //Date Picker cell factory to disable days before today
