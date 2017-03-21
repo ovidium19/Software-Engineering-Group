@@ -5,6 +5,7 @@
  */
 package spherebookingsystem;
 
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -715,22 +716,67 @@ public class SphereBookingSystem extends Application {
     // Creates the user interface for viewing the schedule of sessions
     private Scene makeViewScheduleScreen() {
         
-        Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
+        Label viewScheduleLabel = new Label();
+        viewScheduleLabel.setText("View Schedule");
+        viewScheduleLabel.setAlignment(Pos.TOP_CENTER);
+        viewScheduleLabel.setTextAlignment(TextAlignment.CENTER);
+        viewScheduleLabel.setPadding(new Insets(12,5,20,5));
+        
+        Button mondayButton = new Button();
+        mondayButton.setText("Monday");
+        mondayButton.setAlignment(Pos.TOP_CENTER);
+        mondayButton.setTextAlignment(TextAlignment.CENTER);     
+        mondayButton.setPadding(new Insets(12,5,20,5));
+        
+        Button tuesdayButton = new Button();
+        tuesdayButton.setText("Tuesday");
+        tuesdayButton.setAlignment(Pos.TOP_CENTER);
+        tuesdayButton.setTextAlignment(TextAlignment.CENTER);     
+        tuesdayButton.setPadding(new Insets(12,5,20,5));
+        
+        Button wednesdayButton = new Button();
+        wednesdayButton.setText("Wednesday");
+        wednesdayButton.setAlignment(Pos.TOP_CENTER);
+        wednesdayButton.setTextAlignment(TextAlignment.CENTER);     
+        wednesdayButton.setPadding(new Insets(12,5,20,5));
+        
+        Button thursdayButton = new Button();
+        thursdayButton.setText("Thursday");
+        thursdayButton.setAlignment(Pos.TOP_CENTER);
+        thursdayButton.setTextAlignment(TextAlignment.CENTER);     
+        thursdayButton.setPadding(new Insets(12,5,20,5));
+        
+        Button fridayButton = new Button();
+        fridayButton.setText("Friday");
+        fridayButton.setAlignment(Pos.TOP_CENTER);
+        fridayButton.setTextAlignment(TextAlignment.CENTER);     
+        fridayButton.setPadding(new Insets(12,5,20,5));
+        
+                
+        Button backButton = new Button();
+        backButton.setText("Back");
+        backButton.setAlignment(Pos.TOP_RIGHT);
+        backButton.setTextAlignment(TextAlignment.CENTER);     
+        backButton.setPadding(new Insets(12,5,20,5));
+               
         
         VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
+        root.getChildren().addAll(viewScheduleLabel, mondayButton, tuesdayButton, wednesdayButton, thursdayButton, fridayButton, backButton);
+        root.getChildren().addAll(mondayButton);
+        root.getChildren().addAll(tuesdayButton);
+        root.getChildren().addAll(wednesdayButton);
+        root.getChildren().addAll(thursdayButton);
+        root.getChildren().addAll(fridayButton);
+        root.getChildren().addAll(backButton);
         
         Scene scene = new Scene(root, 500, 450);
         
         return(scene); 
     }
+        
     
     // Creates the user interface for adding a session
-    private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
+     private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
         ManagerUI mui = new ManagerUI(primaryManagerStage,conn);
         
         primaryManagerStage.setScene(mui.setCalendarScene());
