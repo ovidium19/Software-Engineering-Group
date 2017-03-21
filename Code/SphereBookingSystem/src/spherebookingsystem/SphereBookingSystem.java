@@ -784,8 +784,78 @@ public class SphereBookingSystem extends Application {
                                        "-fx-border-radius: 5;" + 
                                        "-fx-border-color: blue;");
         
+        Label customerIDLabel = new Label();
+        customerIDLabel.setText("Customer ID:");
+        customerIDLabel.setAlignment(Pos.TOP_CENTER);
+        customerIDLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label firstNameLabel = new Label();
+        firstNameLabel.setText("First Name:");
+        firstNameLabel.setAlignment(Pos.TOP_CENTER);
+        firstNameLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label lastNameLabel = new Label();
+        lastNameLabel.setText("Last Name:");
+        lastNameLabel.setAlignment(Pos.TOP_CENTER);
+        lastNameLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label emailLabel = new Label();
+        emailLabel.setText("Email:");
+        emailLabel.setAlignment(Pos.TOP_CENTER);
+        emailLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label phoneLabel = new Label();
+        phoneLabel.setText("Telephone:");
+        phoneLabel.setAlignment(Pos.TOP_CENTER);
+        phoneLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        VBox detailsLabelsVBox = new VBox();
+        detailsLabelsVBox.getChildren().addAll(customerIDLabel, firstNameLabel, lastNameLabel, emailLabel, phoneLabel);
+        
+        Label customerIDShownLabel = new Label();
+        customerIDShownLabel.setText("...");
+        customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
+        customerIDShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label firstNameShownLabel = new Label();
+        firstNameShownLabel.setText("...");
+        firstNameShownLabel.setAlignment(Pos.TOP_CENTER);
+        firstNameShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label lastNameShownLabel = new Label();
+        lastNameShownLabel.setText("...");
+        lastNameShownLabel.setAlignment(Pos.TOP_CENTER);
+        lastNameShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label emailShownLabel = new Label();
+        emailShownLabel.setText("...");
+        emailShownLabel.setAlignment(Pos.TOP_CENTER);
+        emailShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label phoneShownLabel = new Label();
+        phoneShownLabel.setText("...");
+        phoneShownLabel.setAlignment(Pos.TOP_CENTER);
+        phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        VBox detailsLabelsShownVBox = new VBox();
+        detailsLabelsShownVBox.getChildren().addAll(customerIDShownLabel, firstNameShownLabel, lastNameShownLabel, emailShownLabel, phoneShownLabel);
+        
+        HBox detailsHBox = new HBox();
+        detailsHBox.getChildren().addAll(detailsLabelsVBox, detailsLabelsShownVBox);
+        detailsHBox.setAlignment(Pos.CENTER);
+        detailsHBox.setSpacing(50);
+        detailsHBox.setStyle("-fx-padding: 10;" + 
+                                       "-fx-border-style: solid inside;" + 
+                                       "-fx-border-width: 2;" +
+                                       "-fx-border-insets: 5;" + 
+                                       "-fx-border-radius: 5;" + 
+                                       "-fx-border-color: blue;");
+        
+        Button returnToBookingButton = new Button();
+        returnToBookingButton.setText("RETURN TO BOOKING SCREEN");
+                
         VBox root = new VBox();
-        root.getChildren().addAll(findCustomerIDLabel, searchBoxesHBox);
+        root.getChildren().addAll(findCustomerIDLabel, searchBoxesHBox, detailsHBox, returnToBookingButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
