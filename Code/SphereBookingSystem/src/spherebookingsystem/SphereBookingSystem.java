@@ -433,7 +433,20 @@ public class SphereBookingSystem extends Application {
         
         // Create text field to enter customer ID
         enterCustomerText = new TextField();
-        enterCustomerText.setAlignment(Pos.TOP_CENTER);     
+        enterCustomerText.setAlignment(Pos.TOP_CENTER);
+        
+        // Ensure only numbers are entered in the CustomerID Text Field
+        enterCustomerText.textProperty().addListener((obs,o,n)->{
+            try{
+                int a = Integer.parseInt(n);
+                if (a<=0){
+                    enterCustomerText.setText("");
+                }
+            }
+            catch (NumberFormatException ex){
+                enterCustomerText.setText("");
+            }
+        });
         
         // Create button to submit customer ID
         Button checkCustomerButton = new Button();
@@ -463,14 +476,32 @@ public class SphereBookingSystem extends Application {
                 else {
                 // Otherwise, display text to say that the customer is not registered
                     
-                    customerStatusLabel.setText("Customer is not Registered. Unable to complete Booking.");
+                    customerStatusLabel.setText("Customer is not Registered. Unable to complete Booking. Please Register the Customer.");
                 }
+            }
+        });
+        
+        // Create button to submit customer ID
+        Button findCustomerButton = new Button();
+        findCustomerButton.setText("Find Customer ID");
+        findCustomerButton.setAlignment(Pos.TOP_CENTER);
+        findCustomerButton.setTextAlignment(TextAlignment.CENTER);
+        
+        // Button goes to screen that allows the user to search for a customer's ID
+        // based on their email address or telephone number
+        findCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                Scene temp = makeFindCustomerScreen();
+                theStage.setScene(temp);
             }
         });
         
         // All above UI elements added to a HBox for layout reasons
         HBox checkCustomerInfo = new HBox();
-        checkCustomerInfo.getChildren().addAll(enterCustomerLabel, enterCustomerText, checkCustomerButton);
+        checkCustomerInfo.getChildren().addAll(enterCustomerLabel, enterCustomerText, checkCustomerButton, findCustomerButton);
         checkCustomerInfo.setAlignment(Pos.TOP_CENTER);
 
         // Set the label text to check the customer is registered, this label is changed 
@@ -692,6 +723,74 @@ public class SphereBookingSystem extends Application {
         Scene scene = new Scene(root, 800, 600);
         
         theStage.show();        
+        
+        return(scene); 
+    }
+    
+    private Scene makeFindCustomerScreen() {
+        
+        Label findCustomerIDLabel = new Label();
+        findCustomerIDLabel.setText("FIND CUSTOMER ID");
+        findCustomerIDLabel.setAlignment(Pos.TOP_CENTER);
+        findCustomerIDLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        Label checkByEmailLabel = new Label();
+        checkByEmailLabel.setText("Search for Customer by Email Address: ");
+        checkByEmailLabel.setAlignment(Pos.TOP_CENTER);
+        checkByEmailLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        TextField checkByEmailTextField = new TextField();
+        checkByEmailTextField.setAlignment(Pos.TOP_CENTER);
+        
+        Button checkByEmailButton = new Button();
+        checkByEmailButton.setText("Submit");
+        checkByEmailButton.setAlignment(Pos.TOP_CENTER);
+        checkByEmailButton.setTextAlignment(TextAlignment.CENTER);
+        
+        HBox checkByEmailHBox = new HBox();
+        checkByEmailHBox.getChildren().addAll(checkByEmailLabel, checkByEmailTextField, checkByEmailButton);
+        checkByEmailHBox.setAlignment(Pos.CENTER);
+        
+        Label checkByPhoneLabel = new Label();
+        checkByPhoneLabel.setText("Search for Customer by Telephone Number: ");
+        checkByPhoneLabel.setAlignment(Pos.TOP_CENTER);
+        checkByPhoneLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        TextField checkByPhoneTextField = new TextField();
+        checkByPhoneTextField.setAlignment(Pos.TOP_CENTER);
+        
+        Button checkByPhoneButton = new Button();
+        checkByPhoneButton.setText("Submit");
+        checkByPhoneButton.setAlignment(Pos.TOP_CENTER);
+        checkByPhoneButton.setTextAlignment(TextAlignment.CENTER);
+        
+        HBox checkByPhoneHBox = new HBox();
+        checkByPhoneHBox.getChildren().addAll(checkByPhoneLabel, checkByPhoneTextField, checkByPhoneButton);
+        checkByPhoneHBox.setAlignment(Pos.CENTER);
+        
+        Label customerStatusLabel = new Label();
+        customerStatusLabel.setText("Search for the Customer's ID by their Email or Telephone Number");
+        customerStatusLabel.setAlignment(Pos.TOP_CENTER);
+        customerStatusLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        VBox searchBoxesHBox = new VBox();
+        searchBoxesHBox.getChildren().addAll(checkByEmailHBox, checkByPhoneHBox, customerStatusLabel);
+        searchBoxesHBox.setAlignment(Pos.CENTER);
+        searchBoxesHBox.setSpacing(25);
+        searchBoxesHBox.setStyle("-fx-padding: 10;" + 
+                                       "-fx-border-style: solid inside;" + 
+                                       "-fx-border-width: 2;" +
+                                       "-fx-border-insets: 5;" + 
+                                       "-fx-border-radius: 5;" + 
+                                       "-fx-border-color: blue;");
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(findCustomerIDLabel, searchBoxesHBox);
+        root.setPadding(new Insets(50,50,50,50));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(25);
+        
+        Scene scene = new Scene(root, 800, 600);
         
         return(scene); 
     }
