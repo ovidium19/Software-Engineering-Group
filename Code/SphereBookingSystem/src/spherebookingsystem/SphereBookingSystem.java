@@ -36,7 +36,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -103,6 +107,25 @@ public class SphereBookingSystem extends Application {
     
     //-------------------------------------------------------------
     // Below functions are for creating each of the screens that will be in the system
+    private HBox makeTopBar(String funcName){
+        HBox root=new HBox();
+        root.setId("titleBar");
+        Image logo=new Image("file:src/logo.png",100,65,true,true);
+        ImageView logoView=new ImageView(logo);
+        logoView.setFitHeight(65);
+        logoView.setFitWidth(100);
+        Label func=new Label(funcName);
+        func.setId("titleLabel");
+        func.setPrefWidth(200);
+        Region empty1 = new Region();
+        empty1.setPrefWidth(200);
+        root.getChildren().addAll(logoView,empty1,func);
+        root.setPrefHeight(80);
+        root.setMaxHeight(100);
+        root.setPadding(new Insets(0,0,20,0));
+        return root;
+        
+    }
     
     // Creates the user interface for the welcome screen login
     private Scene makeWelcomeScreen(){
@@ -163,14 +186,18 @@ public class SphereBookingSystem extends Application {
         VBox passwordInfo = new VBox();
         passwordInfo.getChildren().addAll(passwordLabel, passwordText);
         passwordInfo.setAlignment(Pos.TOP_CENTER);
-        
-        VBox root = new VBox();
-        root.getChildren().addAll(welcomeText, userInfo, passwordInfo, submitButton,errorMessage);
-        root.setPadding(new Insets(50,50,50,50));
-        root.setAlignment(Pos.TOP_CENTER);
-        root.setSpacing(25);
-        
-        Scene scene = new Scene(root,500,450);
+        BorderPane root = new BorderPane();
+        HBox titleBar=makeTopBar("Welcome");
+        root.setTop(titleBar);
+        BorderPane.setMargin(titleBar, new Insets(5,0,10,5));
+        VBox rootCenter = new VBox();
+        rootCenter.getChildren().addAll(welcomeText, userInfo, passwordInfo, submitButton,errorMessage);
+        rootCenter.setPadding(new Insets(0,50,50,50));
+        rootCenter.setAlignment(Pos.TOP_CENTER);
+        rootCenter.setSpacing(25);
+        root.setCenter(rootCenter);
+        Scene scene = new Scene(root,500,500);
+        scene.getStylesheets().add(getClass().getResource("welcomeScreen.css").toExternalForm());
         
         return scene;
     }
