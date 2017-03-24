@@ -113,6 +113,9 @@ public class Session {
     public void setInstructorId(int instructorId) {
         this.instructorId = instructorId;
     }
+    public String toString(){
+        return this.id+" "+this.startTime+":"+this.endTime;
+    }
    
     
     
