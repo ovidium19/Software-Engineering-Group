@@ -6,6 +6,7 @@
 package spherebookingsystem;
 import java.sql.* ;  // for standard JDBC programsimport java.sql.Connection;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 //import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -121,6 +122,16 @@ public class ManagerUI {
             }
         }
     
+   /* private void resetScenes(){
+        sWrite=false;
+        instructorMenu.getItems().clear();
+        slopeMenu.getItems().clear();
+        addSessionDatePicker.setValue(null);
+        
+    }*/
+    /*public managerUIControl(){
+        
+    }*/
     public Scene makeResultScene(){
         
         VBox root=new VBox();
@@ -133,6 +144,7 @@ public class ManagerUI {
         Label confirmText=new Label("Session succesfully added");
         Image dIcon=new Image ("file:src/dIcon.png",60,60,true,true);
         Button finish=new Button("Finish Process");
+        finish.setVisible(false);
         bottomLayer.setId("botbox");
        
         finish.setOnAction(new EventHandler() {
@@ -149,17 +161,19 @@ public class ManagerUI {
                 bottomLayer.getChildren().clear();
                 bottomLayer.getChildren().addAll(sIconView,confirmText);
                 bottomLayer.setVisible(true);
+                finish.setVisible(true);
             }
         });
         topLayer.setId("topbox");
         root.setStyle("-fx-padding:20");
-        Label date=new Label(tempSession.getDate().toString());
-        Label time=new Label(tempSession.getStartTime()+"-"+tempSession.getEndTime());
-        Label instructor=new Label(String.valueOf(tempSession.getInstructorId()));
-        Label slope=new Label(String.valueOf(tempSession.getSlopeId()));
-        Label maxB=new Label(String.valueOf(tempSession.getMaxBookings()));
-        Label price=new Label(String.valueOf(tempSession.getPrice()));
-        Label desc=new Label(tempSession.getDescription());
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("MMMM dd yyyy");
+        Label date=new Label("Date selected: "+tempSession.getDate().format(dtf));
+        Label time=new Label("Time slot: "+ tempSession.getStartTime()+"-"+tempSession.getEndTime());
+        Label instructor=new Label("Instructor selected: "+instructorMenu.getValue());
+        Label slope=new Label("Slope selected: "+slopeMenu.getValue());
+        Label maxB=new Label("Maximum bookings for this session: "+String.valueOf(tempSession.getMaxBookings()));
+        Label price=new Label("Price per booking: "+String.valueOf(tempSession.getPrice()));
+        Label desc=new Label("Description:\n"+tempSession.getDescription());
         topLayer.getChildren().addAll(date,time,instructor,slope,maxB,price,desc);
         root.setAlignment(Pos.CENTER);
         
