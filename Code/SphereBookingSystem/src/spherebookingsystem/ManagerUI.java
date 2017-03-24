@@ -71,11 +71,17 @@ public class ManagerUI {
     private DatePicker addSessionDatePicker = new DatePicker();
     private ObservableList hours = FXCollections.observableArrayList();//
     private ObservableList minutes = FXCollections.observableArrayList();//
-    
-    public ManagerUI(Stage primaryStage, Connection con){
+    private static ManagerUI instance = null;
+    private ManagerUI(Stage primaryStage, Connection con){
         theStage=primaryStage;
         conn=con;
         tempSession=new Session();
+    }
+    public static ManagerUI getInstance(Stage stage,Connection con){
+        if (instance==null){
+            instance=new ManagerUI(stage,con);
+        }
+        return instance;
     }
     private class StartHoursCell extends ListCell<String> {
             StartHoursCell() {
@@ -121,17 +127,6 @@ public class ManagerUI {
                 setOpacity(disable ? 0.5 : 1);
             }
         }
-    
-   /* private void resetScenes(){
-        sWrite=false;
-        instructorMenu.getItems().clear();
-        slopeMenu.getItems().clear();
-        addSessionDatePicker.setValue(null);
-        
-    }*/
-    /*public managerUIControl(){
-        
-    }*/
     public Scene makeResultScene(){
         
         VBox root=new VBox();
@@ -143,7 +138,7 @@ public class ManagerUI {
         sIconView.setImage(sIcon);
         Label confirmText=new Label("Session succesfully added");
         Image dIcon=new Image ("file:src/dIcon.png",60,60,true,true);
-        Button finish=new Button("Finish Process");
+        Button finish=new Button("Back to Start");
         finish.setVisible(false);
         bottomLayer.setId("botbox");
        

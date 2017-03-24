@@ -973,7 +973,7 @@ public class SphereBookingSystem extends Application {
     
     // Creates the user interface for adding a session
      private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
-        ManagerUI mui = new ManagerUI(primaryManagerStage,conn);
+        ManagerUI mui = ManagerUI.getInstance(primaryManagerStage, conn);
         
         primaryManagerStage.setScene(mui.setCalendarScene());
         //primaryManagerStage.initModality(Modality.APPLICATION_MODAL);
