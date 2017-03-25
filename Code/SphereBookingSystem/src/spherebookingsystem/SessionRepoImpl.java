@@ -16,7 +16,7 @@ public class SessionRepoImpl implements SessionRepo {
     private ResultSet sessionsForThisDay;
     
     public SessionRepoImpl(){
-        sessions = new ArrayList<Session>();
+        
     }    
     @Override
     public void addSession(Session session, Connection conn){
