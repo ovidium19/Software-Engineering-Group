@@ -717,7 +717,10 @@ public class SphereBookingSystem extends Application {
                 int theSessionIDInteger = Integer.parseInt(theSessionID);
                             
                 // Send entered info to controller to run function for book()
-                bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);            
+                bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);
+                
+                Scene temp = takePaymentScreen();
+                theStage.setScene(temp);
             }
         });
         
@@ -888,6 +891,36 @@ public class SphereBookingSystem extends Application {
         root.setSpacing(25);
         
         Scene scene = new Scene(root, 800, 600);
+        
+        return(scene); 
+    }
+    
+    private Scene takePaymentScreen() {
+        
+        // Create title text label
+        Label paymentTitleText = new Label();
+        paymentTitleText.setText("PAYMENT SCREEN");
+        paymentTitleText.setAlignment(Pos.TOP_CENTER);
+        paymentTitleText.setTextAlignment(TextAlignment.CENTER);
+        
+        // Create enter customer ID text label
+        Label enterPaymentLabel = new Label();
+        enterPaymentLabel.setText("Has the Customer payed yet?: ");
+        enterPaymentLabel.setAlignment(Pos.TOP_CENTER);
+        enterPaymentLabel.setTextAlignment(TextAlignment.CENTER);
+                
+        
+        // All above elements are added to root - which is a VBox so all elements are displayed vertically
+        VBox root = new VBox();
+        root.getChildren().addAll(paymentTitleText, enterPaymentLabel);
+        root.setPadding(new Insets(50,50,50,50));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(25);
+        
+        // Root is passed as a parameter to create the scene
+        Scene scene = new Scene(root, 800, 600);
+        
+        theStage.show();        
         
         return(scene); 
     }
