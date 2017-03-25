@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package spherebookingsystem;
 import java.sql.* ;  // for standard JDBC programsimport java.sql.Connection;
 import java.time.LocalDate;
@@ -51,17 +47,27 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 /**
  *
- * @author BOCU
+ * @author Ovidiu Mitroi
+ *         SID: 6832432
+ *         FUNCTIONALITY: ADD A SESSION
  */
 public class ManagerUI {
+    /*
+    Main interface class. Holds several screens that represent the functionality to 
+    ADD A SESSION
+    */
     private static Connection conn;
     private static SessionController sess = new SessionController(); 
     private static Scene mainScene;    
     private static Stage theStage;
-    private Session tempSession;
-    private ArrayList<Instructor> availInstructors;
-    private ArrayList<Slope> availSlopes;
-    private boolean sWrite=false;
+    private Session tempSession;  //temporary Session instance which updates as it gets created through the steps of the functionality
+    private ArrayList<Instructor> availInstructors; //will hold all available instructors for the time slot picked
+    private ArrayList<Slope> availSlopes; // will hold all available slopes for the time slot picked
+    //------------------------------------------------------------------------------------
+    /*
+    interface elements. Declared here since the information in them needs to be shared by 
+    several screens.
+    */
     private ComboBox endHours = new ComboBox();
     private ComboBox startHours = new ComboBox();
     private ComboBox startMinutes = new ComboBox();
@@ -69,8 +75,11 @@ public class ManagerUI {
     private ComboBox instructorMenu = new ComboBox();
     private ComboBox slopeMenu = new ComboBox();
     private DatePicker addSessionDatePicker = new DatePicker();
-    private ObservableList hours = FXCollections.observableArrayList();//
-    private ObservableList minutes = FXCollections.observableArrayList();//
+    //---------------------------------------------------------
+    private ObservableList hours = FXCollections.observableArrayList();//list of available hours
+    private ObservableList minutes = FXCollections.observableArrayList();//list of available minutes
+    //------------------------------------------------
+    //Singleton GoF pattern implementation here
     private static ManagerUI instance = null;
     private ManagerUI(Stage primaryStage, Connection con){
         theStage=primaryStage;
@@ -83,7 +92,11 @@ public class ManagerUI {
         }
         return instance;
     }
+    //-------------------------------------------------
     private class StartHoursCell extends ListCell<String> {
+        /*
+        Cell Factory class. Determines the options from the Hour and Minutes comboboxes that need to be disabled
+        */
             StartHoursCell() {
                 endHours.valueProperty().addListener((obs,oldEndHours,newEndHours) -> updateDisableState());
             }
@@ -106,6 +119,9 @@ public class ManagerUI {
             }
         }
     private class EndHoursCell extends ListCell<String> {
+        /*
+        Cell Factory class. Determines the options from the Hour and Minutes comboboxes that need to be disabled
+        */
             EndHoursCell() {
                 startHours.valueProperty().addListener((obs,oldStartHours,newStartHours) -> updateDisableState());
             }
@@ -127,161 +143,14 @@ public class ManagerUI {
                 setOpacity(disable ? 0.5 : 1);
             }
         }
-    public Scene makeResultScene(){
-        
-        VBox root=new VBox();
-        VBox topLayer=new VBox();
-        Button addDb=new Button("Add this Session");
-        VBox bottomLayer=new VBox();
-        Image sIcon=new Image("file:src/successIcon.png", 60, 60, true, true);
-        ImageView sIconView=new ImageView();
-        sIconView.setImage(sIcon);
-        Label confirmText=new Label("Session succesfully added");
-        Image dIcon=new Image ("file:src/dIcon.png",60,60,true,true);
-        Button finish=new Button("Back to Start");
-        finish.setVisible(false);
-        bottomLayer.setId("botbox");
-       
-        finish.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                theStage.setScene(setCalendarScene());
-            }
-        });
-        addDb.setId("addButton");
-        addDb.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                sess.addSession(conn, tempSession);
-                bottomLayer.getChildren().clear();
-                bottomLayer.getChildren().addAll(sIconView,confirmText);
-                bottomLayer.setVisible(true);
-                finish.setVisible(true);
-            }
-        });
-        topLayer.setId("topbox");
-        root.setStyle("-fx-padding:20");
-        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("MMMM dd yyyy");
-        Label date=new Label("Date selected: "+tempSession.getDate().format(dtf));
-        Label time=new Label("Time slot: "+ tempSession.getStartTime()+"-"+tempSession.getEndTime());
-        Label instructor=new Label("Instructor selected: "+instructorMenu.getValue());
-        Label slope=new Label("Slope selected: "+slopeMenu.getValue());
-        Label maxB=new Label("Maximum bookings for this session: "+String.valueOf(tempSession.getMaxBookings()));
-        Label price=new Label("Price per booking: "+String.valueOf(tempSession.getPrice()));
-        Label desc=new Label("Description:\n"+tempSession.getDescription());
-        topLayer.getChildren().addAll(date,time,instructor,slope,maxB,price,desc);
-        root.setAlignment(Pos.CENTER);
-        
-        root.getChildren().addAll(topLayer,addDb,bottomLayer,finish);
-        Scene scene=new Scene(root,500,500);
-        scene.getStylesheets().add(getClass().getResource("ManagerUIRSScene.css").toExternalForm());
-        return scene;
-    }
-    public Scene setDetailsScene(){
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-padding: 20");
-        //TOP
-        Label dateAndTimePicked = new Label(tempSession.getDate().toString()+" "+tempSession.getStartTime()+"-"+tempSession.getEndTime());
-        root.setTop(dateAndTimePicked);
-        BorderPane.setAlignment(dateAndTimePicked, Pos.TOP_CENTER);
-        
-        //CENTER
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-            ColumnConstraints column1 = new ColumnConstraints(200);
-            ColumnConstraints column2 = new ColumnConstraints(200);
-            gridPane.getColumnConstraints().addAll(column1,column2);
-        gridPane.setPadding(new Insets(12,0,20,25));
-       
-        
-        sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
-        sess.setSlopeList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
-        availSlopes=sess.getSlopes();
-        availInstructors=sess.getInstructors();
-        Label instructors = new Label("instructors");
-        Label slopes = new Label("slopes");
-        Label sessDescription = new Label("Write a short description of the session");
-        TextArea description = new TextArea();
-        description.setPrefColumnCount(100);
-        description.setPromptText("Enter text here...");
-        description.setPrefRowCount(5);
-        description.setWrapText(true);
-        
-        Label priceEnter = new Label("Price");
-        TextField priceText = new TextField();
-        priceText.setPromptText("xxx.xx");
-        priceText.setPrefWidth(60);
-        priceText.setMaxWidth(60);
-        priceText.textProperty().addListener((obs,o,n)->{
-            try{
-                Float a = Float.parseFloat(n);
-                if (a<=0){
-                    priceText.setText("");
-                }
-            }
-            catch (NumberFormatException ex){
-                priceText.setText("");
-            }
-        });
-        
-        Label setMaxBookings = new Label ("Max Bookings: ");
-        TextField bookingText = new TextField();
-        bookingText.setPromptText("xx");
-        bookingText.setPrefWidth(60);
-        bookingText.setMaxWidth(60);
-        bookingText.textProperty().addListener((obs,o,n)->{
-            try{
-                int a = Integer.parseInt(n);
-                if (a<=0){
-                    bookingText.setText("");
-                }
-            }
-            catch (NumberFormatException ex){
-                bookingText.setText("");
-            }
-        });
-        
-        
-        //slopeMenu.getItems().addAll(availSlopes);
-        
-        instructorMenu.getItems().addAll(availInstructors);
-        slopeMenu.getItems().addAll(availSlopes);
-       
-        gridPane.add(instructors, 0, 0);
-        gridPane.add(instructorMenu,1,0);
-        gridPane.add(slopes,0,1);
-        gridPane.add(slopeMenu,1,1);
-        gridPane.add(priceEnter,0,2);
-        gridPane.add(priceText,1,2);
-        gridPane.add(setMaxBookings,0,3);
-        gridPane.add(bookingText,1,3);
-        gridPane.add(sessDescription,0,5,2,1);
-        gridPane.add(description,0,6,2,2);
-        
-        //BOTTOM
-        Button nextPage = new Button("NEXT");
-        nextPage.setOnAction(new EventHandler(){
-            @Override
-            public void handle(Event e){
-                tempSession.setInstructorId(((Instructor)instructorMenu.getValue()).getInstrId());
-                tempSession.setSlopeId(((Slope)slopeMenu.getValue()).getId());
-                tempSession.setMaxBookings(Integer.parseInt(bookingText.getText()));
-                tempSession.setPrice(Integer.parseInt(priceText.getText()));
-                tempSession.setDescription(description.getText());
-                mainScene=makeResultScene();
-                theStage.setScene(mainScene);
-            }
-        });
-        
-        root.setCenter(gridPane);
-        root.setBottom(nextPage);
-        root.setMargin(nextPage,new Insets(0,15,12,0));
-        BorderPane.setAlignment(nextPage, Pos.BOTTOM_RIGHT);
-        Scene scene=new Scene(root,550,400);
-        return scene;
-    }
     public Scene setCalendarScene(){
+        //The Calendar Scene represents the first step when adding a session
+        /*
+        Displays:
+            A DatePicker to pick a date
+            Two sets of comboboxes to select a starttime and an endtime
+            A button that goies to the next page when everything has been selected
+        */
         hours.clear();
         hours.addAll("9","10","11","12","13","14","15","16","17","18","19","20");
         minutes.clear();
@@ -378,6 +247,10 @@ public class ManagerUI {
         nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
+                /*
+                Sets the picked Date and Time values in the tempSession instance of the class Session
+                Then moves on to the next screen
+                */
                 tempSession.setDate(addSessionDatePicker.getValue());
                 tempSession.setStartTime(startHours.getValue().toString()+":"+startMinutes.getValue().toString()+":00");
                 tempSession.setEndTime(endHours.getValue().toString()+":"+endMinutes.getValue().toString()+":00"); 
@@ -385,7 +258,15 @@ public class ManagerUI {
                 theStage.setScene(mainScene);
             }
         });
-        
+        /*
+        A set of boolean bindings definitions which define the sequence in which our elements will 
+        become visible on screen
+        The sequence of visiblity is:
+                                        DatePicker
+                                        StartTime combobox 
+                                        EndTime Combobox
+                                        NextPage button
+        */
         BooleanBinding dateValid = Bindings.createBooleanBinding(() -> 
             (addSessionDatePicker.getValue()!=null),addSessionDatePicker.valueProperty());
         BooleanBinding startTimeHoursValid = Bindings.createBooleanBinding(() -> 
@@ -401,6 +282,8 @@ public class ManagerUI {
         startLabel.visibleProperty().bind(dateValid);
         endLabel.visibleProperty().bind(startTimeHoursValid.and(startTimeMinutesValid));
         dayConfirmedLabel.visibleProperty().bind(endTimeHoursValid.and(endTimeMinutesValid));
+        
+        //add all elements to the grid
         gridPane.add(checkInlabel, 1, 0);
         GridPane.setHalignment(checkInlabel, HPos.CENTER);
         gridPane.add(addSessionDatePicker, 1,1);
@@ -430,6 +313,163 @@ public class ManagerUI {
         rootCal.prefWidthProperty().bind(scene.widthProperty());
         rootCal.prefHeightProperty().bind(scene.widthProperty());
         
+        return scene;
+    }
+    public Scene setDetailsScene(){
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-padding: 20");
+        //TOP
+        Label dateAndTimePicked = new Label(tempSession.getDate().toString()+" "+tempSession.getStartTime()+"-"+tempSession.getEndTime());
+        root.setTop(dateAndTimePicked);
+        BorderPane.setAlignment(dateAndTimePicked, Pos.TOP_CENTER);
+        
+        //CENTER
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+            ColumnConstraints column1 = new ColumnConstraints(200);
+            ColumnConstraints column2 = new ColumnConstraints(200);
+            gridPane.getColumnConstraints().addAll(column1,column2);
+        gridPane.setPadding(new Insets(12,0,20,25));
+       
+        //fetch the list of available instructors and slopes for the timeslot picked
+        sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
+        sess.setSlopeList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
+        availSlopes=sess.getSlopes();
+        availInstructors=sess.getInstructors();
+        //-----------------------------------------------------------------------
+        Label instructors = new Label("instructors");
+        Label slopes = new Label("slopes");
+        Label sessDescription = new Label("Write a short description of the session");
+        TextArea description = new TextArea();
+        description.setPrefColumnCount(100);
+        description.setPromptText("Enter text here...");
+        description.setPrefRowCount(5);
+        description.setWrapText(true);
+        
+        Label priceEnter = new Label("Price");
+        TextField priceText = new TextField();
+        priceText.setPromptText("xxx.xx");
+        priceText.setPrefWidth(60);
+        priceText.setMaxWidth(60);
+        //make the price field only able to receive integer as text
+        priceText.textProperty().addListener((obs,o,n)->{
+            try{
+                Float a = Float.parseFloat(n);
+                if (a<=0){
+                    priceText.setText("");
+                }
+            }
+            catch (NumberFormatException ex){
+                priceText.setText("");
+            }
+        });
+        
+        Label setMaxBookings = new Label ("Max Bookings: ");
+        TextField bookingText = new TextField();
+        bookingText.setPromptText("xx");
+        bookingText.setPrefWidth(60);
+        bookingText.setMaxWidth(60);
+        //make the maxBookings field only able to receive integers
+        bookingText.textProperty().addListener((obs,o,n)->{
+            try{
+                int a = Integer.parseInt(n);
+                if (a<=0){
+                    bookingText.setText("");
+                }
+            }
+            catch (NumberFormatException ex){
+                bookingText.setText("");
+            }
+        });
+        
+        //add all items to the grid
+        instructorMenu.getItems().addAll(availInstructors);
+        slopeMenu.getItems().addAll(availSlopes);
+        gridPane.add(instructors, 0, 0);
+        gridPane.add(instructorMenu,1,0);
+        gridPane.add(slopes,0,1);
+        gridPane.add(slopeMenu,1,1);
+        gridPane.add(priceEnter,0,2);
+        gridPane.add(priceText,1,2);
+        gridPane.add(setMaxBookings,0,3);
+        gridPane.add(bookingText,1,3);
+        gridPane.add(sessDescription,0,5,2,1);
+        gridPane.add(description,0,6,2,2);
+        
+        //BOTTOM
+        Button nextPage = new Button("NEXT");
+        nextPage.setOnAction(new EventHandler(){
+            @Override
+            public void handle(Event e){
+                //sets the values picked in the tempSession instance of Session and goes to next page
+                tempSession.setInstructorId(((Instructor)instructorMenu.getValue()).getInstrId());
+                tempSession.setSlopeId(((Slope)slopeMenu.getValue()).getId());
+                tempSession.setMaxBookings(Integer.parseInt(bookingText.getText()));
+                tempSession.setPrice(Integer.parseInt(priceText.getText()));
+                tempSession.setDescription(description.getText());
+                mainScene=makeResultScene();
+                theStage.setScene(mainScene);
+            }
+        });
+        
+        root.setCenter(gridPane);
+        root.setBottom(nextPage);
+        root.setMargin(nextPage,new Insets(0,15,12,0));
+        BorderPane.setAlignment(nextPage, Pos.BOTTOM_RIGHT);
+        Scene scene=new Scene(root,550,400);
+        return scene;
+    }
+    public Scene makeResultScene(){
+        
+        VBox root=new VBox();
+        VBox topLayer=new VBox();
+        Button addDb=new Button("Add this Session");
+        VBox bottomLayer=new VBox();
+        Image sIcon=new Image("file:src/successIcon.png", 60, 60, true, true);
+        ImageView sIconView=new ImageView();
+        sIconView.setImage(sIcon);
+        Label confirmText=new Label("Session succesfully added");
+        Image dIcon=new Image ("file:src/dIcon.png",60,60,true,true);
+        Button finish=new Button("Back to Start");
+        finish.setVisible(false);
+        bottomLayer.setId("botbox");
+       
+        finish.setOnAction(new EventHandler() {
+            //go back to the beginning
+            @Override
+            public void handle(Event event) {
+                theStage.setScene(setCalendarScene());
+            }
+        });
+        addDb.setId("addButton");
+        addDb.setOnAction(new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                //this button will send all the information stored in tempSession to be written in database
+                sess.addSession(conn, tempSession);
+                bottomLayer.getChildren().clear();
+                bottomLayer.getChildren().addAll(sIconView,confirmText);
+                bottomLayer.setVisible(true);
+                finish.setVisible(true);
+            }
+        });
+        topLayer.setId("topbox");
+        root.setStyle("-fx-padding:20");
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("MMMM dd yyyy");
+        Label date=new Label("Date selected: "+tempSession.getDate().format(dtf));
+        Label time=new Label("Time slot: "+ tempSession.getStartTime()+"-"+tempSession.getEndTime());
+        Label instructor=new Label("Instructor selected: "+instructorMenu.getValue());
+        Label slope=new Label("Slope selected: "+slopeMenu.getValue());
+        Label maxB=new Label("Maximum bookings for this session: "+String.valueOf(tempSession.getMaxBookings()));
+        Label price=new Label("Price per booking: "+String.valueOf(tempSession.getPrice()));
+        Label desc=new Label("Description:\n"+tempSession.getDescription());
+        topLayer.getChildren().addAll(date,time,instructor,slope,maxB,price,desc);
+        root.setAlignment(Pos.CENTER);
+        
+        root.getChildren().addAll(topLayer,addDb,bottomLayer,finish);
+        Scene scene=new Scene(root,500,500);
+        scene.getStylesheets().add(getClass().getResource("ManagerUIRSScene.css").toExternalForm());
         return scene;
     }
     

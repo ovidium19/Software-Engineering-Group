@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package spherebookingsystem;
 
 import java.util.ArrayList;
@@ -12,43 +8,25 @@ import java.time.LocalDate;
 
 /**
  *
- * @author BOCU
+ * @author Ovidiu Mitroi
+ *         SID: 6832432
+ *         FUNCTIONALITY: ADD A SESSION
  */
 public class SessionRepoImpl implements SessionRepo {
-    private ArrayList<Session> sessions;
     private ResultSet sessionsForThisDay;
     
     public SessionRepoImpl(){
         sessions = new ArrayList<Session>();
-    }
-    public SessionRepoImpl(ArrayList list){
-        sessions=list;
-    }
-    
-    @Override
-    public ArrayList<Session> getAllSessions(){
-        return sessions;
-    }
-    
-    @Override
-    public Session getSession(Session session){
-        Session temp = new Session();
-        return sessions.get(session.getId()-1);
-    }
-    
-    @Override
-    public void setSessions(ArrayList<Session> list){
-        sessions=list;
-    }
-    
+    }    
     @Override
     public void addSession(Session session, Connection conn){
-        sessions.add(session);
+        //takes a Session parameter and adds it to the db
         write(conn,"add",session);
     }
     
     @Override
     public Session readSessionByID(Connection conn,int id){
+        //read a Session by its id
         Session temp = new Session();
         String query = "SELECT * from Session where sessionid="+String.valueOf(id)+";";
         try
@@ -76,61 +54,10 @@ public class SessionRepoImpl implements SessionRepo {
         }
         return temp;
     }
-    
-    @Override
-    public ArrayList readInstructors(Connection conn){
-        System.out.println("Reading instructor names from db...");
-        ArrayList list = new ArrayList();
-        try
-        {
-            Statement st = conn.createStatement();
-            ResultSet rs=null;
-            String sql = "SELECT name from INSTRUCTOR";
-            rs=st.executeQuery(sql);
-            
-            while (rs.next()){
-                list.add(rs.getString("NAME"));
-                
-            }
-            rs.close();
-            st.close();
-            
-        }
-        catch (SQLException ex){
-            System.out.println(ex);
-        }
-        return list;
-    }
-    
-    @Override
-    public ArrayList readSlopes(Connection conn){
-        System.out.println("Reading slopes names from db...");
-        ArrayList list = new ArrayList();
-        try
-        {
-            Statement st = conn.createStatement();
-            ResultSet rs=null;
-            String sql = "SELECT name from SLOPE";
-            rs=st.executeQuery(sql);
-            
-            while (rs.next()){
-                list.add(rs.getString("NAME"));
-                
-            }
-            rs.close();
-            st.close();
-            
-        }
-        catch (SQLException ex){
-            System.out.println(ex);
-        }
-        return list;
-    }
    
     @Override
     public void write(Connection conn, String str, Session session){
-        
-        ArrayList list = getAllSessions();
+        //Writes a Session instance to the DB
         System.out.println("Writing to the database... ");
         
         if (str.equals("add")){
@@ -154,7 +81,8 @@ public class SessionRepoImpl implements SessionRepo {
         }
          
     }
-
+    
+    @Override
     public ResultSet checkDate(Connection conn, LocalDate date, String sessionType) {
                
         

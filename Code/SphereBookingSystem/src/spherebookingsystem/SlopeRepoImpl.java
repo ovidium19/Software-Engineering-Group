@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package spherebookingsystem;
 
 import java.sql.Connection;
@@ -11,10 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 /**
  *
- * @author BOCU
+ * @author Ovidiu Mitroi
+ *         SID: 6832432
+ *         FUNCTIONALITY: ADD A SESSION
  */
 public class SlopeRepoImpl implements SlopeRepo {
     private ArrayList<Slope> slopes;
@@ -41,6 +38,7 @@ public class SlopeRepoImpl implements SlopeRepo {
 
     @Override
     public void write(Connection con, Slope slope) {
+        //insert a slope in the db
         try{
             Statement st=con.createStatement();
             
@@ -57,6 +55,11 @@ public class SlopeRepoImpl implements SlopeRepo {
 
     @Override
     public void read(Connection con, LocalDate date, String startT, String endT) {
+        /*
+        Reads slopes from the database that don't have a Session booked
+        on a time slot that overlasp with the time slot described in the parameters
+        (Date, Starttime - Endtime)
+        */
         if(slopes.size()>0)
                 slopes.clear();
         try{

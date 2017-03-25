@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package spherebookingsystem;
 
 import java.util.ArrayList;
@@ -13,9 +9,16 @@ import javafx.scene.control.Toggle;
 
 /**
  *
- * @author BOCU
+ * @author Ovidiu Mitroi
+ *         SID: 6832432
+ *         FUNCTIONALITY: ADD A SESSION
  */
 public class SessionController {
+    /*
+    sessionRepo -- an instance of SessionRepoImpl in order to be able to write the session to the database
+    insRepo -- an instance of InstructorRepoImpl in order to be able to get available instructores.
+    slopeRepo - an instance of SlopeRepoImpl meant to read available slopers from the database
+    */
     private SessionRepoImpl sessionRepo = new SessionRepoImpl();
     private ArrayList<Instructor> availInstructors;
     private ArrayList<Slope> availSlopes;
@@ -24,6 +27,8 @@ public class SessionController {
     
     
     public void setInstructorList(Connection con,LocalDate date,String start,String end){
+        //read available instructors from db. The query to read available instructors
+        //requires a date and a starttime and endtime
         insRepo.read(con, date, start, end);
         availInstructors=insRepo.getInstructors();
     }
@@ -31,57 +36,24 @@ public class SessionController {
         return availInstructors;
     }
     public void setSlopeList(Connection con,LocalDate date,String start,String end){
+        //read available slopes from db. The query to read available instructors
+        //requires a date and a starttime and endtime
         slopeRepo.read(con,date,start,end);
         availSlopes=slopeRepo.getSlopes();
     }
     public ArrayList<Slope> getSlopes(){
         return availSlopes;
     }
-    public void addASession(String startTime,String endTime, LocalDate date, int maxBookings,int slopeID,int instructorId, int price, 
-                            String description, Connection conn){
-        Session sess = new Session();
-        sess.setStartTime(startTime);
-        sess.setEndTime(endTime);
-        sess.setDate(date);
-        sess.setMaxBookings(maxBookings);
-        sess.setSlopeId(slopeID);
-        sess.setInstructorId(instructorId);
-        sess.setPrice(price);
-        sess.setDescription(description);
-        sessionRepo.addSession(sess, conn);
-        
-    }
+   
     public void addSession(Connection con,Session session){
+        //send a Session instance to the SessionRepoImpl to be written in the db
         sessionRepo.addSession(session, con);
     }
-    public void viewDetails(int id){
-        ArrayList list = sessionRepo.getAllSessions();
-                 boolean found  = false;
-         int i = 0;
-         while (i<list.size() && !found){
-                Session temp = (Session)list.get(i);
-                if (id == temp.getId()){
-                    System.out.print("Session details: \n startTime: " + temp.getStartTime()+ 
-                     "\n endTime: " +  temp.getEndTime()+ "\n");
-                    
-                    found = true;
-                }
-            i++;
-            }  
-
-    }
-    public void seeAllSessions(){
-        ArrayList list = sessionRepo.getAllSessions();
-        for (int i=0;i<list.size();i++){
-            Session temp = (Session)list.get(i);
-            System.out.print("Session details: \n startTime: " + temp.getStartTime()+ 
-                     "\n endTime: " +  temp.getEndTime()+ "\n");
-        }
-    }
-    public void setSessionList(ArrayList sessions){
-        sessionRepo.setSessions(sessions);
-    }
     
+    
+    /*
+    Implemented by Genaro Bedenko for his functionality
+    */
     // Function that takes in a date and session type
     // Calls the session repo to retieve a resultset from the SQL database table
     // Returns a list of strings for all sessions that match the entered date and session type

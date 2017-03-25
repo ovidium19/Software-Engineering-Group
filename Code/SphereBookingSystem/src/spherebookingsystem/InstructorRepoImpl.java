@@ -11,11 +11,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 /**
  *
- * @author BOCU
+ * @author Ovidiu Mitroi
+ *         SID: 6832432
+ *         FUNCTIONALITY: ADD A SESSION
  */
+
 public class InstructorRepoImpl implements InstructorRepo {
     private ArrayList<Instructor> instructors;
     
@@ -51,7 +53,11 @@ public class InstructorRepoImpl implements InstructorRepo {
     }
     @Override
     public void read(Connection con,LocalDate date,String startTime,String endTime){
-        
+        /*
+        Reads instructors from the database that don't have a Session booked
+        on a time slot that overlasp with the time slot described in the parameters
+        (Date, Starttime - Endtime)
+        */
         if(instructors.size()>0)
                 instructors.clear();
         try{

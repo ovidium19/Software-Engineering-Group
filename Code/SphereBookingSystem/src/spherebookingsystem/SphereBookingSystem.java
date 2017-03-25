@@ -973,13 +973,15 @@ public class SphereBookingSystem extends Application {
     
     // Creates the user interface for adding a session
      private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
+        //Singleton pattern implemented here, therfore to get the instance of
+        //the manager UI, we have to call its public getInstance method.
         ManagerUI mui = ManagerUI.getInstance(primaryManagerStage, conn);
         
         primaryManagerStage.setScene(mui.setCalendarScene());
-        //primaryManagerStage.initModality(Modality.APPLICATION_MODAL);
+        
         primaryManagerStage.show();
         
-        //Scene scene = new Scene(root, 500, 450);
+        
     }
     
     // Sets up the stage for scenes to be shown in
