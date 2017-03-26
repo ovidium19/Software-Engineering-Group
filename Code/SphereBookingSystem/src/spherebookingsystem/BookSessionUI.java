@@ -53,10 +53,19 @@ public class BookSessionUI {
     private HBox availableSessionsInfo = new HBox();
     private HBox confirmationInfo = new HBox();
     private List sessionsListContent = new ArrayList();
+    
     private ComboBox sessionsDropDown = new ComboBox();
     private String theTimeSlot = new String();
     private RadioButton selectedToggle = new RadioButton();
     private TextField enterCustomerText = new TextField();
+    
+    private Label customerIDShownLabel = new Label();
+    private Label firstNameShownLabel = new Label();
+    private Label lastNameShownLabel = new Label();
+    private Label emailShownLabel = new Label();
+    private Label phoneShownLabel = new Label();
+    
+    Customer theCustomer = new Customer();
     
     private BookingController bookingControllerConnection = new BookingController();
     private CustomerController customerControllerConnection = new CustomerController();
@@ -146,7 +155,7 @@ public class BookSessionUI {
         
         // Label for searching for customer ID
         Label findCustomerLabel = new Label();
-        findCustomerLabel.setText("Customer has forgotten their ID? Search for it here:");
+        findCustomerLabel.setText("Customer has forgotten their ID? Search for it here: ");
         findCustomerLabel.setAlignment(Pos.TOP_CENTER);
         findCustomerLabel.setTextAlignment(TextAlignment.CENTER);
         
@@ -417,7 +426,7 @@ public class BookSessionUI {
     
     // Creates the user interface for searching for the customer's id
     private Scene makeFindCustomerScreen() {
-        
+                
         Label findCustomerIDLabel = new Label();
         findCustomerIDLabel.setText("FIND CUSTOMER ID");
         findCustomerIDLabel.setAlignment(Pos.TOP_CENTER);
@@ -435,6 +444,45 @@ public class BookSessionUI {
         checkByEmailButton.setText("Submit");
         checkByEmailButton.setAlignment(Pos.TOP_CENTER);
         checkByEmailButton.setTextAlignment(TextAlignment.CENTER);
+        
+        checkByEmailButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                // Retrieve the customer ID that was typed in
+                String theEmail = checkByEmailTextField.getText();
+                
+                try {
+                    theCustomer = customerControllerConnection.findCustomer(conn, theEmail);
+                    
+                    String customerIDText = Integer.toString(theCustomer.getCustomerID());     
+                    customerIDShownLabel.setText(customerIDText);
+                    customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
+                    customerIDShownLabel.setTextAlignment(TextAlignment.CENTER);
+                
+                    firstNameShownLabel.setText(theCustomer.getFirstName());
+                    firstNameShownLabel.setAlignment(Pos.TOP_CENTER);
+                    firstNameShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+                    lastNameShownLabel.setText(theCustomer.getLastName());
+                    lastNameShownLabel.setAlignment(Pos.TOP_CENTER);
+                    lastNameShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+                    emailShownLabel.setText(theCustomer.getEmail());
+                    emailShownLabel.setAlignment(Pos.TOP_CENTER);
+                    emailShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+                    phoneShownLabel.setText(theCustomer.getTelephoneNo());
+                    phoneShownLabel.setAlignment(Pos.TOP_CENTER);
+                    phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(BookSessionUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        
+            }
+        });
         
         HBox checkByEmailHBox = new HBox();
         checkByEmailHBox.getChildren().addAll(checkByEmailLabel, checkByEmailTextField, checkByEmailButton);
@@ -501,30 +549,7 @@ public class BookSessionUI {
         VBox detailsLabelsVBox = new VBox();
         detailsLabelsVBox.getChildren().addAll(customerIDLabel, firstNameLabel, lastNameLabel, emailLabel, phoneLabel);
         
-        Label customerIDShownLabel = new Label();
-        customerIDShownLabel.setText("...");
-        customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
-        customerIDShownLabel.setTextAlignment(TextAlignment.CENTER);
         
-        Label firstNameShownLabel = new Label();
-        firstNameShownLabel.setText("...");
-        firstNameShownLabel.setAlignment(Pos.TOP_CENTER);
-        firstNameShownLabel.setTextAlignment(TextAlignment.CENTER);
-        
-        Label lastNameShownLabel = new Label();
-        lastNameShownLabel.setText("...");
-        lastNameShownLabel.setAlignment(Pos.TOP_CENTER);
-        lastNameShownLabel.setTextAlignment(TextAlignment.CENTER);
-        
-        Label emailShownLabel = new Label();
-        emailShownLabel.setText("...");
-        emailShownLabel.setAlignment(Pos.TOP_CENTER);
-        emailShownLabel.setTextAlignment(TextAlignment.CENTER);
-        
-        Label phoneShownLabel = new Label();
-        phoneShownLabel.setText("...");
-        phoneShownLabel.setAlignment(Pos.TOP_CENTER);
-        phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
         
         VBox detailsLabelsShownVBox = new VBox();
         detailsLabelsShownVBox.getChildren().addAll(customerIDShownLabel, firstNameShownLabel, lastNameShownLabel, emailShownLabel, phoneShownLabel);

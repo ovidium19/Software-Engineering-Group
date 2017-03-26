@@ -41,6 +41,36 @@ public class CustomerController {
             
             return(isACustomer);
         }
+        
+        public Customer findCustomer(Connection connection, String email) throws SQLException {
+                        
+            Customer foundCustomer = new Customer();
+            
+            ResultSet customerResults = CustomerRepo.findCustomer(connection, email);
+                        
+            while (customerResults.next()){
+                
+                int foundCustomerID = customerResults.getInt("CUSTOMERID");
+                foundCustomer.setCustomerID(foundCustomerID);
+                
+                String foundFirstName = customerResults.getString("FIRSTNAME");
+                foundCustomer.setFirstName(foundFirstName);
+                
+                String foundLastName = customerResults.getString("LASTNAME");
+                foundCustomer.setLastName(foundLastName);
+                
+                String foundEmail = customerResults.getString("EMAIL");
+                foundCustomer.setEmail(foundEmail);
+                
+                String foundTelephone = customerResults.getString("TELEPHONENO");
+                foundCustomer.setFirstName(foundTelephone);
+                
+            }
+            
+            System.out.println(foundCustomer.getFirstName());
+            
+            return(foundCustomer);
+        }
               
         public void register(Connection connection, String firstName, String lastName, String Email, String phoneNo, String Membership){
              

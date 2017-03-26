@@ -1,6 +1,8 @@
 package spherebookingsystem;
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -9,6 +11,7 @@ import java.sql.*;
 public class CustomerRepoImpl implements CustomerRepo {
     private ArrayList customers;
     private ResultSet rs;
+    private ResultSet customerDetails;
     
     public CustomerRepoImpl(){
         customers = new ArrayList();
@@ -115,6 +118,26 @@ public class CustomerRepoImpl implements CustomerRepo {
         }
        
        return(false);
+    }
+    
+    
+    public ResultSet findCustomer(Connection con, String email) {
+
+        System.out.println("Reading from database...");
+        
+        try {   
+                Statement st = con.createStatement();
+                
+                String sql = "SELECT * FROM CUSTOMERS WHERE Email = '" + email + "'";
+                System.out.println(sql);
+                customerDetails = st.executeQuery(sql);
+
+        }
+        catch (SQLException ex) {
+                    System.out.println(ex);
+        } 
+                
+        return(customerDetails);   
     }
     
 }  
