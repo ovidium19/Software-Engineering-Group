@@ -23,8 +23,7 @@ import javafx.stage.Stage;
  */
 public class SlopeOperatorUI {
     
-    private static Connection conn;
-    private static Scene mainScene;    
+    private static Connection conn;   
     private static Stage theStage;
     private Session tempSession;
     
@@ -61,7 +60,7 @@ public class SlopeOperatorUI {
             
             @Override
             public void handle(ActionEvent event) {
-                makeBookingScreen(theStage, conn); 
+                makeRegisterScreen(theStage, conn); 
             }
         });
         
@@ -89,6 +88,14 @@ public class SlopeOperatorUI {
         checkInButton.setTextAlignment(TextAlignment.CENTER);
         checkInButton.setPadding(new Insets(12,5,20,5));
         
+        checkInButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                makeCheckInScreen(theStage, conn); 
+            }
+        });
+        
         Button viewScheduleButton = new Button();
         viewScheduleButton.setText("View Schedule");
         viewScheduleButton.setAlignment(Pos.TOP_CENTER);
@@ -96,6 +103,14 @@ public class SlopeOperatorUI {
         viewScheduleButton.setMaxSize(viewScheduleButton.getPrefWidth(), viewScheduleButton.getPrefHeight());
         viewScheduleButton.setTextAlignment(TextAlignment.CENTER);
         viewScheduleButton.setPadding(new Insets(12,5,20,5));
+        
+        viewScheduleButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                makeViewScheduleScreen(theStage, conn); 
+            }
+        });
         
         Button backButton = new Button();
         backButton.setText("Back");
@@ -123,8 +138,7 @@ public class SlopeOperatorUI {
         Scene scene = new Scene(root, 500, 500);
         
         return(scene);
-    }
-    
+    } 
     
     private void makeRegisterScreen(Stage primarySlopeOperatorStage, Connection conn) {
         
@@ -140,6 +154,24 @@ public class SlopeOperatorUI {
         BookSessionUI booksessionui = BookSessionUI.getInstance(primarySlopeOperatorStage, conn);
         
         primarySlopeOperatorStage.setScene(booksessionui.makeBookingScreen());
+        
+        primarySlopeOperatorStage.show();  
+    }
+    
+    private void makeCheckInScreen(Stage primarySlopeOperatorStage, Connection conn) {
+        
+        CheckInSessionUI checkinsessionui = CheckInSessionUI.getInstance(primarySlopeOperatorStage, conn);
+        
+        primarySlopeOperatorStage.setScene(checkinsessionui.makeCheckInScreen());
+        
+        primarySlopeOperatorStage.show();  
+    }
+    
+    private void makeViewScheduleScreen(Stage primarySlopeOperatorStage, Connection conn) {
+        
+        ViewScheduleUI viewscheduleui = ViewScheduleUI.getInstance(primarySlopeOperatorStage, conn);
+        
+        primarySlopeOperatorStage.setScene(viewscheduleui.makeViewScheduleScreen());
         
         primarySlopeOperatorStage.show();  
     }

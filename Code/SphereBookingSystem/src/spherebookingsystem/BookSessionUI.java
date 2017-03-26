@@ -36,7 +36,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Genaro
+ * @author Genaro Bedenko
  */
 public class BookSessionUI {
     
@@ -45,7 +45,7 @@ public class BookSessionUI {
     private static Stage theStage;
     private Session tempSession;
     
-    // Global attributes used in Booking a Session (Genaro)
+    // Global attributes used in Booking a Session
     private TextField firstNameText = new TextField();
     private Label customerStatusLabel = new Label();
     private VBox sessionPickerInfo = new VBox();
@@ -78,7 +78,8 @@ public class BookSessionUI {
         return instance;
     }
     
-    // Creates the user interface for booking a session
+    
+    // Creates the user interface for entering booking details
     public Scene makeBookingScreen() {
         
         // Create title text label
@@ -414,6 +415,7 @@ public class BookSessionUI {
         return(scene); 
     }
     
+    // Creates the user interface for searching for the customer's id
     private Scene makeFindCustomerScreen() {
         
         Label findCustomerIDLabel = new Label();
@@ -552,6 +554,7 @@ public class BookSessionUI {
         return(scene); 
     }
     
+    // Creates the user interface for confirming the booking details
     private Scene confirmationScreen() {
         
         // Create title text label
@@ -598,18 +601,41 @@ public class BookSessionUI {
         VBox priceDetailsVBox = new VBox();
         priceDetailsVBox.getChildren().addAll(sessionPriceText, priceAfterDeductionText);
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
-        priceDetailsVBox.setSpacing(25);
-        
-        // Create enter customer ID text label
-        //Label enterPaymentLabel = new Label();
-        //enterPaymentLabel.setText("Has the Customer paid yet?: ");
-        //enterPaymentLabel.setAlignment(Pos.TOP_CENTER);
-        //enterPaymentLabel.setTextAlignment(TextAlignment.CENTER);
-                
+        priceDetailsVBox.setSpacing(25);                
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
         root.getChildren().addAll(confirmationTitleText, sessionDetailsVBox, priceDetailsVBox);
+        root.setPadding(new Insets(50,50,50,50));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(25);
+        
+        // Root is passed as a parameter to create the scene
+        Scene scene = new Scene(root, 800, 600);
+        
+        theStage.show();        
+        
+        return(scene); 
+    }
+    
+    // Creates the user interface for taking payment from customer
+    private Scene paymentScreen() {
+        
+        // Create title text label
+        Label confirmationTitleText = new Label();
+        confirmationTitleText.setText("PAYMENT SCREEN");
+        confirmationTitleText.setAlignment(Pos.TOP_CENTER);
+        confirmationTitleText.setTextAlignment(TextAlignment.CENTER);
+                
+        Label enterPaymentLabel = new Label();
+        enterPaymentLabel.setText("Has the Customer paid yet?: ");
+        enterPaymentLabel.setAlignment(Pos.TOP_CENTER);
+        enterPaymentLabel.setTextAlignment(TextAlignment.CENTER);
+                
+        
+        // All above elements are added to root - which is a VBox so all elements are displayed vertically
+        VBox root = new VBox();
+        root.getChildren().addAll(confirmationTitleText, enterPaymentLabel);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);

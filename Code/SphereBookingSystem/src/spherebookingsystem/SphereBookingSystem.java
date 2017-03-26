@@ -59,7 +59,6 @@ public class SphereBookingSystem extends Application {
     
     // Global attributes used in everyone's functionality (Shared)
     private Stage theStage;
-    private Stage managerStage;
     private final static Connection conn = connectDB();
     private BookingController bookingControllerConnection = new BookingController();
     private CustomerController customerControllerConnection = new CustomerController();
@@ -68,15 +67,7 @@ public class SphereBookingSystem extends Application {
     private PasswordField passwordText = new PasswordField();
     private TextField usernameText = new TextField();
     //-------------------------------------------------------------
-    
-    
-    
-    //-------------------------------------------------------------
-    // Global attributes used in Registering a Customer (Rick)
-    
-
-    //-------------------------------------------------------------
-    
+        
     // Method to connect to our DB
     // Database is saved locally and is in a different location depending where each user saves it
     final static Connection connectDB(){
@@ -96,8 +87,6 @@ public class SphereBookingSystem extends Application {
         }
     }
     
-    //-------------------------------------------------------------
-    // Below functions are for creating each of the screens that will be in the system
     private HBox makeTopBar(String funcName){
         HBox root=new HBox();
         root.setId("titleBar");
@@ -203,86 +192,7 @@ public class SphereBookingSystem extends Application {
         primarySlopeOperatorStage.show();          
     }
     
-    // Creates the user interface for checking in a customer
-    private Scene makeCheckInScreen() {
-        
-        Label welcomeText = new Label();
-        welcomeText.setText("Welcome to Sphere Booking & Checking In System");
-        welcomeText.setAlignment(Pos.TOP_CENTER);
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-        welcomeText.setPadding(new Insets(12,5,20,5));
-        
-        VBox root = new VBox();
-        root.getChildren().addAll(welcomeText);
-        
-        Scene scene = new Scene(root, 500, 450);
-        
-        return(scene); 
-    }
-    
-    // Creates the user interface for viewing the schedule of sessions
-    private Scene makeViewScheduleScreen() {
-        
-        Label viewScheduleLabel = new Label();
-        viewScheduleLabel.setText("View Schedule");
-        viewScheduleLabel.setAlignment(Pos.TOP_CENTER);
-        viewScheduleLabel.setTextAlignment(TextAlignment.CENTER);
-        viewScheduleLabel.setPadding(new Insets(12,5,20,5));
-        
-        Button mondayButton = new Button();
-        mondayButton.setText("Monday");
-        mondayButton.setAlignment(Pos.TOP_CENTER);
-        mondayButton.setTextAlignment(TextAlignment.CENTER);     
-        mondayButton.setPadding(new Insets(12,5,20,5));
-        
-        Button tuesdayButton = new Button();
-        tuesdayButton.setText("Tuesday");
-        tuesdayButton.setAlignment(Pos.TOP_CENTER);
-        tuesdayButton.setTextAlignment(TextAlignment.CENTER);     
-        tuesdayButton.setPadding(new Insets(12,5,20,5));
-        
-        Button wednesdayButton = new Button();
-        wednesdayButton.setText("Wednesday");
-        wednesdayButton.setAlignment(Pos.TOP_CENTER);
-        wednesdayButton.setTextAlignment(TextAlignment.CENTER);     
-        wednesdayButton.setPadding(new Insets(12,5,20,5));
-        
-        Button thursdayButton = new Button();
-        thursdayButton.setText("Thursday");
-        thursdayButton.setAlignment(Pos.TOP_CENTER);
-        thursdayButton.setTextAlignment(TextAlignment.CENTER);     
-        thursdayButton.setPadding(new Insets(12,5,20,5));
-        
-        Button fridayButton = new Button();
-        fridayButton.setText("Friday");
-        fridayButton.setAlignment(Pos.TOP_CENTER);
-        fridayButton.setTextAlignment(TextAlignment.CENTER);     
-        fridayButton.setPadding(new Insets(12,5,20,5));
-        
-                
-        Button backButton = new Button();
-        backButton.setText("Back");
-        backButton.setAlignment(Pos.TOP_RIGHT);
-        backButton.setTextAlignment(TextAlignment.CENTER);     
-        backButton.setPadding(new Insets(12,5,20,5));
-               
-        
-        VBox root = new VBox();
-        root.getChildren().addAll(viewScheduleLabel, mondayButton, tuesdayButton, wednesdayButton, thursdayButton, fridayButton, backButton);
-        root.getChildren().addAll(mondayButton);
-        root.getChildren().addAll(tuesdayButton);
-        root.getChildren().addAll(wednesdayButton);
-        root.getChildren().addAll(thursdayButton);
-        root.getChildren().addAll(fridayButton);
-        root.getChildren().addAll(backButton);
-        
-        Scene scene = new Scene(root, 500, 450);
-        
-        return(scene); 
-    }
-        
-    
-    // Creates the user interface for adding a session
+    // Creates the user interface for the manager's function
      private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
         //Singleton pattern implemented here, therfore to get the instance of
         //the manager UI, we have to call its public getInstance method.
