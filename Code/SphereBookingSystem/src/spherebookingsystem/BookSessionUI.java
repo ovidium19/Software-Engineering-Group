@@ -40,12 +40,13 @@ import javafx.stage.Stage;
  */
 public class BookSessionUI {
     
+    // Global attributes for creating an interface (attributes used for everyone)
     private static Connection conn;
     private static Scene mainScene;    
     private static Stage theStage;
     private Session tempSession;
     
-    // Global attributes used in Booking a Session
+    
     private TextField firstNameText = new TextField();
     private Label customerStatusLabel = new Label();
     private VBox sessionPickerInfo = new VBox();
@@ -55,9 +56,31 @@ public class BookSessionUI {
     private List sessionsListContent = new ArrayList();
     
     private ComboBox sessionsDropDown = new ComboBox();
+    
+    // Global attributes for the booking info
     private String theTimeSlot = new String();
+    private String theCustomerID = new String();
+    private String theAmountOfSkiers = new String();
+    private String theDate = new String();
+    private String theSessionType = new String();
+    
     private RadioButton selectedToggle = new RadioButton();
     private TextField enterCustomerText = new TextField();
+    
+    
+    // Global attributes for the Labels that will display the customer info
+    private Label customerIDTextShown = new Label();
+    private Label firstNameTextShown = new Label();
+    private Label lastNameTextShown = new Label();
+    private Label emailTextShown = new Label();
+    private Label telephoneTextShown = new Label();
+    
+    // Global attributes for the Labels that will display the session info
+    private Label numberOfSkiersTextShown = new Label();
+    private Label theSessionIDTextShown = new Label();
+    private Label theDateTextShown = new Label();
+    private Label theSessionTypeTextShown = new Label();
+    private Label theTimeSlotTextShown = new Label();
     
     private Label customerIDShownLabel = new Label();
     private Label firstNameShownLabel = new Label();
@@ -65,8 +88,15 @@ public class BookSessionUI {
     private Label emailShownLabel = new Label();
     private Label phoneShownLabel = new Label();
     
+    
+    
+    private Label sessionPriceShownText = new Label();
+    private Label priceAfterDeductionShownText = new Label();
+    
+    // Create a temp customer to view attributes from
     Customer theCustomer = new Customer();
     
+    // Creating instances of each controller that is used
     private BookingController bookingControllerConnection = new BookingController();
     private CustomerController customerControllerConnection = new CustomerController();
     private SessionController sessionControllerConnection = new SessionController();
@@ -385,8 +415,14 @@ public class BookSessionUI {
             
             @Override
             public void handle(ActionEvent event) {
-                             
-                Scene temp = confirmationScreen();
+                
+                theCustomerID = "...";
+                theAmountOfSkiers = "...";
+                theDate = "...";
+                theSessionType = "..."; 
+                theTimeSlot = sessionsDropDown.getValue().toString(); 
+                        
+                Scene temp = makeConfirmationScreen();
                 theStage.setScene(temp);
             }
         });
@@ -629,7 +665,7 @@ public class BookSessionUI {
     }
     
     // Creates the user interface for confirming the booking details
-    private Scene confirmationScreen() {
+    private Scene makeConfirmationScreen() {
         
         // Create title text label
         Label confirmationTitleText = new Label();
@@ -637,30 +673,88 @@ public class BookSessionUI {
         confirmationTitleText.setAlignment(Pos.TOP_CENTER);
         confirmationTitleText.setTextAlignment(TextAlignment.CENTER);
         
+        // Label to show where customer id will be
         Label customerIDText = new Label();
         customerIDText.setText("CUSTOMER ID:");
         customerIDText.setAlignment(Pos.TOP_CENTER);
         customerIDText.setTextAlignment(TextAlignment.RIGHT);
         
+        // Label to show where session id will be
         Label sessionIDText = new Label();
         sessionIDText.setText("SESSION ID:");
         sessionIDText.setAlignment(Pos.TOP_CENTER);
         sessionIDText.setTextAlignment(TextAlignment.RIGHT);
         
+        // Label to show where number of skiers will be
+        Label numberOfSkiersText = new Label();
+        numberOfSkiersText.setText("NUMBER OF SKIERS:");
+        numberOfSkiersText.setAlignment(Pos.TOP_CENTER);
+        numberOfSkiersText.setTextAlignment(TextAlignment.RIGHT);
+        
+        // Label to show where session date will be
         Label sessionDateText = new Label();
         sessionDateText.setText("SESSION DATE:");
         sessionDateText.setAlignment(Pos.TOP_CENTER);
         sessionDateText.setTextAlignment(TextAlignment.RIGHT);
         
+        // Label to show where session time will be
         Label sessionTimeText = new Label();
         sessionTimeText.setText("SESSION TIME:");
         sessionTimeText.setAlignment(Pos.TOP_CENTER);
         sessionTimeText.setTextAlignment(TextAlignment.RIGHT);
         
+        // Label to show where the session type will be
+        Label sessionTypeText = new Label();
+        sessionTypeText.setText("SESSION TYPE:");
+        sessionTypeText.setAlignment(Pos.TOP_CENTER);
+        sessionTypeText.setTextAlignment(TextAlignment.RIGHT);
+        
         VBox sessionDetailsVBox = new VBox();
-        sessionDetailsVBox.getChildren().addAll(customerIDText, sessionIDText, sessionDateText, sessionTimeText);
+        sessionDetailsVBox.getChildren().addAll(customerIDText, sessionIDText, numberOfSkiersText, sessionDateText, sessionTimeText, sessionTypeText);
         sessionDetailsVBox.setAlignment(Pos.TOP_CENTER);
         sessionDetailsVBox.setSpacing(25);
+        
+        customerIDTextShown.setText(theCustomerID);
+        customerIDTextShown.setAlignment(Pos.TOP_CENTER);
+        customerIDTextShown.setTextAlignment(TextAlignment.RIGHT);
+        
+        theSessionIDTextShown.setText(theAmountOfSkiers);
+        theSessionIDTextShown.setAlignment(Pos.TOP_CENTER);
+        theSessionIDTextShown.setTextAlignment(TextAlignment.RIGHT);
+        
+        numberOfSkiersTextShown.setText(theAmountOfSkiers);
+        numberOfSkiersTextShown.setAlignment(Pos.TOP_CENTER);
+        numberOfSkiersTextShown.setTextAlignment(TextAlignment.RIGHT);
+        
+        theDateTextShown.setText(theDate);
+        theDateTextShown.setAlignment(Pos.TOP_CENTER);
+        theDateTextShown.setTextAlignment(TextAlignment.RIGHT);
+        
+        theSessionTypeTextShown.setText(theSessionType);
+        theSessionTypeTextShown.setAlignment(Pos.TOP_CENTER);
+        theSessionTypeTextShown.setTextAlignment(TextAlignment.RIGHT);
+                 
+        theTimeSlotTextShown.setText(theTimeSlot);
+        theTimeSlotTextShown.setAlignment(Pos.TOP_CENTER);
+        theTimeSlotTextShown.setTextAlignment(TextAlignment.RIGHT);        
+        
+        VBox sessionDetailsShownVBox = new VBox();
+        sessionDetailsShownVBox.getChildren().addAll(customerIDTextShown, theSessionIDTextShown, numberOfSkiersTextShown,
+                                                     theDateTextShown,theTimeSlotTextShown, theSessionTypeTextShown);
+        sessionDetailsShownVBox.setAlignment(Pos.TOP_CENTER);
+        sessionDetailsShownVBox.setSpacing(25);
+        
+        HBox sessionDetailsTotal = new HBox();
+        sessionDetailsTotal.getChildren().addAll(sessionDetailsVBox, sessionDetailsShownVBox);
+        sessionDetailsTotal.setAlignment(Pos.TOP_CENTER);
+        sessionDetailsTotal.setSpacing(25);
+        sessionDetailsTotal.setStyle("-fx-padding: 10;" + 
+                                   "-fx-border-style: solid inside;" + 
+                                   "-fx-border-width: 2;" +
+                                   "-fx-border-insets: 5;" + 
+                                   "-fx-border-radius: 5;" + 
+                                   "-fx-border-color: blue;");     
+        
         
         Label sessionPriceText = new Label();
         sessionPriceText.setText("SESSION PRICE:");
@@ -675,11 +769,44 @@ public class BookSessionUI {
         VBox priceDetailsVBox = new VBox();
         priceDetailsVBox.getChildren().addAll(sessionPriceText, priceAfterDeductionText);
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
-        priceDetailsVBox.setSpacing(25);                
+        priceDetailsVBox.setSpacing(25);
+        
+        sessionPriceShownText.setText("...");
+        priceAfterDeductionShownText.setText("...");
+        
+        VBox priceDetailsShownVBox = new VBox();
+        priceDetailsShownVBox.getChildren().addAll(sessionPriceShownText, priceAfterDeductionShownText);
+        priceDetailsShownVBox.setAlignment(Pos.TOP_CENTER);
+        priceDetailsShownVBox.setSpacing(25);
+        
+        HBox priceDetailsTotal = new HBox();
+        priceDetailsTotal.getChildren().addAll(priceDetailsVBox, priceDetailsShownVBox);
+        priceDetailsTotal.setAlignment(Pos.TOP_CENTER);
+        priceDetailsTotal.setSpacing(25);
+        priceDetailsTotal.setStyle("-fx-padding: 10;" + 
+                                   "-fx-border-style: solid inside;" + 
+                                   "-fx-border-width: 2;" +
+                                   "-fx-border-insets: 5;" + 
+                                   "-fx-border-radius: 5;" + 
+                                   "-fx-border-color: blue;");
+        
+        Button proceedToPaymentButton = new Button();
+        proceedToPaymentButton.setText("PROCEED TO PAYMENT");
+        
+        proceedToPaymentButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                Scene temp = makePaymentScreen();
+                theStage.setScene(temp);
+            }
+        });
+        
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
-        root.getChildren().addAll(confirmationTitleText, sessionDetailsVBox, priceDetailsVBox);
+        root.getChildren().addAll(confirmationTitleText, sessionDetailsTotal, priceDetailsTotal, proceedToPaymentButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -693,7 +820,7 @@ public class BookSessionUI {
     }
     
     // Creates the user interface for taking payment from customer
-    private Scene paymentScreen() {
+    private Scene makePaymentScreen() {
         
         // Create title text label
         Label confirmationTitleText = new Label();
