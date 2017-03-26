@@ -22,6 +22,8 @@ public class Booking {
 	 private int customerID = -1;
          private int sessionID = -1;
          private boolean checkInStatus;
+         private int bookingPrice = -1;
+         private boolean customerPaidStatus;
         
          public int getBookingID(){
              return bookingID;
@@ -50,4 +52,19 @@ public class Booking {
          public void setCheckInStatus(boolean aCheckInStatus){
              checkInStatus = aCheckInStatus;
          }     
+         
+         public int getBookingPrice(){
+             return bookingPrice;
+         }
+         public void setBookingPrice(int aBookingPrice){
+             bookingPrice = aBookingPrice;
+         }
+         
+         public boolean getCustomerPaidStatus(){
+             return customerPaidStatus;
+         }
+         public void getCustomerPaidStatus(boolean aCustomerPaidStatus){
+             customerPaidStatus = aCustomerPaidStatus;
+         }
+         
 }

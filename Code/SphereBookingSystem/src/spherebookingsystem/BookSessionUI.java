@@ -8,6 +8,8 @@ package spherebookingsystem;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +25,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -33,6 +36,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  *
@@ -41,60 +45,55 @@ import javafx.stage.Stage;
 public class BookSessionUI {
     
     // Global attributes for creating an interface (attributes used for everyone)
-    private static Connection conn;
-    private static Scene mainScene;    
+    private static Connection conn;  
     private static Stage theStage;
     private Session tempSession;
     
-    
-    private TextField firstNameText = new TextField();
+    // Global variable for prompting the user the status when typing in the customer id
     private Label customerStatusLabel = new Label();
-    private VBox sessionPickerInfo = new VBox();
+    
+    // Global variables for some HBoxes as they aren't displayed from the start
+    private VBox sessionPickerHBox = new VBox();
+    private HBox availableSessionsHBox = new HBox();
+    private HBox confirmationHBox = new HBox();
+    
+    // Global variable for some GUI elements as these will change within different functions
     private DatePicker sessionPicker = new DatePicker();
-    private HBox availableSessionsInfo = new HBox();
-    private HBox confirmationInfo = new HBox();
     private List sessionsListContent = new ArrayList();
-    
     private ComboBox sessionsDropDown = new ComboBox();
+    private RadioButton selectedSessionToggle = new RadioButton();
+    private TextField enterCustomerText = new TextField();    
+    private RadioButton selectedPaidStatusToggle = new RadioButton();
+    private ComboBox numberOfSkiersComboBox = new ComboBox();
+    private LocalDate theSelectedDate;
     
-    // Global attributes for the booking info
-    private String theTimeSlot = new String();
+    // Global attributes for the booking info as they are used in different functions
     private String theCustomerID = new String();
-    private String theAmountOfSkiers = new String();
+    private String theNumberOfSkiers = new String();
+    private String theTimeSlot = new String();
     private String theDate = new String();
     private String theSessionType = new String();
     
-    private RadioButton selectedToggle = new RadioButton();
-    private TextField enterCustomerText = new TextField();
-    
+    // Global attributes for the Labels that will display the booking info
+    private Label numberOfSkiersShownLabel = new Label();
+    private Label dateShownLabel = new Label();
+    private Label timeSlotShownLabel = new Label();
+    private Label sessionTypeShownLabel = new Label();
+    private Label sessionPriceShownLabel = new Label();
+    private Label priceAfterDeductionShownLabel = new Label();
     
     // Global attributes for the Labels that will display the customer info
-    private Label customerIDTextShown = new Label();
-    private Label firstNameTextShown = new Label();
-    private Label lastNameTextShown = new Label();
-    private Label emailTextShown = new Label();
-    private Label telephoneTextShown = new Label();
-    
-    // Global attributes for the Labels that will display the session info
-    private Label numberOfSkiersTextShown = new Label();
-    private Label theSessionIDTextShown = new Label();
-    private Label theDateTextShown = new Label();
-    private Label theSessionTypeTextShown = new Label();
-    private Label theTimeSlotTextShown = new Label();
-    
     private Label customerIDShownLabel = new Label();
     private Label firstNameShownLabel = new Label();
     private Label lastNameShownLabel = new Label();
     private Label emailShownLabel = new Label();
     private Label phoneShownLabel = new Label();
     
+    // Create a temp customer to hold attributes in whilst booking
+    Customer tempCustomer = new Customer();
     
-    
-    private Label sessionPriceShownText = new Label();
-    private Label priceAfterDeductionShownText = new Label();
-    
-    // Create a temp customer to view attributes from
-    Customer theCustomer = new Customer();
+    // Create a temp booking to hold attributes in whilst booking
+    Booking tempBooking = new Booking();
     
     // Creating instances of each controller that is used
     private BookingController bookingControllerConnection = new BookingController();
@@ -173,7 +172,7 @@ public class BookSessionUI {
                 // If they are registered, continue with the booking and display next section of the UI
                     
                     customerStatusLabel.setText("Customer is Registered. Continue with Booking.");
-                    sessionPickerInfo.setVisible(true);
+                    sessionPickerHBox.setVisible(true);
                 }
                 else {
                 // Otherwise, display text to say that the customer is not registered
@@ -256,7 +255,7 @@ public class BookSessionUI {
             numberOfSkiers.add(numberString);
         }
               
-        final ComboBox numberOfSkiersComboBox = new ComboBox(numberOfSkiers);
+        numberOfSkiersComboBox = new ComboBox(numberOfSkiers);
         
         HBox numberOfSkiersHBox = new HBox();
         numberOfSkiersHBox.getChildren().addAll(numberOfSkiersLabel, numberOfSkiersComboBox);
@@ -299,10 +298,35 @@ public class BookSessionUI {
             @Override
             public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
 
-                selectedToggle = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
+                selectedSessionToggle = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
                 
             }
         });
+        
+        // For the date picker, do not allow dates before the current date
+        // to be picked
+        final Callback<DatePicker, DateCell> dayCellFactory = 
+            new Callback<DatePicker, DateCell>() {
+                @Override
+                public DateCell call(final DatePicker datePicker) {
+                    return new DateCell() {
+                        @Override
+                        public void updateItem(LocalDate item, boolean empty) {
+                            super.updateItem(item, empty);
+                           
+                            if (item.isBefore(
+                                    LocalDate.now())
+                                ) {
+                                    setDisable(true);
+                                    setStyle("-fx-background-color: #ffc0cb;");
+                            }   
+                    }
+                };
+            }
+        };
+        sessionPicker.setDayCellFactory(dayCellFactory);
+        
+        
         
         // Create a HBox for the date picker to be saved to
         HBox datePickerInfo = new HBox();
@@ -327,14 +351,14 @@ public class BookSessionUI {
             public void handle(ActionEvent event) {
                 
                 // Save to an attribute the date that the user picked
-                LocalDate theDate = sessionPicker.getValue();
+                theSelectedDate = sessionPicker.getValue();
                 
                 // Save to an attribute the radio button that the user picked
-                String theSessionType = selectedToggle.getText();
+                theSessionType = selectedSessionToggle.getText();
                         
                 try {
                     // Sends details to the session controller, which returns a list of timeslots as strings
-                    sessionsListContent = sessionControllerConnection.checkDate(conn, theDate, theSessionType);
+                    sessionsListContent = sessionControllerConnection.checkDate(conn, theSelectedDate, theSessionType);
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -349,7 +373,7 @@ public class BookSessionUI {
                 }
                 
                 // Display the next part of the UI
-                availableSessionsInfo.setVisible(true);                
+                availableSessionsHBox.setVisible(true);                
             }
         });
         
@@ -359,16 +383,16 @@ public class BookSessionUI {
         submitSessionInfo.setAlignment(Pos.TOP_CENTER);
         
         // Add above elements into HBox for layout reasons
-        sessionPickerInfo.getChildren().addAll(numberOfSkiersHBox, datePickerInfo, sessionTypeInfo, submitSessionInfo);
-        sessionPickerInfo.setAlignment(Pos.TOP_CENTER);
-        sessionPickerInfo.setSpacing(25);
-        sessionPickerInfo.setStyle("-fx-padding: 10;" + 
+        sessionPickerHBox.getChildren().addAll(numberOfSkiersHBox, datePickerInfo, sessionTypeInfo, submitSessionInfo);
+        sessionPickerHBox.setAlignment(Pos.TOP_CENTER);
+        sessionPickerHBox.setSpacing(25);
+        sessionPickerHBox.setStyle("-fx-padding: 10;" + 
                       "-fx-border-style: solid inside;" + 
                       "-fx-border-width: 2;" +
                       "-fx-border-insets: 5;" + 
                       "-fx-border-radius: 5;" + 
                       "-fx-border-color: blue;");
-        sessionPickerInfo.setVisible(false);
+        sessionPickerHBox.setVisible(false);
         
         // Create a text label which is shown next to the dropdown
         Label availableSessionsLabel = new Label();
@@ -390,21 +414,21 @@ public class BookSessionUI {
                 theTimeSlot = sessionsDropDown.getValue().toString(); 
                 
                 // After submitting the time slot, display the next part of the UI
-                confirmationInfo.setVisible(true);                
+                confirmationHBox.setVisible(true);                
             }
         });
         
         // Add above elements to a HBox for layout reasons
-        availableSessionsInfo.getChildren().addAll(availableSessionsLabel, sessionsDropDown, submitChosenSessionButton);
-        availableSessionsInfo.setAlignment(Pos.TOP_CENTER);
-        availableSessionsInfo.setSpacing(25);
-        availableSessionsInfo.setStyle("-fx-padding: 10;" + 
+        availableSessionsHBox.getChildren().addAll(availableSessionsLabel, sessionsDropDown, submitChosenSessionButton);
+        availableSessionsHBox.setAlignment(Pos.TOP_CENTER);
+        availableSessionsHBox.setSpacing(25);
+        availableSessionsHBox.setStyle("-fx-padding: 10;" + 
                                        "-fx-border-style: solid inside;" + 
                                        "-fx-border-width: 2;" +
                                        "-fx-border-insets: 5;" + 
                                        "-fx-border-radius: 5;" + 
                                        "-fx-border-color: blue;");
-        availableSessionsInfo.setVisible(false);
+        availableSessionsHBox.setVisible(false);
         
         // Create button for confirming all above details
         Button confirmBookingButton = new Button();
@@ -415,11 +439,11 @@ public class BookSessionUI {
             
             @Override
             public void handle(ActionEvent event) {
-                
-                theCustomerID = "...";
-                theAmountOfSkiers = "...";
-                theDate = "...";
-                theSessionType = "..."; 
+                                
+                theCustomerID = enterCustomerText.getText();
+                theNumberOfSkiers = numberOfSkiersComboBox.getValue().toString();
+                theDate = theSelectedDate.toString();
+                theSessionType = selectedSessionToggle.getText(); 
                 theTimeSlot = sessionsDropDown.getValue().toString(); 
                         
                 Scene temp = makeConfirmationScreen();
@@ -433,21 +457,21 @@ public class BookSessionUI {
         finalButtonInfo.setAlignment(Pos.CENTER);
         
         // Above button goes into a HBox for layout reasons
-        confirmationInfo.getChildren().addAll(finalButtonInfo);
-        confirmationInfo.setAlignment(Pos.TOP_CENTER);
-        confirmationInfo.setSpacing(25);
-        confirmationInfo.setStyle("-fx-padding: 10;" + 
+        confirmationHBox.getChildren().addAll(finalButtonInfo);
+        confirmationHBox.setAlignment(Pos.TOP_CENTER);
+        confirmationHBox.setSpacing(25);
+        confirmationHBox.setStyle("-fx-padding: 10;" + 
                                        "-fx-border-style: solid inside;" + 
                                        "-fx-border-width: 2;" +
                                        "-fx-border-insets: 5;" + 
                                        "-fx-border-radius: 5;" + 
                                        "-fx-border-color: blue;");
-        confirmationInfo.setVisible(false);
+        confirmationHBox.setVisible(false);
         
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
-        root.getChildren().addAll(bookingTitleText, totalCustomerInfo, sessionPickerInfo, availableSessionsInfo, confirmationInfo);
+        root.getChildren().addAll(bookingTitleText, totalCustomerInfo, sessionPickerHBox, availableSessionsHBox, confirmationHBox);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -490,26 +514,26 @@ public class BookSessionUI {
                 String theEmail = checkByEmailTextField.getText();
                 
                 try {
-                    theCustomer = customerControllerConnection.findCustomerByEmail(conn, theEmail);
+                    tempCustomer = customerControllerConnection.findCustomerByEmail(conn, theEmail);
                     
-                    String customerIDText = Integer.toString(theCustomer.getCustomerID());     
+                    String customerIDText = Integer.toString(tempCustomer.getCustomerID());     
                     customerIDShownLabel.setText(customerIDText);
                     customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
                     customerIDShownLabel.setTextAlignment(TextAlignment.CENTER);
                 
-                    firstNameShownLabel.setText(theCustomer.getFirstName());
+                    firstNameShownLabel.setText(tempCustomer.getFirstName());
                     firstNameShownLabel.setAlignment(Pos.TOP_CENTER);
                     firstNameShownLabel.setTextAlignment(TextAlignment.CENTER);
         
-                    lastNameShownLabel.setText(theCustomer.getLastName());
+                    lastNameShownLabel.setText(tempCustomer.getLastName());
                     lastNameShownLabel.setAlignment(Pos.TOP_CENTER);
                     lastNameShownLabel.setTextAlignment(TextAlignment.CENTER);
         
-                    emailShownLabel.setText(theCustomer.getEmail());
+                    emailShownLabel.setText(tempCustomer.getEmail());
                     emailShownLabel.setAlignment(Pos.TOP_CENTER);
                     emailShownLabel.setTextAlignment(TextAlignment.CENTER);
                             
-                    phoneShownLabel.setText(theCustomer.getTelephoneNo());
+                    phoneShownLabel.setText(tempCustomer.getTelephoneNo());
                     phoneShownLabel.setAlignment(Pos.TOP_CENTER);
                     phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
                     
@@ -546,26 +570,26 @@ public class BookSessionUI {
                 String thePhone = checkByPhoneTextField.getText();
                 
                 try {
-                    theCustomer = customerControllerConnection.findCustomerByPhone(conn, thePhone);
+                    tempCustomer = customerControllerConnection.findCustomerByPhone(conn, thePhone);
                     
-                    String customerIDText = Integer.toString(theCustomer.getCustomerID());     
+                    String customerIDText = Integer.toString(tempCustomer.getCustomerID());     
                     customerIDShownLabel.setText(customerIDText);
                     customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
                     customerIDShownLabel.setTextAlignment(TextAlignment.CENTER);
                 
-                    firstNameShownLabel.setText(theCustomer.getFirstName());
+                    firstNameShownLabel.setText(tempCustomer.getFirstName());
                     firstNameShownLabel.setAlignment(Pos.TOP_CENTER);
                     firstNameShownLabel.setTextAlignment(TextAlignment.CENTER);
         
-                    lastNameShownLabel.setText(theCustomer.getLastName());
+                    lastNameShownLabel.setText(tempCustomer.getLastName());
                     lastNameShownLabel.setAlignment(Pos.TOP_CENTER);
                     lastNameShownLabel.setTextAlignment(TextAlignment.CENTER);
         
-                    emailShownLabel.setText(theCustomer.getEmail());
+                    emailShownLabel.setText(tempCustomer.getEmail());
                     emailShownLabel.setAlignment(Pos.TOP_CENTER);
                     emailShownLabel.setTextAlignment(TextAlignment.CENTER);
                             
-                    phoneShownLabel.setText(theCustomer.getTelephoneNo());
+                    phoneShownLabel.setText(tempCustomer.getTelephoneNo());
                     phoneShownLabel.setAlignment(Pos.TOP_CENTER);
                     phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
                     
@@ -659,7 +683,7 @@ public class BookSessionUI {
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
         
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 800, 700);
         
         return(scene); 
     }
@@ -678,12 +702,6 @@ public class BookSessionUI {
         customerIDText.setText("CUSTOMER ID:");
         customerIDText.setAlignment(Pos.TOP_CENTER);
         customerIDText.setTextAlignment(TextAlignment.RIGHT);
-        
-        // Label to show where session id will be
-        Label sessionIDText = new Label();
-        sessionIDText.setText("SESSION ID:");
-        sessionIDText.setAlignment(Pos.TOP_CENTER);
-        sessionIDText.setTextAlignment(TextAlignment.RIGHT);
         
         // Label to show where number of skiers will be
         Label numberOfSkiersText = new Label();
@@ -710,37 +728,36 @@ public class BookSessionUI {
         sessionTypeText.setTextAlignment(TextAlignment.RIGHT);
         
         VBox sessionDetailsVBox = new VBox();
-        sessionDetailsVBox.getChildren().addAll(customerIDText, sessionIDText, numberOfSkiersText, sessionDateText, sessionTimeText, sessionTypeText);
+        sessionDetailsVBox.getChildren().addAll(customerIDText, numberOfSkiersText, sessionDateText, sessionTimeText, sessionTypeText);
         sessionDetailsVBox.setAlignment(Pos.TOP_CENTER);
         sessionDetailsVBox.setSpacing(25);
         
-        customerIDTextShown.setText(theCustomerID);
-        customerIDTextShown.setAlignment(Pos.TOP_CENTER);
-        customerIDTextShown.setTextAlignment(TextAlignment.RIGHT);
+        customerIDShownLabel.setText(theCustomerID);
+        customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
+        customerIDShownLabel.setTextAlignment(TextAlignment.RIGHT);
+            
+        numberOfSkiersShownLabel.setText(theNumberOfSkiers);
+        numberOfSkiersShownLabel.setAlignment(Pos.TOP_CENTER);
+        numberOfSkiersShownLabel.setTextAlignment(TextAlignment.RIGHT);
+                
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
+        theDate = theSelectedDate.format(formatter);
+        dateShownLabel.setText(theDate);
         
-        theSessionIDTextShown.setText(theAmountOfSkiers);
-        theSessionIDTextShown.setAlignment(Pos.TOP_CENTER);
-        theSessionIDTextShown.setTextAlignment(TextAlignment.RIGHT);
+        dateShownLabel.setAlignment(Pos.TOP_CENTER);
+        dateShownLabel.setTextAlignment(TextAlignment.RIGHT);
         
-        numberOfSkiersTextShown.setText(theAmountOfSkiers);
-        numberOfSkiersTextShown.setAlignment(Pos.TOP_CENTER);
-        numberOfSkiersTextShown.setTextAlignment(TextAlignment.RIGHT);
-        
-        theDateTextShown.setText(theDate);
-        theDateTextShown.setAlignment(Pos.TOP_CENTER);
-        theDateTextShown.setTextAlignment(TextAlignment.RIGHT);
-        
-        theSessionTypeTextShown.setText(theSessionType);
-        theSessionTypeTextShown.setAlignment(Pos.TOP_CENTER);
-        theSessionTypeTextShown.setTextAlignment(TextAlignment.RIGHT);
+        sessionTypeShownLabel.setText(theSessionType);
+        sessionTypeShownLabel.setAlignment(Pos.TOP_CENTER);
+        sessionTypeShownLabel.setTextAlignment(TextAlignment.RIGHT);
                  
-        theTimeSlotTextShown.setText(theTimeSlot);
-        theTimeSlotTextShown.setAlignment(Pos.TOP_CENTER);
-        theTimeSlotTextShown.setTextAlignment(TextAlignment.RIGHT);        
+        timeSlotShownLabel.setText(theTimeSlot);
+        timeSlotShownLabel.setAlignment(Pos.TOP_CENTER);
+        timeSlotShownLabel.setTextAlignment(TextAlignment.RIGHT);        
         
         VBox sessionDetailsShownVBox = new VBox();
-        sessionDetailsShownVBox.getChildren().addAll(customerIDTextShown, theSessionIDTextShown, numberOfSkiersTextShown,
-                                                     theDateTextShown,theTimeSlotTextShown, theSessionTypeTextShown);
+        sessionDetailsShownVBox.getChildren().addAll(customerIDShownLabel, numberOfSkiersShownLabel,
+                                                     dateShownLabel,timeSlotShownLabel, sessionTypeShownLabel);
         sessionDetailsShownVBox.setAlignment(Pos.TOP_CENTER);
         sessionDetailsShownVBox.setSpacing(25);
         
@@ -771,11 +788,11 @@ public class BookSessionUI {
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
         priceDetailsVBox.setSpacing(25);
         
-        sessionPriceShownText.setText("...");
-        priceAfterDeductionShownText.setText("...");
+        sessionPriceShownLabel.setText("...");
+        priceAfterDeductionShownLabel.setText("...");
         
         VBox priceDetailsShownVBox = new VBox();
-        priceDetailsShownVBox.getChildren().addAll(sessionPriceShownText, priceAfterDeductionShownText);
+        priceDetailsShownVBox.getChildren().addAll(sessionPriceShownLabel, priceAfterDeductionShownLabel);
         priceDetailsShownVBox.setAlignment(Pos.TOP_CENTER);
         priceDetailsShownVBox.setSpacing(25);
         
@@ -812,7 +829,7 @@ public class BookSessionUI {
         root.setSpacing(25);
         
         // Root is passed as a parameter to create the scene
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 800, 700);
         
         theStage.show();        
         
@@ -829,20 +846,63 @@ public class BookSessionUI {
         confirmationTitleText.setTextAlignment(TextAlignment.CENTER);
                 
         Label enterPaymentLabel = new Label();
-        enterPaymentLabel.setText("Has the Customer paid yet?: ");
+        enterPaymentLabel.setText("Have you taken payment from the customer yet?");
         enterPaymentLabel.setAlignment(Pos.TOP_CENTER);
         enterPaymentLabel.setTextAlignment(TextAlignment.CENTER);
+        
+        
+        
+        ToggleGroup paidStatusToggle = new ToggleGroup();
+        
+        RadioButton yesRadioButton = new RadioButton();
+        yesRadioButton.setText("Yes");
+        yesRadioButton.setAlignment(Pos.TOP_CENTER);
+        yesRadioButton.setTextAlignment(TextAlignment.CENTER);
+        // Add radio button to the toggle group
+        yesRadioButton.setToggleGroup(paidStatusToggle);
+        
+        RadioButton noRadioButton = new RadioButton();
+        noRadioButton.setText("No");
+        noRadioButton.setAlignment(Pos.TOP_CENTER);
+        noRadioButton.setTextAlignment(TextAlignment.CENTER);
+        // Add radio button to the toggle group
+        noRadioButton.setToggleGroup(paidStatusToggle);
+        
+        // Create listener to save the selected radio button from the toggle group
+        paidStatusToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
+
+                selectedPaidStatusToggle = (RadioButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
+                
+            }
+        });
+        
+        selectedPaidStatusToggle.getText();
+        
+        
+        Button createBookingButton = new Button();
+        createBookingButton.setText("CREATE BOOKING");
+        
+        createBookingButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+            }
+        });
+        
                 
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
-        root.getChildren().addAll(confirmationTitleText, enterPaymentLabel);
+        root.getChildren().addAll(confirmationTitleText, enterPaymentLabel, yesRadioButton, noRadioButton, createBookingButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
         
         // Root is passed as a parameter to create the scene
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 800, 700);
         
         theStage.show();        
         
