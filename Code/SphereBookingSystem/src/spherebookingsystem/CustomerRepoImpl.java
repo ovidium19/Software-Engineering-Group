@@ -121,7 +121,7 @@ public class CustomerRepoImpl implements CustomerRepo {
     }
     
     
-    public ResultSet findCustomer(Connection con, String email) {
+    public ResultSet findCustomerByEmail(Connection con, String email) {
 
         System.out.println("Reading from database...");
         
@@ -138,6 +138,25 @@ public class CustomerRepoImpl implements CustomerRepo {
         } 
                 
         return(customerDetails);   
+    }
+    
+    public ResultSet findCustomerByPhone(Connection con, String phone) {
+        
+        System.out.println("Reading from database...");
+        
+        try {   
+                Statement st = con.createStatement();
+                
+                String sql = "SELECT * FROM CUSTOMERS WHERE TelephoneNo = '" + phone + "'";
+                System.out.println(sql);
+                customerDetails = st.executeQuery(sql);
+
+        }
+        catch (SQLException ex) {
+                    System.out.println(ex);
+        } 
+                
+        return(customerDetails);
     }
     
 }  

@@ -17,7 +17,8 @@ public interface CustomerRepo {
     ResultSet read(Connection con);
     
     boolean checkCustomerID(Connection con, int customerID);
-    public ResultSet findCustomer(Connection con, String email);
+    public ResultSet findCustomerByEmail(Connection con, String email);
+    public ResultSet findCustomerByPhone(Connection con, String phone);
     
     public ArrayList getAllCustomers();
     public void setCustomers(ArrayList list);

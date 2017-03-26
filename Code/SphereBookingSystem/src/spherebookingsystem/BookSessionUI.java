@@ -454,7 +454,7 @@ public class BookSessionUI {
                 String theEmail = checkByEmailTextField.getText();
                 
                 try {
-                    theCustomer = customerControllerConnection.findCustomer(conn, theEmail);
+                    theCustomer = customerControllerConnection.findCustomerByEmail(conn, theEmail);
                     
                     String customerIDText = Integer.toString(theCustomer.getCustomerID());     
                     customerIDShownLabel.setText(customerIDText);
@@ -472,7 +472,7 @@ public class BookSessionUI {
                     emailShownLabel.setText(theCustomer.getEmail());
                     emailShownLabel.setAlignment(Pos.TOP_CENTER);
                     emailShownLabel.setTextAlignment(TextAlignment.CENTER);
-        
+                            
                     phoneShownLabel.setText(theCustomer.getTelephoneNo());
                     phoneShownLabel.setAlignment(Pos.TOP_CENTER);
                     phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
@@ -500,6 +500,45 @@ public class BookSessionUI {
         checkByPhoneButton.setText("Submit");
         checkByPhoneButton.setAlignment(Pos.TOP_CENTER);
         checkByPhoneButton.setTextAlignment(TextAlignment.CENTER);
+        
+        checkByPhoneButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                
+                // Retrieve the customer ID that was typed in
+                String thePhone = checkByPhoneTextField.getText();
+                
+                try {
+                    theCustomer = customerControllerConnection.findCustomerByPhone(conn, thePhone);
+                    
+                    String customerIDText = Integer.toString(theCustomer.getCustomerID());     
+                    customerIDShownLabel.setText(customerIDText);
+                    customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
+                    customerIDShownLabel.setTextAlignment(TextAlignment.CENTER);
+                
+                    firstNameShownLabel.setText(theCustomer.getFirstName());
+                    firstNameShownLabel.setAlignment(Pos.TOP_CENTER);
+                    firstNameShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+                    lastNameShownLabel.setText(theCustomer.getLastName());
+                    lastNameShownLabel.setAlignment(Pos.TOP_CENTER);
+                    lastNameShownLabel.setTextAlignment(TextAlignment.CENTER);
+        
+                    emailShownLabel.setText(theCustomer.getEmail());
+                    emailShownLabel.setAlignment(Pos.TOP_CENTER);
+                    emailShownLabel.setTextAlignment(TextAlignment.CENTER);
+                            
+                    phoneShownLabel.setText(theCustomer.getTelephoneNo());
+                    phoneShownLabel.setAlignment(Pos.TOP_CENTER);
+                    phoneShownLabel.setTextAlignment(TextAlignment.CENTER);
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(BookSessionUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        
+            }
+        });
         
         HBox checkByPhoneHBox = new HBox();
         checkByPhoneHBox.getChildren().addAll(checkByPhoneLabel, checkByPhoneTextField, checkByPhoneButton);
@@ -567,6 +606,16 @@ public class BookSessionUI {
         
         Button returnToBookingButton = new Button();
         returnToBookingButton.setText("RETURN TO BOOKING SCREEN");
+               
+        returnToBookingButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+        
+                Scene temp = makeBookingScreen();
+                theStage.setScene(temp);
+            }
+        });
                 
         VBox root = new VBox();
         root.getChildren().addAll(findCustomerIDLabel, searchBoxesHBox, detailsHBox, returnToBookingButton);

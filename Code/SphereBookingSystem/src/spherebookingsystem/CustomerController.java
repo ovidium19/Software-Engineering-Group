@@ -42,11 +42,11 @@ public class CustomerController {
             return(isACustomer);
         }
         
-        public Customer findCustomer(Connection connection, String email) throws SQLException {
+        public Customer findCustomerByEmail(Connection connection, String email) throws SQLException {
                         
             Customer foundCustomer = new Customer();
             
-            ResultSet customerResults = CustomerRepo.findCustomer(connection, email);
+            ResultSet customerResults = CustomerRepo.findCustomerByEmail(connection, email);
                         
             while (customerResults.next()){
                 
@@ -63,7 +63,7 @@ public class CustomerController {
                 foundCustomer.setEmail(foundEmail);
                 
                 String foundTelephone = customerResults.getString("TELEPHONENO");
-                foundCustomer.setFirstName(foundTelephone);
+                foundCustomer.setTelephoneNo(foundTelephone);
                 
             }
             
@@ -71,7 +71,38 @@ public class CustomerController {
             
             return(foundCustomer);
         }
-              
+        
+        public Customer findCustomerByPhone(Connection connection, String phone) throws SQLException {
+                        
+            Customer foundCustomer = new Customer();
+            
+            ResultSet customerResults = CustomerRepo.findCustomerByPhone(connection, phone);
+                        
+            while (customerResults.next()){
+                
+                int foundCustomerID = customerResults.getInt("CUSTOMERID");
+                foundCustomer.setCustomerID(foundCustomerID);
+                
+                String foundFirstName = customerResults.getString("FIRSTNAME");
+                foundCustomer.setFirstName(foundFirstName);
+                
+                String foundLastName = customerResults.getString("LASTNAME");
+                foundCustomer.setLastName(foundLastName);
+                
+                String foundEmail = customerResults.getString("EMAIL");
+                foundCustomer.setEmail(foundEmail);
+                
+                String foundTelephone = customerResults.getString("TELEPHONENO");
+                foundCustomer.setTelephoneNo(foundTelephone);
+                
+            }
+            
+            System.out.println(foundCustomer.getFirstName());
+            
+            return(foundCustomer);
+        }
+        
+        
         public void register(Connection connection, String firstName, String lastName, String Email, String phoneNo, String Membership){
              
              Customer customer = new Customer();
