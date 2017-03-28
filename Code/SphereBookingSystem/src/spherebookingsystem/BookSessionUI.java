@@ -807,19 +807,19 @@ public class BookSessionUI {
         
         
         System.out.println(tempCustomer.getMembership());
-        //if(tempCustomer.getMembership().equals("Free Membership")) {
+        if(tempCustomer.getMembership().equals("Free Membership")) {
             
             priceAfterDeductionShownLabel.setText("£" + Float.toString(tempSession.getPrice()) + " (NO DISCOUNT APPLIED)");
-        //}
-        //else if(tempCustomer.getMembership().equals("Paid Membership")) {
+        }
+        else if(tempCustomer.getMembership().equals("Paid Membership")) {
             
             priceAfterDeduction = (float) (tempSession.getPrice() * 0.8);
             priceAfterDeductionShownLabel.setText("£" + Float.toString(priceAfterDeduction) + " (20% OFF DISCOUNT APPLIED)");
-        //}
-        //else {
+        }
+        else {
             
-            //System.out.println("Something went wrong.. Probably that the membership type was stored wrong");
-        //}
+            System.out.println("Something went wrong.. Probably that the membership type was stored wrong");
+        }
         
         
         VBox priceDetailsShownVBox = new VBox();
