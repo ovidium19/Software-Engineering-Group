@@ -73,6 +73,8 @@ public class BookSessionUI {
     private String theTimeSlot = new String();
     private String theDate = new String();
     private String theSessionType = new String();
+    private float thePrice;
+    private float thePriceAfterDiscount;
     
     // Global attributes for the Labels that will display the booking info
     private Label numberOfSkiersShownLabel = new Label();
@@ -102,7 +104,7 @@ public class BookSessionUI {
     
     private static BookSessionUI instance = null;
     private BookSessionUI(Stage primaryStage, Connection con){
-        
+                
         theStage=primaryStage;
         conn=con;
         tempSession=new Session();
@@ -368,7 +370,7 @@ public class BookSessionUI {
                 
                 // For every timeslot in the array, add it to the drop down combobox
                 for(int i = 0; i < sessionsListContent.size(); i++) {
-            
+                    
                     sessionsDropDown.getItems().addAll(sessionsArray[i]);
                 }
                 
@@ -444,8 +446,11 @@ public class BookSessionUI {
                 theNumberOfSkiers = numberOfSkiersComboBox.getValue().toString();
                 theDate = theSelectedDate.toString();
                 theSessionType = selectedSessionToggle.getText(); 
-                theTimeSlot = sessionsDropDown.getValue().toString(); 
-                        
+                theTimeSlot = sessionsDropDown.getValue().toString().substring(0, 18); 
+                
+                String thePriceString = sessionsDropDown.getValue().toString().substring(22, sessionsDropDown.getValue().toString().length() -1) ;
+                thePrice = Float.parseFloat(thePriceString);
+                
                 Scene temp = makeConfirmationScreen();
                 theStage.setScene(temp);
             }
@@ -788,7 +793,7 @@ public class BookSessionUI {
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
         priceDetailsVBox.setSpacing(25);
         
-        sessionPriceShownLabel.setText("...");
+        sessionPriceShownLabel.setText("£ " + Float.toString(thePrice));
         priceAfterDeductionShownLabel.setText("...");
         
         VBox priceDetailsShownVBox = new VBox();
@@ -811,9 +816,26 @@ public class BookSessionUI {
         proceedToPaymentButton.setText("PROCEED TO PAYMENT");
         
         proceedToPaymentButton.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
+               
+              @Override
+              public void handle(ActionEvent event) {
+                  
+                
+                // Change the customer ID into an integer so that the controller can use it
+                int theCustomerIDInteger = Integer.parseInt(theCustomerID);
+                //int theSessionIDInteger = Integer.parseInt(theSessionID);
+             
+                 
+                // Retrieve the session ID from the timeslot the user picked
+                String theSessionID = theTimeSlot.substring(0, 4);
+                 
+                // Change the session ID into an integer so that the controller can use it
+                
+                             
+                // Send entered info to controller to run function for book()
+                //bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);            
+              
+                
                 
                 Scene temp = makePaymentScreen();
                 theStage.setScene(temp);

@@ -71,13 +71,15 @@ public class SessionController {
                     
                     String startTime = sessionsResults.getString("STARTTIME");
                     String endTime = sessionsResults.getString("ENDTIME");
+                    String price = sessionsResults.getString("PRICE");
                     
-                    String overallTime = startTime + " - " + endTime;
+                    String overallTime = startTime + " - " + endTime + " (£" + price + ")";
                     System.out.println(overallTime);
                     sessions.add(overallTime);
             }
             
             return(sessions);
     }
+    
     
 }
