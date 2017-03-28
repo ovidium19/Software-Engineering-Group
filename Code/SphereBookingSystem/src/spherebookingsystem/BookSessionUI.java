@@ -71,13 +71,13 @@ public class BookSessionUI {
     private RadioButton selectedPaidStatusToggle = new RadioButton();
     private ComboBox numberOfSkiersComboBox = new ComboBox();
     private LocalDate theSelectedDate;
+    private Button confirmBookingButton = new Button();
     
     // Global variables for some VBoxes/HBoxes as they aren't displayed from the start
     private VBox sessionPickerHBox = new VBox();
     private HBox availableSessionsHBox = new HBox();
     private HBox confirmationHBox = new HBox();
      
-    
     // Create a temp customer to hold attributes in whilst booking is being made
     Customer tempCustomer = new Customer();
     
@@ -112,7 +112,19 @@ public class BookSessionUI {
     
     
     // Creates the user interface for entering booking details
-    public Scene makeBookingScreen() {
+    public Scene makeBookingScreen(Scene lastScene) {
+        
+        Button returnToMenuButton = new Button();
+        returnToMenuButton.setText("RETURN TO MENU");
+        returnToMenuButton.setAlignment(Pos.BASELINE_LEFT);
+        returnToMenuButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+        
+                theStage.setScene(lastScene);
+            }
+        });
         
         // Create title text label
         Label bookingTitleText = new Label();
@@ -159,9 +171,18 @@ public class BookSessionUI {
                 // Retrieve the customer ID that was typed in
                 String theCustomerIDString = enterCustomerText.getText();
                 
-                // Return a boolean for whether or not the customer ID is registered or not
-                boolean isACustomer = customerControllerConnection.checkCustomerID(conn, theCustomerIDString);
-            
+                boolean isACustomer;
+                
+                if(theCustomerIDString.equals("")) {
+                    
+                    isACustomer = false;
+                }
+                else {
+                    
+                    // Return a boolean for whether or not the customer ID is registered or not
+                    isACustomer = customerControllerConnection.checkCustomerID(conn, theCustomerIDString);
+                }
+                
                 if(isACustomer==true) {
                 // If they are registered, continue with the booking and display next section of the UI
                     
@@ -174,10 +195,16 @@ public class BookSessionUI {
                         Logger.getLogger(BookSessionUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                else if((isACustomer == false) && (theCustomerIDString.equals(""))) {
+                
+                    customerStatusLabel.setText("No Customer ID was entered.");
+                    sessionPickerHBox.setVisible(false);
+                }
                 else {
                 // Otherwise, display text to say that the customer is not registered
                     
                     customerStatusLabel.setText("Customer is not Registered. Unable to complete Booking. Please Register the Customer.");
+                    sessionPickerHBox.setVisible(false);
                 }
             }
         });
@@ -410,7 +437,7 @@ public class BookSessionUI {
             public void handle(ActionEvent event) {
                                 
                 // After submitting the time slot, display the next part of the UI
-                confirmationHBox.setVisible(true);                
+                confirmationHBox.setVisible(true);
             }
         });
         
@@ -444,33 +471,28 @@ public class BookSessionUI {
                 } catch (SQLException ex) {
                     Logger.getLogger(BookSessionUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                                
-                Scene temp = makeConfirmationScreen();
+                
+                Scene lastScene=theStage.getScene();
+                Scene temp = makeConfirmationScreen(lastScene);
                 theStage.setScene(temp);
             }
         });
         
         // Create a HBox for button to go into
-        HBox finalButtonInfo = new HBox();
-        finalButtonInfo.getChildren().addAll(confirmBookingButton);
-        finalButtonInfo.setAlignment(Pos.CENTER);
+        //HBox finalButtonInfo = new HBox();
+        //finalButtonInfo.getChildren().addAll(confirmBookingButton);
+        //finalButtonInfo.setAlignment(Pos.CENTER);
         
         // Above button goes into a HBox for layout reasons
-        confirmationHBox.getChildren().addAll(finalButtonInfo);
+        confirmationHBox.getChildren().addAll(confirmBookingButton);
         confirmationHBox.setAlignment(Pos.TOP_CENTER);
         confirmationHBox.setSpacing(25);
-        confirmationHBox.setStyle("-fx-padding: 10;" + 
-                                       "-fx-border-style: solid inside;" + 
-                                       "-fx-border-width: 2;" +
-                                       "-fx-border-insets: 5;" + 
-                                       "-fx-border-radius: 5;" + 
-                                       "-fx-border-color: blue;");
         confirmationHBox.setVisible(false);
         
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
-        root.getChildren().addAll(bookingTitleText, totalCustomerInfo, sessionPickerHBox, availableSessionsHBox, confirmationHBox);
+        root.getChildren().addAll(bookingTitleText, totalCustomerInfo, sessionPickerHBox, availableSessionsHBox, confirmationHBox, returnToMenuButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -687,7 +709,7 @@ public class BookSessionUI {
     }
     
     // Creates the user interface for confirming the booking details
-    private Scene makeConfirmationScreen() {
+    private Scene makeConfirmationScreen(Scene lastScene) {
         
         // Create title text label
         Label confirmationTitleText = new Label();
@@ -695,6 +717,18 @@ public class BookSessionUI {
         confirmationTitleText.setAlignment(Pos.TOP_CENTER);
         confirmationTitleText.setTextAlignment(TextAlignment.CENTER);
         
+        Button returnToBookingButton = new Button();
+        returnToBookingButton.setText("RETURN TO BOOKING SCREEN");
+        returnToBookingButton.setAlignment(Pos.BASELINE_LEFT);
+        returnToBookingButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+        
+                theStage.setScene(lastScene);
+            }
+        });
+                
         // Label to show where customer id will be
         Label customerIDText = new Label();
         customerIDText.setText("CUSTOMER ID:");
@@ -829,7 +863,8 @@ public class BookSessionUI {
               @Override
               public void handle(ActionEvent event) {
                 
-                Scene temp = makePaymentScreen();
+                Scene lastScene=theStage.getScene();
+                Scene temp = makePaymentScreen(lastScene);
                 theStage.setScene(temp);
             }
         });
@@ -837,7 +872,7 @@ public class BookSessionUI {
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
-        root.getChildren().addAll(confirmationTitleText, sessionDetailsTotal, priceDetailsTotal, proceedToPaymentButton);
+        root.getChildren().addAll(confirmationTitleText, sessionDetailsTotal, priceDetailsTotal, proceedToPaymentButton, returnToBookingButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -851,7 +886,19 @@ public class BookSessionUI {
     }
     
     // Creates the user interface for taking payment from customer
-    private Scene makePaymentScreen() {
+    private Scene makePaymentScreen(Scene lastScene) {
+        
+        Button returnToConfirmationButton = new Button();
+        returnToConfirmationButton.setText("RETURN TO CONFIRMATION SCREEN");
+        returnToConfirmationButton.setAlignment(Pos.BASELINE_LEFT);
+        returnToConfirmationButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+        
+                theStage.setScene(lastScene);
+            }
+        });
         
         // Create title text label
         Label confirmationTitleText = new Label();
@@ -879,6 +926,17 @@ public class BookSessionUI {
         noRadioButton.setTextAlignment(TextAlignment.CENTER);
         // Add radio button to the toggle group
         noRadioButton.setToggleGroup(paidStatusToggle);
+        
+        VBox paymentVBox = new VBox();
+        paymentVBox.getChildren().addAll(enterPaymentLabel, yesRadioButton, noRadioButton);
+        paymentVBox.setAlignment(Pos.TOP_CENTER);
+        paymentVBox.setSpacing(25);
+        paymentVBox.setStyle("-fx-padding: 10;" + 
+                                   "-fx-border-style: solid inside;" + 
+                                   "-fx-border-width: 2;" +
+                                   "-fx-border-insets: 5;" + 
+                                   "-fx-border-radius: 5;" + 
+                                   "-fx-border-color: blue;");
         
         // Create listener to save the selected radio button from the toggle group
         paidStatusToggle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -929,7 +987,7 @@ public class BookSessionUI {
         
         // All above elements are added to root - which is a VBox so all elements are displayed vertically
         VBox root = new VBox();
-        root.getChildren().addAll(confirmationTitleText, enterPaymentLabel, yesRadioButton, noRadioButton, createBookingButton);
+        root.getChildren().addAll(confirmationTitleText, paymentVBox, createBookingButton, returnToConfirmationButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
