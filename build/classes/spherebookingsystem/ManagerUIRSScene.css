@@ -1,0 +1,31 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-Mar-2017, 15:01:50
+    Author     : BOCU
+*/
+#topbox{
+    -fx-background-color: #cbcfef;
+    -fx-alignment: CENTER;
+    -fx-border-color: #dddfeb;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    
+}
+#addButton{
+    -fx-background-color: #3efb66;
+    -fx-border-style: solid;
+    -fx-border-color: #d9dbea;
+}
+#botbox{
+    -fx-background-color: #cbcfef;
+    -fx-alignment: CENTER;
+    -fx-border-color: #dddfeb;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    
+}
+

@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22-Mar-2017, 09:56:42
+    Author     : BOCU
+*/
+#titleBar{
+    -fx-background-color: #009900;
+    
+    
+}
+#titleLabel{
+        -fx-text-fill: #ccffff;
+        -fx-font: 32px cursive;
+}
+.borderpane{
+    
+}
