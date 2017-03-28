@@ -819,19 +819,19 @@ public class BookSessionUI {
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
         priceDetailsVBox.setSpacing(25);
         
-        sessionPriceShownLabel.setText("£" + Float.toString(tempSession.getPrice()));
+        sessionPriceShownLabel.setText("£" + Float.toString(tempSession.getPrice() * theNumberOfSkiers) + " (£" + tempSession.getPrice() + " per person)");
         
         
         System.out.println(tempCustomer.getMembership());
         if(tempCustomer.getMembership().equals("Free Membership")) {
             
-            theBookingPrice = (tempSession.getPrice() * 1);
-            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (NO DISCOUNT APPLIED)");
+            theBookingPrice = ((tempSession.getPrice() * theNumberOfSkiers) * 1);
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (NO DISCOUNT APPLIED/BASIC MEMBERSHIP)");
         }
         else if(tempCustomer.getMembership().equals("Paid Membership")) {
             
-            theBookingPrice = (float) (tempSession.getPrice() * 0.8);
-            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (20% OFF DISCOUNT APPLIED)");
+            theBookingPrice = (float) ((tempSession.getPrice() * theNumberOfSkiers) * 0.8);
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (20% OFF DISCOUNT APPLIED/LOYAL MEMBERSHIP)");
         }
         else {
             
