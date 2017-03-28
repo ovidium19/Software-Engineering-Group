@@ -57,11 +57,11 @@ public class SessionController {
     // Function that takes in a date and session type
     // Calls the session repo to retieve a resultset from the SQL database table
     // Returns a list of strings for all sessions that match the entered date and session type
-    public List findSessions(Connection conn, LocalDate date, String sessionType) throws SQLException {
+    public List findSessions(Connection conn, LocalDate date, String sessionType, int numberOfSkiers) throws SQLException {
                     
             List<String> sessions = new ArrayList<String>();
         
-            ResultSet sessionsResults = sessionRepo.findSessions(conn, date, sessionType);
+            ResultSet sessionsResults = sessionRepo.findSessions(conn, date, sessionType, numberOfSkiers);
                         
             while (sessionsResults.next()) {
             // While there is a next record on the resultset, add it to the array of timeslots

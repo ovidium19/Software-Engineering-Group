@@ -84,7 +84,7 @@ public class SessionRepoImpl implements SessionRepo {
     }
     
     @Override
-    public ResultSet findSessions(Connection conn, LocalDate date, String sessionType) {
+    public ResultSet findSessions(Connection conn, LocalDate date, String sessionType, int numberOfSkiers) {
                
         
         System.out.println("Reading from database...");
@@ -95,7 +95,7 @@ public class SessionRepoImpl implements SessionRepo {
             try {   
                 Statement st = conn.createStatement();
                 
-                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  InstructorID IS NOT NULL";
+                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  MaxBookings >= " + numberOfSkiers + " AND InstructorID IS NOT NULL";
                 System.out.println(sql);
                 sessionsForThisDay = st.executeQuery(sql);
 

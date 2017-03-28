@@ -384,7 +384,7 @@ public class BookSessionUI {
                         
                 try {
                     // Sends details to the session controller, which returns a list of timeslots as strings
-                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, selectedSessionToggle.getText());
+                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, selectedSessionToggle.getText(), theNumberOfSkiers);
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
