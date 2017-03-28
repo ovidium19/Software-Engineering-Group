@@ -6,12 +6,17 @@
 package spherebookingsystem;
 
 import java.sql.Connection;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -51,6 +56,37 @@ public class ViewScheduleUI {
         viewScheduleLabel.setTextAlignment(TextAlignment.CENTER);
         viewScheduleLabel.setPadding(new Insets(12,5,20,5));
         
+         TableView table = new TableView();
+        
+       
+                
+        //Scene scene = new Scene(new Group());
+         //stage.setTitle("Table View Sample");
+        // stage.setWidth(300);
+        // stage.setHeight(500);
+ 
+         final Label label = new Label("Address Book");
+         label.setFont(new Font("Arial", 20));
+  
+         table.setEditable(true);
+         table.setVisible(false);
+ 
+         TableColumn firstNameCol = new TableColumn("First Name");
+         TableColumn startTimeCol = new TableColumn("start");
+         TableColumn FinishTimeCol = new TableColumn("finish");
+         
+         
+         table.getColumns().addAll(firstNameCol, startTimeCol, FinishTimeCol);
+ 
+         VBox vbox = new VBox();
+         vbox.setSpacing(5);
+         vbox.setPadding(new Insets(10, 0, 0, 10));
+         vbox.getChildren().addAll(label, table);
+ 
+        //((Group) scene.getRoot()).getChildren().addAll(vbox);
+        
+        
+        
         Button mondayButton = new Button();
         mondayButton.setText("Monday");
         mondayButton.setAlignment(Pos.TOP_CENTER);
@@ -87,14 +123,36 @@ public class ViewScheduleUI {
         backButton.setAlignment(Pos.TOP_RIGHT);
         backButton.setTextAlignment(TextAlignment.CENTER);     
         backButton.setPadding(new Insets(12,5,20,5));
-               
         
-        VBox root = new VBox();
-        root.getChildren().addAll(viewScheduleLabel, mondayButton, tuesdayButton, wednesdayButton, thursdayButton, fridayButton, backButton);
+         
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
                 
+            @Override
+            public void handle(ActionEvent t) {
+               //.setVisible(true);
+            }
+        });  
+       
+        
+        mondayButton.setOnAction(new EventHandler<ActionEvent>() {
+                
+            @Override
+            public void handle(ActionEvent t) {
+               table.setVisible(true);
+            }
+        });  
+       
+      
+ 
+       
+        VBox root = new VBox();
+        root.getChildren().addAll(viewScheduleLabel, mondayButton, tuesdayButton, wednesdayButton, thursdayButton, fridayButton, vbox,backButton);
+         
+        
         Scene scene = new Scene(root, 500, 450);
         
-        return(scene); 
-    }
-    
+        return(scene);
+        
+    } 
 }
+        
