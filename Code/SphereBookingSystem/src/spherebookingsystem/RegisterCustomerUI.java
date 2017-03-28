@@ -125,14 +125,14 @@ public class RegisterCustomerUI {
         ToggleGroup MemToggle = new ToggleGroup();
         
         RadioButton MemberButton = new RadioButton();
-        MemberButton.setText("Free Membership   ");
+        MemberButton.setText("Free Membership");
         MemberButton.setAlignment(Pos.TOP_CENTER);
         MemberButton.setTextAlignment(TextAlignment.CENTER);
         
         MemberButton.setToggleGroup(MemToggle);
         
         RadioButton MemberButton2 = new RadioButton();
-        MemberButton2.setText("Paid Membership   ");
+        MemberButton2.setText("Paid Membership");
         MemberButton2.setAlignment(Pos.TOP_CENTER);
         MemberButton2.setTextAlignment(TextAlignment.CENTER);
         

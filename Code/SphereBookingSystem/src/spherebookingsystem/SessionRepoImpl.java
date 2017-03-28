@@ -14,6 +14,7 @@ import java.time.LocalDate;
  */
 public class SessionRepoImpl implements SessionRepo {
     private ResultSet sessionsForThisDay;
+    private ResultSet foundSession;
     
     public SessionRepoImpl(){
         
@@ -83,7 +84,7 @@ public class SessionRepoImpl implements SessionRepo {
     }
     
     @Override
-    public ResultSet checkDate(Connection conn, LocalDate date, String sessionType) {
+    public ResultSet findSessions(Connection conn, LocalDate date, String sessionType) {
                
         
         System.out.println("Reading from database...");
@@ -123,5 +124,25 @@ public class SessionRepoImpl implements SessionRepo {
         
         return(sessionsForThisDay);
     }
+    
+    public ResultSet findChosenSession(Connection con, int sessionIDInt) {
+        
+        System.out.println("Reading from database...");
+        
+        try {   
+                Statement st = con.createStatement();
+                
+                String sql = "SELECT * FROM SESSION WHERE ID = " + sessionIDInt + "";
+                System.out.println(sql);
+                foundSession = st.executeQuery(sql);
+
+        }
+        catch (SQLException ex) {
+                    System.out.println(ex);
+        } 
+        
+        return(foundSession);
+    }
+    
     
 }  

@@ -120,6 +120,24 @@ public class CustomerRepoImpl implements CustomerRepo {
        return(false);
     }
     
+    public ResultSet findCustomer(Connection con, int customerID) {
+        
+        System.out.println("Reading from database...");
+        
+        try {   
+                Statement st = con.createStatement();
+                
+                String sql = "SELECT * FROM CUSTOMERS WHERE CustomerID = " + customerID + "";
+                System.out.println(sql);
+                customerDetails = st.executeQuery(sql);
+
+        }
+        catch (SQLException ex) {
+                    System.out.println(ex);
+        } 
+                
+        return(customerDetails);
+    }
     
     public ResultSet findCustomerByEmail(Connection con, String email) {
 

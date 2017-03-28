@@ -17,5 +17,7 @@ public interface SessionRepo {
     public void addSession(Session session, Connection con);
     void write(Connection con,String str,Session session);
     public Session readSessionByID(Connection con,int id);
-    public ResultSet checkDate(Connection con, LocalDate date, String sessionType);
+    
+    public ResultSet findSessions(Connection con, LocalDate date, String sessionType);
+    public ResultSet findChosenSession(Connection con, int sessionIDInt);
 }

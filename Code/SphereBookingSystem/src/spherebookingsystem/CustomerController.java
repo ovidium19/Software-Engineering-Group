@@ -42,6 +42,41 @@ public class CustomerController {
             return(isACustomer);
         }
         
+        public Customer findCustomer(Connection connection, String customerID) throws SQLException {
+                        
+            Customer foundCustomer = new Customer();
+            
+            int customerIDInt = Integer.parseInt(customerID);
+            
+            ResultSet customerResult = CustomerRepo.findCustomer(connection, customerIDInt);
+                        
+            while (customerResult.next()){
+                
+                int foundCustomerID = customerResult.getInt("CUSTOMERID");
+                foundCustomer.setCustomerID(foundCustomerID);
+                
+                String foundFirstName = customerResult.getString("FIRSTNAME");
+                foundCustomer.setFirstName(foundFirstName);
+                
+                String foundLastName = customerResult.getString("LASTNAME");
+                foundCustomer.setLastName(foundLastName);
+                
+                String foundEmail = customerResult.getString("EMAIL");
+                foundCustomer.setEmail(foundEmail);
+                
+                String foundTelephone = customerResult.getString("TELEPHONENO");
+                foundCustomer.setTelephoneNo(foundTelephone);
+                
+                String foundMembershipType = customerResult.getString("MEMBERSHIPTYPE");
+                foundCustomer.setMembership(foundMembershipType);
+                
+            }
+            
+            System.out.println(foundCustomer.getFirstName());
+            
+            return(foundCustomer);
+        }
+        
         public Customer findCustomerByEmail(Connection connection, String email) throws SQLException {
                         
             Customer foundCustomer = new Customer();

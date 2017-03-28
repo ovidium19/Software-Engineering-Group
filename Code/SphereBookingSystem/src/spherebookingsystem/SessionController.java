@@ -57,11 +57,11 @@ public class SessionController {
     // Function that takes in a date and session type
     // Calls the session repo to retieve a resultset from the SQL database table
     // Returns a list of strings for all sessions that match the entered date and session type
-    public List checkDate(Connection conn, LocalDate date, String sessionType) throws SQLException {
+    public List findSessions(Connection conn, LocalDate date, String sessionType) throws SQLException {
                     
             List<String> sessions = new ArrayList<String>();
         
-            ResultSet sessionsResults = sessionRepo.checkDate(conn, date, sessionType);
+            ResultSet sessionsResults = sessionRepo.findSessions(conn, date, sessionType);
                         
             while (sessionsResults.next()) {
             // While there is a next record on the resultset, add it to the array of timeslots
@@ -73,12 +73,56 @@ public class SessionController {
                     String endTime = sessionsResults.getString("ENDTIME");
                     String price = sessionsResults.getString("PRICE");
                     
-                    String overallTime = startTime + " - " + endTime + " (£" + price + ")";
+                    String overallTime = "Session ID " + sessionID + ": " + startTime + " - " + endTime + " (£" + price + ")";
                     System.out.println(overallTime);
                     sessions.add(overallTime);
             }
             
             return(sessions);
+    }
+    
+    public Session findChosenSession(Connection conn, String sessionID) throws SQLException {
+            
+            Session foundSession = new Session();
+            
+            int sessionIDInt = Integer.parseInt(sessionID);
+        
+            ResultSet sessionResult = sessionRepo.findChosenSession(conn, sessionIDInt);
+                        
+            while (sessionResult.next()) {
+            // While there is a next record on the resultset, add it to the array of timeslots
+            
+                    int foundSessionID = sessionResult.getInt("ID");
+                    foundSession.setId(foundSessionID);
+                    
+                    String foundStartTime = sessionResult.getString("STARTTIME");
+                    foundSession.setStartTime(foundStartTime);
+                    
+                    String foundEndTime = sessionResult.getString("ENDTIME");
+                    foundSession.setEndTime(foundEndTime);
+                    
+                    Date foundDate = sessionResult.getDate("DATE");
+                    LocalDate foundDateLocalDate = new java.sql.Date(foundDate.getTime()).toLocalDate();
+                    foundSession.setDate(foundDateLocalDate);
+                    
+                    int foundMaxBookings = sessionResult.getInt("MAXBOOKINGS");
+                    foundSession.setMaxBookings(foundMaxBookings);
+                    
+                    int foundSlopeID = sessionResult.getInt("SLOPEID");
+                    foundSession.setSlopeId(foundSlopeID);
+                    
+                    int foundInstructorID = sessionResult.getInt("INSTRUCTORID");
+                    foundSession.setInstructorId(foundInstructorID);
+                    
+                    float foundPrice = sessionResult.getFloat("PRICE");
+                    foundSession.setPrice(foundPrice);
+                    
+                    String foundDescription = sessionResult.getString("DESCRIPTION");
+                    foundSession.setDescription(foundDescription);
+            
+            }
+            
+            return(foundSession);
     }
     
     

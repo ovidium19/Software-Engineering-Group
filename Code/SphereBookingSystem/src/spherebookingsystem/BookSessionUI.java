@@ -47,7 +47,6 @@ public class BookSessionUI {
     // Global attributes for creating an interface (attributes used for everyone)
     private static Connection conn;  
     private static Stage theStage;
-    private Session tempSession;
     
     // Global variable for prompting the user the status when typing in the customer id
     private Label customerStatusLabel = new Label();
@@ -73,8 +72,9 @@ public class BookSessionUI {
     private String theTimeSlot = new String();
     private String theDate = new String();
     private String theSessionType = new String();
-    private float thePrice;
-    private float thePriceAfterDiscount;
+    
+    
+    private float priceAfterDeduction;
     
     // Global attributes for the Labels that will display the booking info
     private Label numberOfSkiersShownLabel = new Label();
@@ -93,6 +93,9 @@ public class BookSessionUI {
     
     // Create a temp customer to hold attributes in whilst booking
     Customer tempCustomer = new Customer();
+    
+    // Create a temp session to hold attributes in whilst booking
+    Session tempSession = new Session();
     
     // Create a temp booking to hold attributes in whilst booking
     Booking tempBooking = new Booking();
@@ -165,16 +168,22 @@ public class BookSessionUI {
             public void handle(ActionEvent event) {
                 
                 // Retrieve the customer ID that was typed in
-                String theCustomerID = enterCustomerText.getText(); 
+                String theCustomerIDString = enterCustomerText.getText();
                 
                 // Return a boolean for whether or not the customer ID is registered or not
-                boolean isACustomer = customerControllerConnection.checkCustomerID(conn, theCustomerID);
+                boolean isACustomer = customerControllerConnection.checkCustomerID(conn, theCustomerIDString);
             
                 if(isACustomer==true) {
                 // If they are registered, continue with the booking and display next section of the UI
                     
                     customerStatusLabel.setText("Customer is Registered. Continue with Booking.");
                     sessionPickerHBox.setVisible(true);
+                    
+                    try {
+                        tempCustomer = customerControllerConnection.findCustomer(conn, theCustomerIDString);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BookSessionUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 else {
                 // Otherwise, display text to say that the customer is not registered
@@ -357,10 +366,12 @@ public class BookSessionUI {
                 
                 // Save to an attribute the radio button that the user picked
                 theSessionType = selectedSessionToggle.getText();
+                
+                theNumberOfSkiers = numberOfSkiersComboBox.getValue().toString();
                         
                 try {
                     // Sends details to the session controller, which returns a list of timeslots as strings
-                    sessionsListContent = sessionControllerConnection.checkDate(conn, theSelectedDate, theSessionType);
+                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, theSessionType);
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -441,16 +452,16 @@ public class BookSessionUI {
             
             @Override
             public void handle(ActionEvent event) {
+                
+                String theSessionID = sessionsDropDown.getValue().toString().substring(11, 15);
+                System.out.println(theSessionID);
+                
+                try {
+                    tempSession = sessionControllerConnection.findChosenSession(conn, theSessionID);
+                } catch (SQLException ex) {
+                    Logger.getLogger(BookSessionUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
                                 
-                theCustomerID = enterCustomerText.getText();
-                theNumberOfSkiers = numberOfSkiersComboBox.getValue().toString();
-                theDate = theSelectedDate.toString();
-                theSessionType = selectedSessionToggle.getText(); 
-                theTimeSlot = sessionsDropDown.getValue().toString().substring(0, 18); 
-                
-                String thePriceString = sessionsDropDown.getValue().toString().substring(22, sessionsDropDown.getValue().toString().length() -1) ;
-                thePrice = Float.parseFloat(thePriceString);
-                
                 Scene temp = makeConfirmationScreen();
                 theStage.setScene(temp);
             }
@@ -737,18 +748,17 @@ public class BookSessionUI {
         sessionDetailsVBox.setAlignment(Pos.TOP_CENTER);
         sessionDetailsVBox.setSpacing(25);
         
-        customerIDShownLabel.setText(theCustomerID);
+        customerIDShownLabel.setText(Integer.toString(tempCustomer.getCustomerID()));
         customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
         customerIDShownLabel.setTextAlignment(TextAlignment.RIGHT);
             
         numberOfSkiersShownLabel.setText(theNumberOfSkiers);
         numberOfSkiersShownLabel.setAlignment(Pos.TOP_CENTER);
         numberOfSkiersShownLabel.setTextAlignment(TextAlignment.RIGHT);
-                
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
-        theDate = theSelectedDate.format(formatter);
-        dateShownLabel.setText(theDate);
         
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
+        String theDateShown = tempSession.getDate().format(formatter);
+        dateShownLabel.setText(theDateShown);
         dateShownLabel.setAlignment(Pos.TOP_CENTER);
         dateShownLabel.setTextAlignment(TextAlignment.RIGHT);
         
@@ -756,7 +766,7 @@ public class BookSessionUI {
         sessionTypeShownLabel.setAlignment(Pos.TOP_CENTER);
         sessionTypeShownLabel.setTextAlignment(TextAlignment.RIGHT);
                  
-        timeSlotShownLabel.setText(theTimeSlot);
+        timeSlotShownLabel.setText(tempSession.getStartTime() + " - " + tempSession.getEndTime());
         timeSlotShownLabel.setAlignment(Pos.TOP_CENTER);
         timeSlotShownLabel.setTextAlignment(TextAlignment.RIGHT);        
         
@@ -793,8 +803,24 @@ public class BookSessionUI {
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
         priceDetailsVBox.setSpacing(25);
         
-        sessionPriceShownLabel.setText("£ " + Float.toString(thePrice));
-        priceAfterDeductionShownLabel.setText("...");
+        sessionPriceShownLabel.setText("£" + Float.toString(tempSession.getPrice()));
+        
+        
+        System.out.println(tempCustomer.getMembership());
+        //if(tempCustomer.getMembership().equals("Free Membership")) {
+            
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(tempSession.getPrice()) + " (NO DISCOUNT APPLIED)");
+        //}
+        //else if(tempCustomer.getMembership().equals("Paid Membership")) {
+            
+            priceAfterDeduction = (float) (tempSession.getPrice() * 0.8);
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(priceAfterDeduction) + " (20% OFF DISCOUNT APPLIED)");
+        //}
+        //else {
+            
+            //System.out.println("Something went wrong.. Probably that the membership type was stored wrong");
+        //}
+        
         
         VBox priceDetailsShownVBox = new VBox();
         priceDetailsShownVBox.getChildren().addAll(sessionPriceShownLabel, priceAfterDeductionShownLabel);
@@ -819,23 +845,6 @@ public class BookSessionUI {
                
               @Override
               public void handle(ActionEvent event) {
-                  
-                
-                // Change the customer ID into an integer so that the controller can use it
-                int theCustomerIDInteger = Integer.parseInt(theCustomerID);
-                //int theSessionIDInteger = Integer.parseInt(theSessionID);
-             
-                 
-                // Retrieve the session ID from the timeslot the user picked
-                String theSessionID = theTimeSlot.substring(0, 4);
-                 
-                // Change the session ID into an integer so that the controller can use it
-                
-                             
-                // Send entered info to controller to run function for book()
-                //bookingControllerConnection.book(conn, theCustomerIDInteger, theSessionIDInteger);            
-              
-                
                 
                 Scene temp = makePaymentScreen();
                 theStage.setScene(temp);
