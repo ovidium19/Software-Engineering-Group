@@ -201,8 +201,8 @@ public class BookSessionUI {
             
             @Override
             public void handle(ActionEvent event) {
-                
-                Scene temp = makeFindCustomerScreen();
+                Scene lastScene=theStage.getScene();
+                Scene temp = makeFindCustomerScreen(lastScene);
                 theStage.setScene(temp);
             }
         });
@@ -484,7 +484,7 @@ public class BookSessionUI {
     }
     
     // Creates the user interface for searching for the customer's id if they don't know it
-    private Scene makeFindCustomerScreen() {
+    private Scene makeFindCustomerScreen(Scene lastScene) {
                 
         Label findCustomerIDLabel = new Label();
         findCustomerIDLabel.setText("FIND CUSTOMER ID");
@@ -671,8 +671,7 @@ public class BookSessionUI {
             @Override
             public void handle(ActionEvent event) {
         
-                Scene temp = makeBookingScreen();
-                theStage.setScene(temp);
+                theStage.setScene(lastScene);
             }
         });
                 

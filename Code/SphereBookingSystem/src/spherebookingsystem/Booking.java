@@ -24,6 +24,7 @@ public class Booking {
          private boolean checkInStatus;
          private int bookingPrice = -1;
          private boolean customerPaidStatus;
+         private int numberOfSkiers = -1;
         
          public int getBookingID(){
              return bookingID;
@@ -65,6 +66,13 @@ public class Booking {
          }
          public void getCustomerPaidStatus(boolean aCustomerPaidStatus){
              customerPaidStatus = aCustomerPaidStatus;
+         }
+         
+         public int getNumberOfSkiers(){
+             return numberOfSkiers;
+         }
+         public void setNumberOfSkiers(int aNumberOfSkiers){
+             numberOfSkiers = aNumberOfSkiers;
          }
          
 }
