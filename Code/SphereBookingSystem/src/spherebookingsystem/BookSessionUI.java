@@ -48,15 +48,21 @@ public class BookSessionUI {
     private static Connection conn;  
     private static Stage theStage;
     
-    // Global variable for prompting the user the status when typing in the customer id
+    // Global attributes for Labels that will change their text
     private Label customerStatusLabel = new Label();
+    private Label numberOfSkiersShownLabel = new Label();
+    private Label dateShownLabel = new Label();
+    private Label timeSlotShownLabel = new Label();
+    private Label sessionTypeShownLabel = new Label();
+    private Label sessionPriceShownLabel = new Label();
+    private Label priceAfterDeductionShownLabel = new Label();
+    private Label customerIDShownLabel = new Label();
+    private Label firstNameShownLabel = new Label();
+    private Label lastNameShownLabel = new Label();
+    private Label emailShownLabel = new Label();
+    private Label phoneShownLabel = new Label();
     
-    // Global variables for some HBoxes as they aren't displayed from the start
-    private VBox sessionPickerHBox = new VBox();
-    private HBox availableSessionsHBox = new HBox();
-    private HBox confirmationHBox = new HBox();
-    
-    // Global variable for some GUI elements as these will change within different functions
+    // Global attributes for other GUI elements that will change
     private DatePicker sessionPicker = new DatePicker();
     private List sessionsListContent = new ArrayList();
     private ComboBox sessionsDropDown = new ComboBox();
@@ -66,39 +72,22 @@ public class BookSessionUI {
     private ComboBox numberOfSkiersComboBox = new ComboBox();
     private LocalDate theSelectedDate;
     
-    // Global attributes for the booking info as they are used in different functions
-    private String theCustomerID = new String();
-    private String theNumberOfSkiers = new String();
-    private String theTimeSlot = new String();
-    private String theDate = new String();
-    private String theSessionType = new String();
+    // Global variables for some VBoxes/HBoxes as they aren't displayed from the start
+    private VBox sessionPickerHBox = new VBox();
+    private HBox availableSessionsHBox = new HBox();
+    private HBox confirmationHBox = new HBox();
+     
     
-    
-    private float priceAfterDeduction;
-    
-    // Global attributes for the Labels that will display the booking info
-    private Label numberOfSkiersShownLabel = new Label();
-    private Label dateShownLabel = new Label();
-    private Label timeSlotShownLabel = new Label();
-    private Label sessionTypeShownLabel = new Label();
-    private Label sessionPriceShownLabel = new Label();
-    private Label priceAfterDeductionShownLabel = new Label();
-    
-    // Global attributes for the Labels that will display the customer info
-    private Label customerIDShownLabel = new Label();
-    private Label firstNameShownLabel = new Label();
-    private Label lastNameShownLabel = new Label();
-    private Label emailShownLabel = new Label();
-    private Label phoneShownLabel = new Label();
-    
-    // Create a temp customer to hold attributes in whilst booking
+    // Create a temp customer to hold attributes in whilst booking is being made
     Customer tempCustomer = new Customer();
     
-    // Create a temp session to hold attributes in whilst booking
+    // Create a temp session to hold attributes in whilst booking is being made
     Session tempSession = new Session();
     
-    // Create a temp booking to hold attributes in whilst booking
-    Booking tempBooking = new Booking();
+    // Global attributes for the booking info as they are used in different functions
+    private int theNumberOfSkiers;
+    private float theBookingPrice;
+    private boolean theCustomerPaidStatus;
     
     // Creating instances of each controller that is used
     private BookingController bookingControllerConnection = new BookingController();
@@ -363,15 +352,12 @@ public class BookSessionUI {
                 
                 // Save to an attribute the date that the user picked
                 theSelectedDate = sessionPicker.getValue();
-                
-                // Save to an attribute the radio button that the user picked
-                theSessionType = selectedSessionToggle.getText();
-                
-                theNumberOfSkiers = numberOfSkiersComboBox.getValue().toString();
+                                
+                theNumberOfSkiers = Integer.parseInt(numberOfSkiersComboBox.getValue().toString());
                         
                 try {
                     // Sends details to the session controller, which returns a list of timeslots as strings
-                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, theSessionType);
+                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, selectedSessionToggle.getText());
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -422,10 +408,7 @@ public class BookSessionUI {
             
             @Override
             public void handle(ActionEvent event) {
-                
-                // Gets the value of the selected item in the drop down
-                theTimeSlot = sessionsDropDown.getValue().toString(); 
-                
+                                
                 // After submitting the time slot, display the next part of the UI
                 confirmationHBox.setVisible(true);                
             }
@@ -500,7 +483,7 @@ public class BookSessionUI {
         return(scene); 
     }
     
-    // Creates the user interface for searching for the customer's id
+    // Creates the user interface for searching for the customer's id if they don't know it
     private Scene makeFindCustomerScreen() {
                 
         Label findCustomerIDLabel = new Label();
@@ -752,7 +735,7 @@ public class BookSessionUI {
         customerIDShownLabel.setAlignment(Pos.TOP_CENTER);
         customerIDShownLabel.setTextAlignment(TextAlignment.RIGHT);
             
-        numberOfSkiersShownLabel.setText(theNumberOfSkiers);
+        numberOfSkiersShownLabel.setText(numberOfSkiersComboBox.getValue().toString());
         numberOfSkiersShownLabel.setAlignment(Pos.TOP_CENTER);
         numberOfSkiersShownLabel.setTextAlignment(TextAlignment.RIGHT);
         
@@ -762,7 +745,7 @@ public class BookSessionUI {
         dateShownLabel.setAlignment(Pos.TOP_CENTER);
         dateShownLabel.setTextAlignment(TextAlignment.RIGHT);
         
-        sessionTypeShownLabel.setText(theSessionType);
+        sessionTypeShownLabel.setText(selectedSessionToggle.getText());
         sessionTypeShownLabel.setAlignment(Pos.TOP_CENTER);
         sessionTypeShownLabel.setTextAlignment(TextAlignment.RIGHT);
                  
@@ -809,12 +792,13 @@ public class BookSessionUI {
         System.out.println(tempCustomer.getMembership());
         if(tempCustomer.getMembership().equals("Free Membership")) {
             
-            priceAfterDeductionShownLabel.setText("£" + Float.toString(tempSession.getPrice()) + " (NO DISCOUNT APPLIED)");
+            theBookingPrice = (tempSession.getPrice() * 1);
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (NO DISCOUNT APPLIED)");
         }
         else if(tempCustomer.getMembership().equals("Paid Membership")) {
             
-            priceAfterDeduction = (float) (tempSession.getPrice() * 0.8);
-            priceAfterDeductionShownLabel.setText("£" + Float.toString(priceAfterDeduction) + " (20% OFF DISCOUNT APPLIED)");
+            theBookingPrice = (float) (tempSession.getPrice() * 0.8);
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (20% OFF DISCOUNT APPLIED)");
         }
         else {
             
@@ -881,8 +865,6 @@ public class BookSessionUI {
         enterPaymentLabel.setAlignment(Pos.TOP_CENTER);
         enterPaymentLabel.setTextAlignment(TextAlignment.CENTER);
         
-        
-        
         ToggleGroup paidStatusToggle = new ToggleGroup();
         
         RadioButton yesRadioButton = new RadioButton();
@@ -919,6 +901,27 @@ public class BookSessionUI {
             
             @Override
             public void handle(ActionEvent event) {
+                
+                if(selectedPaidStatusToggle.getText().equals("Yes")) {
+                    
+                    theCustomerPaidStatus = true;
+                }
+                else if(selectedPaidStatusToggle.getText().equals("No")) {
+                    
+                    theCustomerPaidStatus = false;
+                }
+                else {
+                    
+                    System.out.println("Something went wrong with the chosen paid status toggle...");
+                }
+                
+                BookingFactory bookingFactory = new BookingFactory();
+                
+                bookingFactory.createBooking(tempCustomer.getCustomerID(),
+                                             tempSession.getId(),
+                                             theBookingPrice,
+                                             theCustomerPaidStatus,
+                                             theNumberOfSkiers);
                 
             }
         });
