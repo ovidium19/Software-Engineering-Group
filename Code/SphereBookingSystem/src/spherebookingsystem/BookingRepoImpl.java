@@ -87,7 +87,10 @@ public class BookingRepoImpl implements BookingRepo {
                 String sql = "INSERT INTO BOOKINGS VALUES (DEFAULT, "
                                                             + booking.getCustomerID() + " , "
                                                             + booking.getSessionID() + " , '"
-                                                            + booking.getCheckInStatus() + "')";
+                                                            + booking.getCheckInStatus() + "' , "
+                                                            + booking.getBookingPrice() + " , '"
+                                                            + booking.getCustomerPaidStatus() + "' , "
+                                                            + booking.getNumberOfSkiers() + ")";
                 System.out.println(sql);
                 st.executeUpdate(sql);
 

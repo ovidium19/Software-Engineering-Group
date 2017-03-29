@@ -149,7 +149,7 @@ public class SlopeOperatorUI {
         primarySlopeOperatorStage.show();  
     }
     
-    private void makeBookingScreen(Stage primarySlopeOperatorStage, Connection conn) {
+    public static void makeBookingScreen(Stage primarySlopeOperatorStage, Connection conn) {
         
         BookSessionUI booksessionui = BookSessionUI.getInstance(primarySlopeOperatorStage, conn);
         

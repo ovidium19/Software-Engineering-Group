@@ -11,20 +11,34 @@ package spherebookingsystem;
  */
 public class BookingFactory {
     
-    public void createBooking(int aCustomerID, int aSessionID, float aBookingPrice, boolean aCustomerPaidStatus, int aNumberOfSkiers) {
+    public Booking createBooking(int aCustomerID, int aSessionID, float aBookingPrice, boolean aCustomerPaidStatus, int aNumberOfSkiers) {
+        
+        Booking booking = new Booking();
+        
+        
         
         if(aNumberOfSkiers == 1) {
             
-            System.out.println("INDIVIDUAL BOOKING TO BE CREATED");
+            System.out.println("INDIVIDUAL BOOKING CREATED");
             
-            // CREATE INDIVIDUAL BOOKING SUBCLASS
+            booking = new IndividualBooking();
+            
+            
         }
         else if(aNumberOfSkiers > 1) {
             
-            System.out.println("GROUP BOOKING TO BE CREATED");
+            System.out.println("GROUP BOOKING CREATED");
             
-            // CREATE GROUP BOOKING SUBCLASS
-        }
+            booking = new GroupBooking();
+        }      
+        
+        booking.setCustomerID(aCustomerID);
+        booking.setSessionID(aSessionID);
+        booking.setBookingPrice(aBookingPrice);
+        booking.setCustomerPaidStatus(aCustomerPaidStatus);
+        booking.setNumberOfSkiers(aNumberOfSkiers);
+        
+        return(booking);
     }
     
 }

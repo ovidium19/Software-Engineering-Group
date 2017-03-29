@@ -22,9 +22,9 @@ public class Booking {
 	 private int customerID = -1;
          private int sessionID = -1;
          private boolean checkInStatus;
-         private int bookingPrice = -1;
+         protected float bookingPrice = -1;
          private boolean customerPaidStatus;
-         private int numberOfSkiers = -1;
+         protected int numberOfSkiers = -1;
         
          public int getBookingID(){
              return bookingID;
@@ -54,17 +54,17 @@ public class Booking {
              checkInStatus = aCheckInStatus;
          }     
          
-         public int getBookingPrice(){
+         public float getBookingPrice(){
              return bookingPrice;
          }
-         public void setBookingPrice(int aBookingPrice){
+         public void setBookingPrice(float aBookingPrice){
              bookingPrice = aBookingPrice;
          }
          
          public boolean getCustomerPaidStatus(){
              return customerPaidStatus;
          }
-         public void getCustomerPaidStatus(boolean aCustomerPaidStatus){
+         public void setCustomerPaidStatus(boolean aCustomerPaidStatus){
              customerPaidStatus = aCustomerPaidStatus;
          }
          

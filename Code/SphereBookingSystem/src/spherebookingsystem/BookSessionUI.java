@@ -47,6 +47,7 @@ public class BookSessionUI {
     // Global attributes for creating an interface (attributes used for everyone)
     private static Connection conn;  
     private static Stage theStage;
+    private static Stage lastStage = new Stage();
     
     // Global attributes for Labels that will change their text
     private Label customerStatusLabel = new Label();
@@ -971,15 +972,18 @@ public class BookSessionUI {
                     
                     System.out.println("Something went wrong with the chosen paid status toggle...");
                 }
+                                
+                bookingControllerConnection.book(conn,
+                                                 tempCustomer.getCustomerID(),
+                                                 tempSession.getId(),
+                                                 theBookingPrice,
+                                                 theCustomerPaidStatus,
+                                                 theNumberOfSkiers);
                 
-                BookingFactory bookingFactory = new BookingFactory();
-                
-                bookingFactory.createBooking(tempCustomer.getCustomerID(),
-                                             tempSession.getId(),
-                                             theBookingPrice,
-                                             theCustomerPaidStatus,
-                                             theNumberOfSkiers);
-                
+                //Scene lastScene=theStage.getScene();
+                Scene temp = makeFinalPopUpScreen();
+                lastStage.setScene(temp);
+                lastStage.show();
             }
         });
         
@@ -998,6 +1002,35 @@ public class BookSessionUI {
         theStage.show();        
         
         return(scene); 
+    }
+    
+    private Scene makeFinalPopUpScreen() {
+        
+        Label confirmationLabel = new Label();
+        confirmationLabel.setText("Booking Created.");
+        confirmationLabel.setTextAlignment(TextAlignment.CENTER);
+        confirmationLabel.setAlignment(Pos.CENTER);
+        
+        Button okButton = new Button("OK");
+        okButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+                lastStage.close();
+                theStage.close();                             
+            }
+        });
+        
+        VBox root = new VBox();
+        root.getChildren().addAll(confirmationLabel, okButton);
+        root.setPadding(new Insets(25,25,25,25));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(25);
+        
+        // Root is passed as a parameter to create the scene
+        Scene scene = new Scene(root, 200, 100);
+               
+        return(scene);
     }
     
 }
