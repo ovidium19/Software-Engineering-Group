@@ -384,7 +384,7 @@ public class BookSessionUI {
                 theSelectedDate = sessionPicker.getValue();
                                 
                 theNumberOfSkiers = Integer.parseInt(numberOfSkiersComboBox.getValue().toString());
-                        
+                                
                 try {
                     // Sends details to the session controller, which returns a list of timeslots as strings
                     sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, selectedSessionToggle.getText(), theNumberOfSkiers);
@@ -394,6 +394,8 @@ public class BookSessionUI {
                 
                 // List of timeslot strings is converted to an array
                 Object[] sessionsArray = sessionsListContent.toArray();
+                
+                sessionsDropDown.getItems().clear();
                 
                 // For every timeslot in the array, add it to the drop down combobox
                 for(int i = 0; i < sessionsListContent.size(); i++) {
