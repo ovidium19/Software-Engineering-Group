@@ -48,6 +48,7 @@ public class BookSessionUI {
     private static Connection conn;  
     private static Stage theStage;
     private static Stage lastStage = new Stage();
+    private static Scene menuScene;
     
     // Global attributes for Labels that will change their text
     private Label customerStatusLabel = new Label();
@@ -96,17 +97,18 @@ public class BookSessionUI {
     private SessionController sessionControllerConnection = new SessionController();
     
     private static BookSessionUI instance = null;
-    private BookSessionUI(Stage primaryStage, Connection con){
+    private BookSessionUI(Stage primaryStage, Connection con, Scene scene){
                 
         theStage=primaryStage;
         conn=con;
         tempSession=new Session();
+        menuScene = scene;
     }
     
-    public static BookSessionUI getInstance(Stage stage,Connection con){
+    public static BookSessionUI getInstance(Stage stage,Connection con, Scene scene){
         
         if (instance==null){
-            instance=new BookSessionUI(stage,con);
+            instance=new BookSessionUI(stage,con,scene);
         }
         return instance;
     }
@@ -1017,7 +1019,7 @@ public class BookSessionUI {
             public void handle(ActionEvent event) {
                 
                 lastStage.close();
-                theStage.close();                             
+                theStage.setScene(menuScene);
             }
         });
         
