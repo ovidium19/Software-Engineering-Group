@@ -86,11 +86,9 @@ public class BookSessionUI {
     // Create a temp session to hold attributes in whilst booking is being made
     Session tempSession = new Session();
     
-    // Global attributes for the booking info as they are used in different functions
-    private int theNumberOfSkiers;
-    private float theBookingPrice;
-    private boolean theCustomerPaidStatus;
-    
+    // Create a temp booking to hold attributes in whilst booking is being made
+    Booking tempBooking = new Booking();
+        
     // Creating instances of each controller that is used
     private BookingController bookingControllerConnection = new BookingController();
     private CustomerController customerControllerConnection = new CustomerController();
@@ -385,11 +383,11 @@ public class BookSessionUI {
                 // Save to an attribute the date that the user picked
                 theSelectedDate = sessionPicker.getValue();
                                 
-                theNumberOfSkiers = Integer.parseInt(numberOfSkiersComboBox.getValue().toString());
+                tempBooking.setNumberOfSkiers(Integer.parseInt(numberOfSkiersComboBox.getValue().toString()));
                                 
                 try {
                     // Sends details to the session controller, which returns a list of timeslots as strings
-                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, selectedSessionToggle.getText(), theNumberOfSkiers);
+                    sessionsListContent = sessionControllerConnection.findSessions(conn, theSelectedDate, selectedSessionToggle.getText(), tempBooking.getNumberOfSkiers());
                 } catch (SQLException ex) {
                     Logger.getLogger(SphereBookingSystem.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -583,6 +581,16 @@ public class BookSessionUI {
         
         TextField checkByPhoneTextField = new TextField();
         checkByPhoneTextField.setAlignment(Pos.TOP_CENTER);
+        checkByPhoneTextField.textProperty().addListener((obs,o,n)->{
+            try{
+                Long.parseLong(n);
+                //phoneNoText.setText("");
+                
+            }
+            catch (NumberFormatException ex){
+                checkByPhoneTextField.clear();
+            }
+        });
         
         Button checkByPhoneButton = new Button();
         checkByPhoneButton.setText("Submit");
@@ -826,19 +834,19 @@ public class BookSessionUI {
         priceDetailsVBox.setAlignment(Pos.TOP_CENTER);
         priceDetailsVBox.setSpacing(25);
         
-        sessionPriceShownLabel.setText("£" + Float.toString(tempSession.getPrice() * theNumberOfSkiers) + " (£" + tempSession.getPrice() + " per person)");
+        sessionPriceShownLabel.setText("£" + Float.toString(tempSession.getPrice() * tempBooking.getNumberOfSkiers()) + " (£" + tempSession.getPrice() + " per person)");
         
         
         System.out.println(tempCustomer.getMembership());
         if(tempCustomer.getMembership().equals("Free Membership")) {
             
-            theBookingPrice = ((tempSession.getPrice() * theNumberOfSkiers) * 1);
-            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (NO DISCOUNT APPLIED/BASIC MEMBERSHIP)");
+            tempBooking.setBookingPrice(((tempSession.getPrice() * tempBooking.getNumberOfSkiers()) * 1));
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(tempBooking.getBookingPrice()) + " (NO DISCOUNT APPLIED/BASIC MEMBERSHIP)");
         }
         else if(tempCustomer.getMembership().equals("Paid Membership")) {
             
-            theBookingPrice = (float) ((tempSession.getPrice() * theNumberOfSkiers) * 0.8);
-            priceAfterDeductionShownLabel.setText("£" + Float.toString(theBookingPrice) + " (20% OFF DISCOUNT APPLIED/LOYAL MEMBERSHIP)");
+            tempBooking.setBookingPrice((float) ((tempSession.getPrice() * tempBooking.getNumberOfSkiers()) * 0.8));
+            priceAfterDeductionShownLabel.setText("£" + Float.toString(tempBooking.getBookingPrice()) + " (20% OFF DISCOUNT APPLIED/LOYAL MEMBERSHIP)");
         }
         else {
             
@@ -924,8 +932,10 @@ public class BookSessionUI {
         yesRadioButton.setText("Yes");
         yesRadioButton.setAlignment(Pos.TOP_CENTER);
         yesRadioButton.setTextAlignment(TextAlignment.CENTER);
+        yesRadioButton.setSelected(true);
         // Add radio button to the toggle group
         yesRadioButton.setToggleGroup(paidStatusToggle);
+        selectedPaidStatusToggle = (RadioButton)paidStatusToggle.getSelectedToggle();
         
         RadioButton noRadioButton = new RadioButton();
         noRadioButton.setText("No");
@@ -968,11 +978,11 @@ public class BookSessionUI {
                 
                 if(selectedPaidStatusToggle.getText().equals("Yes")) {
                     
-                    theCustomerPaidStatus = true;
+                    tempBooking.setCustomerPaidStatus(true);
                 }
                 else if(selectedPaidStatusToggle.getText().equals("No")) {
                     
-                    theCustomerPaidStatus = false;
+                    tempBooking.setCustomerPaidStatus(false);
                 }
                 else {
                     
@@ -982,9 +992,9 @@ public class BookSessionUI {
                 bookingControllerConnection.book(conn,
                                                  tempCustomer.getCustomerID(),
                                                  tempSession.getId(),
-                                                 theBookingPrice,
-                                                 theCustomerPaidStatus,
-                                                 theNumberOfSkiers);
+                                                 tempBooking.getBookingPrice(),
+                                                 tempBooking.getCustomerPaidStatus(),
+                                                 tempBooking.getNumberOfSkiers());
                 
                 //Scene lastScene=theStage.getScene();
                 Scene temp = makeFinalPopUpScreen();
