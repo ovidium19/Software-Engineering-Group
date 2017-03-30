@@ -30,7 +30,7 @@ public class BookingRepoImpl implements BookingRepo {
     }
     public void createBooking(Booking booking, Connection conn){
         bookings.add(booking);
-        write(conn,"add",booking);
+        write(conn,booking);
     }
     
     public List read(Connection conn){
@@ -74,16 +74,18 @@ public class BookingRepoImpl implements BookingRepo {
         return(resultsList);
     }
     
-    public void write(Connection conn, String str, Booking booking){
+    // Takes in a booking object and writes the attributes as a record in the database table
+    public void write(Connection conn, Booking booking){
         
         ArrayList list = getAllBookings();
         System.out.println("Writing to the database... ");
         
-        if (str.equals("add")){
-
-            try {   
+        try {   
+                // Declare an SQL statement
                 Statement st = conn.createStatement();
               
+                // SQL statement to enter the values of the booking object to the database
+                // BookingID is DEFAULT as the database increments the ID number itself
                 String sql = "INSERT INTO BOOKINGS VALUES (DEFAULT, "
                                                             + booking.getCustomerID() + " , "
                                                             + booking.getSessionID() + " , '"
@@ -92,19 +94,20 @@ public class BookingRepoImpl implements BookingRepo {
                                                             + booking.getCustomerPaidStatus() + "' , "
                                                             + booking.getNumberOfSkiers() + ")";
                 System.out.println(sql);
+                
+                // Execute the SQL statement
                 st.executeUpdate(sql);
-
+                
+                // Closes the SQL statement
                 st.close();
-            }
-            catch (SQLException ex) {
-                    System.out.println(ex);
-            }         
-        
         }
+        
+        catch (SQLException ex) {
+                    
+                    // If there is an error with writing to the database, display the error
+                    System.out.println(ex);
+        }         
+        
+    }
          
-    }    
-
-      
-}  
-
-
+}

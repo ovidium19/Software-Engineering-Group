@@ -11,4 +11,5 @@ package spherebookingsystem;
  */
 public class GroupBooking extends Booking {
     
+        
 }

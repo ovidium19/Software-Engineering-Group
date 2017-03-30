@@ -11,10 +11,5 @@ package spherebookingsystem;
  */
 public class IndividualBooking extends Booking {
     
-    void calculatePrice() {
         
-        bookingPrice = bookingPrice * numberOfSkiers;
-        
-    }
-    
 }

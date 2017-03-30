@@ -12,8 +12,7 @@ import java.util.List;
  */
 public interface BookingRepo {
     
-    // Interface for functions that can be implemented by BookingRepoImpl
-    
-    void write(Connection con, String str, Booking booking);
+    // Interface for functions that are implemented by BookingRepoImpl
+    void write(Connection con, Booking booking);
     List read(Connection con);
 }
