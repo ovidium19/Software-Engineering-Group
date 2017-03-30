@@ -71,6 +71,19 @@ public class RegisterCustomerUI {
         TextField FirstNameText = new TextField();
         FirstNameText.setAlignment(Pos.TOP_CENTER);
         
+        /*FirstNameText.textProperty().addListener((obs,o,n)->{
+            try{
+                
+                if(n[0] >= 'a')
+                //String.parseString(n);
+                //phoneNoText.setText("");
+                
+            }
+            catch (NumberFormatException ex){
+                FirstNameText.clear();
+            }
+        });*/
+        
         HBox FirstNameHBox = new HBox();
         FirstNameHBox.getChildren().addAll(FirstNameLabel, FirstNameText);
         FirstNameHBox.setAlignment(Pos.TOP_CENTER);
@@ -113,6 +126,17 @@ public class RegisterCustomerUI {
         TextField phoneNoText = new TextField();
         phoneNoText.setAlignment(Pos.TOP_CENTER);
         
+        phoneNoText.textProperty().addListener((obs,o,n)->{
+            try{
+                Long.parseLong(n);
+                //phoneNoText.setText("");
+                
+            }
+            catch (NumberFormatException ex){
+                phoneNoText.clear();
+            }
+        });
+        
         HBox phoneNoHBox = new HBox();
         phoneNoHBox.getChildren().addAll(phoneNoLabel, phoneNoText);
         phoneNoHBox.setAlignment(Pos.TOP_CENTER);
@@ -128,8 +152,10 @@ public class RegisterCustomerUI {
         MemberButton.setText("Free Membership");
         MemberButton.setAlignment(Pos.TOP_CENTER);
         MemberButton.setTextAlignment(TextAlignment.CENTER);
+        MemberButton.setSelected(true);
         
         MemberButton.setToggleGroup(MemToggle);
+        chk = (RadioButton)MemberButton.getToggleGroup().getSelectedToggle();
         
         RadioButton MemberButton2 = new RadioButton();
         MemberButton2.setText("Paid Membership");
@@ -152,10 +178,34 @@ public class RegisterCustomerUI {
         MemberHBox.getChildren().addAll(MemberLabel, MemberButton, MemberButton2);
         MemberHBox.setAlignment(Pos.TOP_CENTER);
         
+        Button SubmitButton = new Button();
+        SubmitButton.setText("Submit");
+        SubmitButton.setAlignment(Pos.TOP_CENTER);
+        SubmitButton.setTextAlignment(TextAlignment.CENTER);
+        
+        
         Button ConfirmButton = new Button();
         ConfirmButton.setText("Confirm");
         ConfirmButton.setAlignment(Pos.TOP_CENTER);
         ConfirmButton.setTextAlignment(TextAlignment.CENTER);
+        ConfirmButton.setVisible(false);
+        
+        SubmitButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+       
+                if (FirstNameText.getText().isEmpty() || LastNameText.getText().isEmpty() || EmailText.getText().isEmpty() || phoneNoText.getText().isEmpty()){
+                    
+                    ConfirmButton.setVisible(false);
+                }    
+                
+                else {
+                    
+                    ConfirmButton.setVisible(true);
+                }
+            }
+        });
         
         ConfirmButton.setOnAction(new EventHandler<ActionEvent>() {
             
@@ -176,7 +226,7 @@ public class RegisterCustomerUI {
         
         
         VBox root = new VBox();
-        root.getChildren().addAll(TitleText, FirstNameHBox, LastNameHBox, EmailHBox, phoneNoHBox, MemberHBox, ConfirmButton);
+        root.getChildren().addAll(TitleText, FirstNameHBox, LastNameHBox, EmailHBox, phoneNoHBox, MemberHBox, SubmitButton, ConfirmButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -187,3 +237,4 @@ public class RegisterCustomerUI {
     }
     
 }
+                                
