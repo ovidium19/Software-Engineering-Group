@@ -312,8 +312,10 @@ public class BookSessionUI {
         withInstructorRadioButton.setText("With Instructor ");
         withInstructorRadioButton.setAlignment(Pos.TOP_CENTER);
         withInstructorRadioButton.setTextAlignment(TextAlignment.CENTER);
+        withInstructorRadioButton.setSelected(true);
         // Add radio button to the toggle group
         withInstructorRadioButton.setToggleGroup(sessionTypeToggle);
+        selectedSessionToggle = (RadioButton)sessionTypeToggle.getSelectedToggle();
         
         // Create radio button for if they don't want an instructor
         RadioButton withoutInstructorRadioButton = new RadioButton();
