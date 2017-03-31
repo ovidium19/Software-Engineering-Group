@@ -23,7 +23,7 @@ public class Booking {
 	private int customerID = -1;
         private int sessionID = -1;
         private boolean checkInStatus;
-        protected float bookingPrice = -1;
+        private float bookingPrice = -1;
         private boolean customerPaidStatus;
         protected int numberOfSkiers = -1;
         

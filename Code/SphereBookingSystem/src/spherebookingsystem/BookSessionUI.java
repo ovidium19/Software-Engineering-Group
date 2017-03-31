@@ -73,7 +73,6 @@ public class BookSessionUI {
     private RadioButton selectedPaidStatusToggle = new RadioButton();
     private ComboBox numberOfSkiersComboBox = new ComboBox();
     private LocalDate theSelectedDate;
-    private Button confirmBookingButton = new Button();
     
     // Global variables for some VBoxes/HBoxes as they aren't displayed from the start
     private VBox sessionPickerHBox = new VBox();

@@ -27,9 +27,9 @@ public class BookingFactory {
             booking = new IndividualBooking();
             
         }
-        else if(aNumberOfSkiers > 1) {
-            
-        // If the number of skiers is greater than 1, then create the subclass GroupBooking    
+        else if(aNumberOfSkiers > 1) {            
+        // If the number of skiers is greater than 1, then create the subclass GroupBooking   
+        
             System.out.println("GROUP BOOKING CREATED");
             
             booking = new GroupBooking();

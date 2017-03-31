@@ -74,7 +74,6 @@ public class SessionController {
                     String price = sessionsResults.getString("PRICE");
                     
                     String overallTime = "Session ID " + sessionID + ": " + startTime + " - " + endTime + " (£" + price + ")";
-                    System.out.println(overallTime);
                     sessions.add(overallTime);
             }
             
