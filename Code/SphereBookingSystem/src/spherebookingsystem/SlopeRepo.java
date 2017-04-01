@@ -16,5 +16,7 @@ public interface SlopeRepo {
     public void setSlopes(ArrayList<Slope> rSlopes);
     public void addSlope(Slope slope);
     void write(Connection con,Slope slope);
+    public void read(Connection con);
     void read(Connection con,LocalDate date,String startT,String endT);
+    public Slope read(Connection con, int id);
 }

@@ -25,7 +25,18 @@ public class SessionController {
     private InstructorRepoImpl insRepo = new InstructorRepoImpl();
     private SlopeRepoImpl slopeRepo=new SlopeRepoImpl();
     
-    
+    public ArrayList<Instructor> getAllInstructors(Connection con){
+        insRepo.read(con);
+        return insRepo.getInstructors();
+        
+    }
+    public ArrayList<Slope> getAllSlopes(Connection con){
+        slopeRepo.read(con);
+        return slopeRepo.getSlopes();
+    }
+    public int countAllSessions(Connection con){
+        return sessionRepo.countSessions(con);
+    }
     public void setInstructorList(Connection con,LocalDate date,String start,String end){
         //read available instructors from db. The query to read available instructors
         //requires a date and a starttime and endtime

@@ -6,6 +6,8 @@
 package spherebookingsystem;
 
 import java.time.LocalDate;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
@@ -75,15 +77,15 @@ public class Session {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id=id;
     }
 
     public void setStartTime(String startTime) {
-        this.startTime = startTime;
+        this.startTime=startTime;
     }
 
     public void setEndTime(String endTime) {
-        this.endTime = endTime;
+        this.endTime=endTime;
     }
 
     public void setDate(LocalDate date) {
@@ -91,7 +93,7 @@ public class Session {
     }
 
     public void setMaxBookings(int maxBookings) {
-        this.maxBookings = maxBookings;
+        this.maxBookings=maxBookings;
     }
 
     public void setSlopeId(int slopeId) {

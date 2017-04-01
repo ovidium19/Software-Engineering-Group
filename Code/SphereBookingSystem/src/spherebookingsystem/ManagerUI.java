@@ -12,6 +12,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -59,6 +60,7 @@ public class ManagerUI {
     private static Connection conn;
     private static SessionController sess = new SessionController(); 
     private static Scene mainScene;    
+    private static Scene loginScene;
     private static Stage theStage;
     private Session tempSession;  //temporary Session instance which updates as it gets created through the steps of the functionality
     private ArrayList<Instructor> availInstructors; //will hold all available instructors for the time slot picked
@@ -81,14 +83,17 @@ public class ManagerUI {
     //------------------------------------------------
     //Singleton GoF pattern implementation here
     private static ManagerUI instance = null;
-    private ManagerUI(Stage primaryStage, Connection con){
+    private ManagerUI(Stage primaryStage, Connection con,Scene loginScene){
         theStage=primaryStage;
+        this.loginScene=loginScene;
         conn=con;
         tempSession=new Session();
+        availSlopes=new ArrayList();
+        availInstructors=new ArrayList();
     }
-    public static ManagerUI getInstance(Stage stage,Connection con){
+    public static ManagerUI getInstance(Stage stage,Connection con,Scene loginScene){
         if (instance==null){
-            instance=new ManagerUI(stage,con);
+            instance=new ManagerUI(stage,con,loginScene);
         }
         return instance;
     }
@@ -143,6 +148,69 @@ public class ManagerUI {
                 setOpacity(disable ? 0.5 : 1);
             }
         }
+    public Scene mainScene(){
+        //Represents the main scene displayed when logging in as a manager
+        // TOP Layer: A welcome title
+        //CENTER LAYER: Some data about how many instructors,slopes are available
+        //              and how many sessions are in the database
+        //LEFT MENU: A menu with all actions a manager can take
+        //             (Note): only Add Session has been implemented
+        //BOTTOM LAYER: A button to log out
+        BorderPane root=new BorderPane();
+        //TOP
+        Label title=new Label("Welcome to Sphere Booking System ");
+        title.setAlignment(Pos.CENTER);
+        title.setId("titleMain");
+        root.setTop(title);
+        BorderPane.setAlignment(title, Pos.CENTER);
+        //CENTER
+        VBox centerRoot=new VBox(40);
+        centerRoot.setAlignment(Pos.CENTER);
+        Label availInstructorsLabel=new Label("There are "+sess.getAllInstructors(conn).size()+" instructors available.");
+        Label availSlopesLabel=new Label("There are "+sess.getAllSlopes(conn).size()+" slopes available.");
+        Label sessionCount=new Label(sess.countAllSessions(conn)+" sessions registered(in total)");
+        centerRoot.getChildren().addAll(availInstructorsLabel,availSlopesLabel,sessionCount);
+        
+        root.setCenter(centerRoot);
+        BorderPane.setMargin(centerRoot, new Insets(20,0,0,0));
+        //LEFT
+        VBox menuLeft = new VBox(30);
+        Label actions=new Label("Actions you can take:");
+        Button addSession=new Button("Add a Session");
+        Button addInstructor=new Button("Add an instructor");
+        Button addSlope=new Button("Add a slope");
+        addInstructor.setDisable(true);
+        addSlope.setDisable(true);
+        menuLeft.getChildren().addAll(actions,addSession,addInstructor,addSlope);
+        root.setLeft(menuLeft);
+        BorderPane.setMargin(menuLeft, new Insets(20,30,0,10));
+        //BOTTOM
+        Button logOut=new Button("Log Out");
+        root.setBottom(logOut);
+        BorderPane.setAlignment(logOut, Pos.CENTER);
+        BorderPane.setMargin(logOut,new Insets(10,0,20,0));
+        Scene scene=new Scene(root,500,500);
+        scene.getStylesheets().add(getClass().getResource("CalendarScene.css").toExternalForm());
+        
+        //button actions
+        addSession.setOnAction(new EventHandler<ActionEvent>() {
+            //Start the process of adding a session
+            @Override
+            public void handle(ActionEvent event) {
+                
+                theStage.setScene(setCalendarScene());
+            }
+        });
+        logOut.setOnAction(new EventHandler<ActionEvent>() {
+            //log out
+            @Override
+            public void handle(ActionEvent event) {
+                theStage.setScene(loginScene);
+            }
+        });
+        return scene;
+        
+    }
     public Scene setCalendarScene(){
         //The Calendar Scene represents the first step when adding a session
         /*
@@ -161,6 +229,7 @@ public class ManagerUI {
         rootCal.setStyle("-fx-padding:20");
         
         Label pageTitle = new Label("Add a Session - Step 1  ");
+        pageTitle.setId("pageTitle");
         pageTitle.setAlignment(Pos.CENTER);
         pageTitle.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         pageTitle.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -206,11 +275,12 @@ public class ManagerUI {
         Label startLabel=new Label("Choose start time");
         Label dayConfirmedLabel= new Label();
         addSessionDatePicker.valueProperty().addListener((obs,o,n)->{
-           dayConfirmedLabel.setText(n.getDayOfWeek().toString()); 
+           if (n!=null)
+            dayConfirmedLabel.setText(n.getDayOfWeek().toString()); 
         });
         
         Label endLabel=new Label("Choose end time");
-        Button nextPage=new Button("NEXT");
+        
         //time HBoxes
         
         
@@ -242,8 +312,18 @@ public class ManagerUI {
         //Adding cell factories to the Time Pickers
         startHours.setCellFactory(lv -> new StartHoursCell());
         endHours.setCellFactory(lv -> new EndHoursCell());
-       
         
+        //BOTTOM
+        
+        
+        Button logOut=new Button("Back to Menu");
+        logOut.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                theStage.setScene(mainScene());
+            }
+        });
+        Button nextPage=new Button("NEXT");
         nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
@@ -258,6 +338,11 @@ public class ManagerUI {
                 theStage.setScene(mainScene);
             }
         });
+        BorderPane bottomButtons=new BorderPane();
+        bottomButtons.setPrefWidth(rootCal.getPrefWidth());
+        bottomButtons.setLeft(logOut);
+        bottomButtons.setRight(nextPage);
+        
         /*
         A set of boolean bindings definitions which define the sequence in which our elements will 
         become visible on screen
@@ -299,20 +384,20 @@ public class ManagerUI {
         GridPane.setHalignment(dayConfirmedLabel, HPos.CENTER);
         gridPane.setStyle("-fx-background-color: #FFE0B2");
         
-       
-        rootCal.setAlignment(nextPage, Pos.BOTTOM_RIGHT);
+        rootCal.setAlignment(logOut,Pos.BOTTOM_LEFT);
         rootCal.setAlignment(pageTitle, Pos.TOP_CENTER);
         rootCal.setTop(pageTitle);
         rootCal.setCenter(gridPane);
-        rootCal.setBottom(nextPage);
+        rootCal.setBottom(bottomButtons);
+        
         rootCal.setMargin(gridPane,new Insets(12,15,12,15));
-        rootCal.setMargin(nextPage,new Insets(0,15,12,0));
+        rootCal.setMargin(bottomButtons,new Insets(0,15,12,0));
         rootCal.setStyle("-fx-background-color: #FF9800");
         
         Scene scene = new Scene(rootCal, 550, 400);
         rootCal.prefWidthProperty().bind(scene.widthProperty());
         rootCal.prefHeightProperty().bind(scene.widthProperty());
-        
+        scene.getStylesheets().add(getClass().getResource("CalendarScene.css").toExternalForm());
         return scene;
     }
     public Scene setDetailsScene(){
@@ -335,8 +420,14 @@ public class ManagerUI {
         //fetch the list of available instructors and slopes for the timeslot picked
         sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
         sess.setSlopeList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
-        availSlopes=sess.getSlopes();
-        availInstructors=sess.getInstructors();
+        if (availInstructors.size()>0)
+            availInstructors.clear();
+        if (availSlopes.size()>0)
+            availSlopes.clear();
+        availInstructors.add(new Instructor());
+        
+        availSlopes.addAll(sess.getSlopes());
+        availInstructors.addAll(sess.getInstructors());
         //-----------------------------------------------------------------------
         Label instructors = new Label("instructors");
         Label slopes = new Label("slopes");
@@ -352,7 +443,7 @@ public class ManagerUI {
         priceText.setPromptText("xxx.xx");
         priceText.setPrefWidth(60);
         priceText.setMaxWidth(60);
-        //make the price field only able to receive integer as text
+        //make the price field only able to receive float as text
         priceText.textProperty().addListener((obs,o,n)->{
             try{
                 Float a = Float.parseFloat(n);
@@ -399,6 +490,7 @@ public class ManagerUI {
         
         //BOTTOM
         Button nextPage = new Button("NEXT");
+        Button previousPage = new Button("GO BACK");
         nextPage.setOnAction(new EventHandler(){
             @Override
             public void handle(Event e){
@@ -408,23 +500,39 @@ public class ManagerUI {
                 tempSession.setMaxBookings(Integer.parseInt(bookingText.getText()));
                 tempSession.setPrice(Integer.parseInt(priceText.getText()));
                 tempSession.setDescription(description.getText());
-                mainScene=makeResultScene();
+                Scene lastScene=theStage.getScene();
+                mainScene=makeResultScene(lastScene);
                 theStage.setScene(mainScene);
             }
         });
+        previousPage.setOnAction(new EventHandler<ActionEvent>() {
+            //go back to date selector
+            @Override
+            public void handle(ActionEvent event) {
+                resetElements();
+                theStage.setScene(setCalendarScene());
+            }
+        });
+        BorderPane bottomButtons=new BorderPane();
+        bottomButtons.setPrefWidth(root.getPrefWidth());
+        bottomButtons.setLeft(previousPage);
+        bottomButtons.setRight(nextPage);
         
         root.setCenter(gridPane);
-        root.setBottom(nextPage);
-        root.setMargin(nextPage,new Insets(0,15,12,0));
-        BorderPane.setAlignment(nextPage, Pos.BOTTOM_RIGHT);
+        root.setBottom(bottomButtons);
+        root.setMargin(bottomButtons,new Insets(0,15,12,0));
         Scene scene=new Scene(root,550,400);
         return scene;
     }
-    public Scene makeResultScene(){
+    public Scene makeResultScene(Scene lastScene){
         
         VBox root=new VBox();
         VBox topLayer=new VBox();
+        HBox buttons = new HBox(50);
+        buttons.setAlignment(Pos.CENTER);
         Button addDb=new Button("Add this Session");
+        Button editDetails = new Button("Edit Details");
+        buttons.getChildren().addAll(addDb,editDetails);
         VBox bottomLayer=new VBox();
         Image sIcon=new Image("file:src/successIcon.png", 60, 60, true, true);
         ImageView sIconView=new ImageView();
@@ -439,7 +547,8 @@ public class ManagerUI {
             //go back to the beginning
             @Override
             public void handle(Event event) {
-                theStage.setScene(setCalendarScene());
+                resetElements();
+                theStage.setScene(mainScene());
             }
         });
         addDb.setId("addButton");
@@ -452,6 +561,13 @@ public class ManagerUI {
                 bottomLayer.getChildren().addAll(sIconView,confirmText);
                 bottomLayer.setVisible(true);
                 finish.setVisible(true);
+            }
+        });
+        editDetails.setOnAction(new EventHandler<ActionEvent>() {
+            //This button will take you back to the previous screen in order to edit details
+            @Override
+            public void handle(ActionEvent event) {
+               theStage.setScene(lastScene);
             }
         });
         topLayer.setId("topbox");
@@ -467,10 +583,16 @@ public class ManagerUI {
         topLayer.getChildren().addAll(date,time,instructor,slope,maxB,price,desc);
         root.setAlignment(Pos.CENTER);
         
-        root.getChildren().addAll(topLayer,addDb,bottomLayer,finish);
+        root.getChildren().addAll(topLayer,buttons,bottomLayer,finish);
+        
         Scene scene=new Scene(root,500,500);
         scene.getStylesheets().add(getClass().getResource("ManagerUIRSScene.css").toExternalForm());
         return scene;
+    }
+    private void resetElements(){
+        instructorMenu.getItems().clear();
+        slopeMenu.getItems().clear();
+        addSessionDatePicker.setValue(null);
     }
     
 }

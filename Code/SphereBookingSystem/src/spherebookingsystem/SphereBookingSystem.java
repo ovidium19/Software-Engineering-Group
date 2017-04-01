@@ -152,7 +152,8 @@ public class SphereBookingSystem extends Application {
                     makeSlopeOperatorScreen(theStage, conn);                   
                 }
                 else if (tempLogin.getUsertype().equals("manager")){
-                    makeAddSessionScreen(theStage, conn);
+                    Scene loginScene=makeWelcomeScreen();
+                    makeAddSessionScreen(theStage, conn,loginScene);
                 }  
             }
         });
@@ -193,12 +194,12 @@ public class SphereBookingSystem extends Application {
     }
     
     // Creates the user interface for the manager's function
-     private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn) {
+     private void makeAddSessionScreen(Stage primaryManagerStage, Connection conn, Scene loginScene) {
         //Singleton pattern implemented here, therfore to get the instance of
         //the manager UI, we have to call its public getInstance method.
-        ManagerUI mui = ManagerUI.getInstance(primaryManagerStage, conn);
+        ManagerUI mui = ManagerUI.getInstance(primaryManagerStage, conn,loginScene);
         
-        primaryManagerStage.setScene(mui.setCalendarScene());
+        primaryManagerStage.setScene(mui.mainScene());
         
         primaryManagerStage.show();
         

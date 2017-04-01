@@ -19,5 +19,7 @@ public interface InstructorRepo {
     public void setInstructors(ArrayList<Instructor> insList);
     void write(Connection con, Instructor ins);
     void read(Connection con,LocalDate date,String startTime,String endTime);
+    public void read(Connection con);
+    public Instructor read(Connection con, int id);
     
 }

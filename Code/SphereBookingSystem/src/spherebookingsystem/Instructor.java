@@ -17,9 +17,10 @@ public class Instructor {
     private String personalStatement;
     
     public Instructor(){
-        name="";
+        name="None";
         speciality="";
         personalStatement="";
+        instrId=0;
     }
     public Instructor(int id,String iName,int iAge,String iSpeciality,String iPersonalStatement){
         instrId=id;

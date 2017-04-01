@@ -89,5 +89,54 @@ public class SlopeRepoImpl implements SlopeRepo {
             System.out.println(ex);
         }
     }
-    
+    @Override
+    public void read(Connection con) {
+        /*
+        Reads slopes from the database that don't have a Session booked
+        on a time slot that overlasp with the time slot described in the parameters
+        (Date, Starttime - Endtime)
+        */
+        if(slopes.size()>0)
+                slopes.clear();
+        try{
+            Slope temp;
+            Statement st=con.createStatement();
+            ResultSet rs=null;
+            String sql = "SELECT * from Slope"; 
+            System.out.println(sql);
+            rs=st.executeQuery(sql);
+            while (rs.next()){
+                temp = new Slope();
+                temp.setId(rs.getInt("id"));
+                temp.setName(rs.getString("name"));
+                temp.setLength(rs.getInt("length"));
+                
+                slopes.add(temp);
+            }
+            rs.close();
+            st.close();             
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+    }
+    @Override
+    public Slope read(Connection con, int id){
+        Slope tempSlope=new Slope();
+        try{
+            Statement st=con.createStatement();
+            String sql="Select * from slope where id="+id;
+            System.out.println(sql);
+            ResultSet rs=st.executeQuery(sql);
+            while(rs.next()){
+                tempSlope.setId(rs.getInt("id"));
+                tempSlope.setLength(rs.getInt("length"));
+                tempSlope.setName(rs.getString("name"));
+                
+            }
+            rs.close();
+            st.close();
+        }
+        catch(Exception ex){System.out.println(ex);}
+        return tempSlope;
+        }
 }

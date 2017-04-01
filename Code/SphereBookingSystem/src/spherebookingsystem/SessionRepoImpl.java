@@ -65,9 +65,10 @@ public class SessionRepoImpl implements SessionRepo {
 
             try {   
                 Statement st = conn.createStatement();
-              
+                String instr="null";
+                if (session.getInstructorId()>0) instr=String.valueOf(session.getInstructorId());
                 String sql = "INSERT INTO SESSION VALUES (DEFAULT"+", '" + session.getStartTime() + "' , '" + session.getEndTime() + "', '"
-                        +session.getDate()+"', "+ session.getMaxBookings()+", " + session.getSlopeId()+", " + session.getInstructorId()+
+                        +session.getDate()+"', "+ session.getMaxBookings()+", " + session.getSlopeId()+", " + instr+
                         ", "+session.getPrice()+", '"+session.getDescription()+ "')";
                 System.out.println(sql);
                 st.executeUpdate(sql);
@@ -81,6 +82,21 @@ public class SessionRepoImpl implements SessionRepo {
         
         }
          
+    }
+    public int countSessions(Connection con){
+        int count=0;
+        try{
+            Statement st=con.createStatement();
+            String sql="Select count(*) as SessionCount from session";
+            System.out.println(sql);
+            ResultSet rs=st.executeQuery(sql);
+            while(rs.next()){
+                count=rs.getInt("SessionCount");
+            }
+            
+        }
+        catch(Exception ex){System.out.println(ex);}
+        return count;
     }
     
     @Override
@@ -143,6 +159,30 @@ public class SessionRepoImpl implements SessionRepo {
         
         return(foundSession);
     }
+    //Munir
+    @Override
+    public ArrayList<Session> read(Connection con, LocalDate date){
+        ArrayList<Session> temp=new ArrayList();
+        try{
+            Statement st=con.createStatement();
+            String sql="Select * from Session where date='"+date.toString()+"'";
+            System.out.println(sql);
+            ResultSet rs=st.executeQuery(sql);
+            while (rs.next()){
+                Session tempSession=new Session();
+                tempSession.setId(rs.getInt("id"));
+                tempSession.setStartTime(rs.getString("starttime"));
+                tempSession.setEndTime(rs.getString("endtime"));
+                tempSession.setInstructorId(rs.getInt("instructorid"));
+                tempSession.setSlopeId(rs.getInt("slopeid"));
+                tempSession.setMaxBookings(rs.getInt("maxbookings"));
+                temp.add(tempSession);
+            }
+            rs.close();
+            st.close();
+        }catch(Exception ex){System.out.println(ex);}
+        return temp;
+        }
+    }
     
     
-}  
