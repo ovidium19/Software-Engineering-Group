@@ -33,6 +33,7 @@ public class BookingRepoImpl implements BookingRepo {
         write(conn,booking);
     }
     
+    @Override
     public List read(Connection conn){
         
         System.out.println("Reading from the database... ");
@@ -41,7 +42,9 @@ public class BookingRepoImpl implements BookingRepo {
         
         try {   
                 
-                Statement st = conn.createStatement();
+                Statement st;
+                st = conn.createStatement();
+                
                 String sql = "SELECT * FROM BOOKINGS";
                 
                 rs = st.executeQuery(sql);
@@ -58,6 +61,8 @@ public class BookingRepoImpl implements BookingRepo {
                 
                 
                 resultsList.add(result);
+                
+                // Clear the result for the next one to be added to the string
                 result = "";
                 
                 } 
@@ -75,6 +80,7 @@ public class BookingRepoImpl implements BookingRepo {
     }
     
     // Takes in a booking object and writes the attributes as a record in the database table
+    @Override
     public void write(Connection conn, Booking booking){
         
         ArrayList list = getAllBookings();
@@ -82,7 +88,8 @@ public class BookingRepoImpl implements BookingRepo {
         
         try {   
                 // Declare an SQL statement
-                Statement st = conn.createStatement();
+                Statement st;
+                st = conn.createStatement();
               
                 // SQL statement to enter the values of the booking object to the database
                 // BookingID is DEFAULT as the database increments the ID number itself

@@ -32,12 +32,10 @@ public class CustomerController {
         // return whether the customerID exists or not
         // Returns a boolean for whethere the customer has been registered or not
         public boolean checkCustomerID(Connection connection, String customerID) {
-            
-            boolean isACustomer = false;
-            
+                        
             int customerIDInt = Integer.parseInt(customerID);
             
-            isACustomer = CustomerRepo.checkCustomerID(connection, customerIDInt);
+            boolean isACustomer = CustomerRepo.checkCustomerID(connection, customerIDInt);
             
             return(isACustomer);
         }

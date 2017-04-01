@@ -105,7 +105,7 @@ public class SessionRepoImpl implements SessionRepo {
         
         System.out.println("Reading from database...");
         
-        if(sessionType == "With Instructor ") {
+        if(sessionType.equals("With Instructor ")) {
         // If they ask for an instructor, run the SQL command with Instructor ID NOT NULL
         
             try {   
@@ -141,6 +141,7 @@ public class SessionRepoImpl implements SessionRepo {
         return(sessionsForThisDay);
     }
     
+    @Override
     public ResultSet findChosenSession(Connection con, int sessionIDInt) {
         
         System.out.println("Reading from database...");

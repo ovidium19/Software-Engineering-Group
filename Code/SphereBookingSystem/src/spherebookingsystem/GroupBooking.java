@@ -11,5 +11,15 @@ package spherebookingsystem;
  */
 public class GroupBooking extends Booking {
     
+    @Override
+    public int getNumberOfSkiers(){
         
+             return numberOfSkiers;
+    }
+    
+    @Override
+    public void setNumberOfSkiers(int aNumberOfSkiers){
+        
+             numberOfSkiers = aNumberOfSkiers;
+    }
 }
