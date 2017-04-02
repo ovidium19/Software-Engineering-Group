@@ -7,6 +7,7 @@ package spherebookingsystem;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -60,7 +61,7 @@ public class ViewScheduleUI {
         }
         return instance;
     }
-    /*
+    
     public class tableSession {
             
             private final SimpleStringProperty id;
@@ -69,6 +70,9 @@ public class ViewScheduleUI {
             private final SimpleStringProperty maxBookings;
             private final SimpleStringProperty insName;
             private final SimpleStringProperty slopeName;
+            private final LocalDate date;
+            private final String desc;
+            private final float price;
             public tableSession(Session ses){
                this.id=new SimpleStringProperty(String.valueOf(ses.getId()));
                this.startTime=new SimpleStringProperty(ses.getStartTime());
@@ -76,9 +80,26 @@ public class ViewScheduleUI {
                this.maxBookings=new SimpleStringProperty(String.valueOf(ses.getMaxBookings()));
                this.insName=new SimpleStringProperty(instr.read(conn, ses.getInstructorId()).getName());
                this.slopeName=new SimpleStringProperty(slopes.read(conn, ses.getSlopeId()).getName());
+               this.date=ses.getDate();
+               this.desc=ses.getDescription();
+               this.price=ses.getPrice();
+               
                
             }
 
+        public String getDesc() {
+            return desc;
+        }
+
+        public float getPrice() {
+            return price;
+        }
+
+        public LocalDate getDate() {
+            return date;
+        }
+            
+            
         public String getId() {
             return this.id.get();
         }
@@ -183,10 +204,12 @@ public class ViewScheduleUI {
         slopeCol.setCellValueFactory(
                 new PropertyValueFactory<tableSession, String>("slopeName"));
         TableColumn bookCol = new TableColumn("Bookings");
-        eTimeCol.setMinWidth(100);
-        eTimeCol.setCellValueFactory(
+        bookCol.setMinWidth(100);
+        bookCol.setCellValueFactory(
                 new PropertyValueFactory<tableSession, String>("maxBookings"));
         table.getColumns().addAll(idCol,sTimeCol,eTimeCol,insCol,slopeCol,bookCol);
+        //-----------------------------------------------------------------------
+        //Set up an auto-update on the table content when the date is changed
         addSessionDatePicker.valueProperty().addListener((obs,o,n)->{
             ArrayList<Session> temp = sessions.read(conn, n);
             data.clear();
@@ -195,10 +218,19 @@ public class ViewScheduleUI {
             }
             table.setItems(data);
         });
-        
-        
-        
-        
+        //------------------------------------------------------------------------
+        //Set up a popup stage to show when you select a session from the table
+        Stage popupStage=new Stage();
+        popupStage.setX(100);
+        popupStage.setY(100);
+        table.getSelectionModel().selectedItemProperty().addListener((obs,o,n)->{
+            if (n!=null){
+            popupStage.setScene(sessionDetails((tableSession)n));
+            popupStage.show();
+            }
+            else{popupStage.hide();}
+        });
+        //---------------------------------------------------------------------
         
         VBox root = new VBox();
         root.setSpacing(30);
@@ -209,9 +241,23 @@ public class ViewScheduleUI {
         Scene scene=new Scene(root,600,600);
         return scene;
     }
-     */   
-    public Scene makeViewScheduleScreen(){
-        return new Scene(new BorderPane(),500,500);
-    }
+     
+   private Scene sessionDetails(tableSession ses){
+       //Describes the layout of the popus stage that will have a session's details
+       VBox root = new VBox(20);
+       DateTimeFormatter dtf =DateTimeFormatter.ofPattern("MMMM dd yyyy");
+       Label date=new Label("Date: "+ses.getDate().format(dtf));
+       Label time=new Label("Time Slot: "+ses.getStartTime()+" : "+ses.getEndTime());
+       Label insLabel=new Label("Instructor: "+ses.getInsName());
+       Label sloLabel= new Label("Slope: "+ses.getSlopeName());
+       Label bookLabel=new Label("Max Bookings: "+ses.getMaxBookings());
+       Label price=new Label("Price per booking: "+ses.getPrice());
+       Label desc=new Label("Description: \n\t"+ses.getDesc());
+       root.getChildren().addAll(date,time,insLabel,sloLabel,bookLabel,price,desc);
+       root.setAlignment(Pos.CENTER);
+       Scene scene=new Scene(root,300,400);
+       return scene;
+       
+   }
 }
         

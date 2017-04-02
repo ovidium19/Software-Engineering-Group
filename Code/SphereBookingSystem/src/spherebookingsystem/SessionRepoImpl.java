@@ -177,6 +177,9 @@ public class SessionRepoImpl implements SessionRepo {
                 tempSession.setInstructorId(rs.getInt("instructorid"));
                 tempSession.setSlopeId(rs.getInt("slopeid"));
                 tempSession.setMaxBookings(rs.getInt("maxbookings"));
+                tempSession.setDate(LocalDate.parse(rs.getString("date")));
+                tempSession.setPrice(rs.getFloat("price"));
+                tempSession.setDescription(rs.getString("description"));
                 temp.add(tempSession);
             }
             rs.close();
