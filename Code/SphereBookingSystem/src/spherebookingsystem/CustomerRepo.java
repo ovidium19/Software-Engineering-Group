@@ -20,7 +20,9 @@ public interface CustomerRepo {
     public ResultSet findCustomer(Connection connection, int customerID);
     public ResultSet findCustomerByEmail(Connection con, String email);
     public ResultSet findCustomerByPhone(Connection con, String phone);
-    
+    //Michael Sofroni
+    public Customer readByID(Connection conn,int customerID);
+    //----------------------------------------------------------
     public ArrayList getAllCustomers();
     public void setCustomers(ArrayList list);
 }

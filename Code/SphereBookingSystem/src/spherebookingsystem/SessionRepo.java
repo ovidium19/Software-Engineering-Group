@@ -22,4 +22,5 @@ public interface SessionRepo {
     public ResultSet findChosenSession(Connection con, int sessionIDInt);
     //Munir
     public ArrayList<Session> read(Connection con, LocalDate date);
+   
 }

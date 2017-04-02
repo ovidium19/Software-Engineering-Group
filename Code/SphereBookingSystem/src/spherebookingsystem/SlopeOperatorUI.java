@@ -163,7 +163,8 @@ public class SlopeOperatorUI {
     
     private void makeCheckInScreen(Stage primarySlopeOperatorStage, Connection conn) {
         
-        CheckInSessionUI checkinsessionui = CheckInSessionUI.getInstance(primarySlopeOperatorStage, conn);
+        Scene lastScene=theStage.getScene();
+        CheckInSessionUI checkinsessionui = CheckInSessionUI.getInstance(primarySlopeOperatorStage, conn,lastScene);
         
         primarySlopeOperatorStage.setScene(checkinsessionui.makeCheckInScreen());
         

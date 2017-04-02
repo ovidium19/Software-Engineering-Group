@@ -2,6 +2,7 @@ package spherebookingsystem;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -115,6 +116,46 @@ public class BookingRepoImpl implements BookingRepo {
                     System.out.println(ex);
         }         
         
+    }
+    //Michael Sofroni
+    public ArrayList<Session> readSessionsForCustomer(Connection con,Customer cust){
+        ArrayList<Session> temp=new ArrayList();
+        try{
+            Statement st=con.createStatement();
+            String sql="Select * from Session where id in("
+                    + "select sessionid from bookings where customerid="+cust.getCustomerID()+")";
+            System.out.println(sql);
+            ResultSet rs=st.executeQuery(sql);
+            while (rs.next()){
+                Session tempSession=new Session();
+                tempSession.setId(rs.getInt("id"));
+                tempSession.setStartTime(rs.getString("starttime"));
+                tempSession.setEndTime(rs.getString("endtime"));
+                tempSession.setInstructorId(rs.getInt("instructorid"));
+                tempSession.setSlopeId(rs.getInt("slopeid"));
+                tempSession.setMaxBookings(rs.getInt("maxbookings"));
+                tempSession.setDate(LocalDate.parse(rs.getString("date")));
+                tempSession.setPrice(rs.getFloat("price"));
+                tempSession.setDescription(rs.getString("description"));
+                temp.add(tempSession);
+            }
+            rs.close();
+            st.close();
+        }catch(Exception ex){System.out.println(ex);}
+        return temp;
+        }
+    //Michael Sofroni
+    public void checkInCustomer(Connection conn, Session tempSession, Customer tempCustomer){
+        try{
+            Statement st=conn.createStatement();
+            String sql="Update Bookings set checkinstatus=true where customerid="+tempCustomer.getCustomerID()
+                    +" and sessionid="+tempSession.getId();
+            System.out.println(sql);
+            int res=st.executeUpdate(sql);
+            if (res>0) System.out.println("Succesful");
+            else System.out.println("Unsuccesful");
+        }
+        catch(Exception ex){System.out.println(ex);}
     }
          
 }

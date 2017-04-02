@@ -182,6 +182,32 @@ public class CustomerRepoImpl implements CustomerRepo {
         return(customerDetails);
     }
     
+    /*Michael Sofroni*/
+    public Customer readByID(Connection conn,int customerID){
+        Customer temp=new Customer();
+        ResultSet rs;
+        try{
+            Statement st=conn.createStatement();
+            String sql="SELECT * FROM CUSTOMERS WHERE CustomerID="+customerID;
+            rs=st.executeQuery(sql);
+            while(rs.next()){
+                temp.setCustomerID(rs.getInt("CustomerID"));
+                temp.setEmail(rs.getString("Email"));
+                temp.setFirstName(rs.getString("Firstname"));
+                temp.setLastName(rs.getString("Lastname"));
+                temp.setTelephoneNo(rs.getString("Telephoneno"));
+                temp.setMembership(rs.getString("Membership"));
+            }
+            rs.close();
+            st.close();
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+            return null;
+        }
+     return temp;
+    }
+    
 }  
 
 

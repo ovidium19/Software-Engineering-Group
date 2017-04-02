@@ -35,7 +35,7 @@ import javafx.util.Callback;
 
 /**
  *
- * @author Genaro
+ * @author Munir
  */
 public class ViewScheduleUI {
     private static SlopeRepoImpl slopes = new SlopeRepoImpl();
