@@ -93,8 +93,8 @@ public class BookSessionUI {
     private CustomerController customerControllerConnection = new CustomerController();
     private SessionController sessionControllerConnection = new SessionController();
     
-    private static BookSessionUI instance = null;
-    private BookSessionUI(Stage primaryStage, Connection con, Scene scene){
+    
+    public BookSessionUI(Stage primaryStage, Connection con, Scene scene){
                 
         theStage=primaryStage;
         conn=con;
@@ -102,13 +102,7 @@ public class BookSessionUI {
         menuScene = scene;
     }
     
-    public static BookSessionUI getInstance(Stage stage,Connection con, Scene scene){
-        
-        if (instance==null){
-            instance=new BookSessionUI(stage,con,scene);
-        }
-        return instance;
-    }
+    
     
     // Creates the user interface for entering the booking details
     public Scene makeBookingScreen(Scene lastScene) {

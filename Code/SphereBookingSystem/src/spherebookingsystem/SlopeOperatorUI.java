@@ -151,9 +151,10 @@ public class SlopeOperatorUI {
     
     public static void makeBookingScreen(Stage primarySlopeOperatorStage, Connection conn) {
         
-        BookSessionUI booksessionui = BookSessionUI.getInstance(primarySlopeOperatorStage, conn, theStage.getScene());
-        
         Scene lastScene=theStage.getScene();
+        
+        BookSessionUI booksessionui = new BookSessionUI(primarySlopeOperatorStage, conn, lastScene);    
+        
         Scene temp = booksessionui.makeBookingScreen(lastScene);
         
         primarySlopeOperatorStage.setScene(temp);
