@@ -334,8 +334,73 @@ public class ManagerUI {
                 tempSession.setDate(addSessionDatePicker.getValue());
                 tempSession.setStartTime(startHours.getValue().toString()+":"+startMinutes.getValue().toString()+":00");
                 tempSession.setEndTime(endHours.getValue().toString()+":"+endMinutes.getValue().toString()+":00"); 
-                mainScene=setDetailsScene();
-                theStage.setScene(mainScene);
+                //Yi Lin's feedback implementation
+                //get available slopes and instructors for the date selected
+                sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
+                sess.setSlopeList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
+                if (availInstructors.size()>0)
+                    availInstructors.clear();
+                if (availSlopes.size()>0)
+                    availSlopes.clear();
+                availInstructors.add(new Instructor());
+        
+                availSlopes.addAll(sess.getSlopes());
+                availInstructors.addAll(sess.getInstructors());
+                //if no slopes available, give an error and let the user know he has to select another date
+                if (availSlopes.size()==0){
+                    Stage errorStage=new Stage();
+                    VBox rootError=new VBox(20);
+                    Label errorMessage=new Label("There are no available slopes for that time slot"+
+                                                 "\n\t  Please choose another time slot");
+                    Button okButton=new Button("OK");
+                    okButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            errorStage.close();
+                        }
+                    });
+                    rootError.getChildren().addAll(errorMessage,okButton);
+                    rootError.setAlignment(Pos.CENTER);
+                    Scene errorScene=new Scene(rootError,400,150);
+                    errorStage.setScene(errorScene);
+                    errorStage.show();
+                }
+                //if no instructors available, let user know. He can still choose to proceed
+                else if (availInstructors.size()<=1){
+                    Stage warningStage=new Stage();
+                    VBox rootWarning=new VBox(20);
+                    HBox buttonsWarning=new HBox(20);
+                    Label warning=new Label("There will be no instructors available for this time slot");
+                    Label warning2=new Label("You can still proceed if you don't want to set up an instructor");
+                    Button goForward=new Button("Proceed");
+                    goForward.setStyle("-fx-background-color: green");
+                    goForward.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            warningStage.close();
+                            mainScene=setDetailsScene();
+                            theStage.setScene(mainScene);
+                        }
+                    });
+                    Button goBack=new Button("Choose another time slot");
+                    goBack.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            warningStage.close();
+                            
+                        }
+                    });
+                    buttonsWarning.getChildren().addAll(goForward,goBack);
+                    rootWarning.getChildren().addAll(warning,warning2,buttonsWarning);
+                    rootWarning.setAlignment(Pos.CENTER);
+                    buttonsWarning.setAlignment(Pos.CENTER);
+                    Scene scene=new Scene(rootWarning,400,150);
+                    warningStage.setScene(scene);
+                    warningStage.show();
+                }
+                //if everything ok, go forward in the process
+                else {mainScene=setDetailsScene();
+                theStage.setScene(mainScene);}
             }
         });
         BorderPane bottomButtons=new BorderPane();
@@ -418,7 +483,7 @@ public class ManagerUI {
         gridPane.setPadding(new Insets(12,0,20,25));
        
         //fetch the list of available instructors and slopes for the timeslot picked
-        sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
+       /* sess.setInstructorList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
         sess.setSlopeList(conn, tempSession.getDate(),tempSession.getStartTime(), tempSession.getEndTime());
         if (availInstructors.size()>0)
             availInstructors.clear();
@@ -427,7 +492,7 @@ public class ManagerUI {
         availInstructors.add(new Instructor());
         
         availSlopes.addAll(sess.getSlopes());
-        availInstructors.addAll(sess.getInstructors());
+        availInstructors.addAll(sess.getInstructors());*/
         //-----------------------------------------------------------------------
         Label instructors = new Label("instructors");
         Label slopes = new Label("slopes");
