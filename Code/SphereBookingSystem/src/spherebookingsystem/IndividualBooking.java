@@ -10,7 +10,8 @@ package spherebookingsystem;
  * @author Genaro
  */
 public class IndividualBooking extends Booking {
-        
+    
+    // Getters and setters for numberOfSkiers overrides parent class
     @Override
     public int getNumberOfSkiers(){
         
