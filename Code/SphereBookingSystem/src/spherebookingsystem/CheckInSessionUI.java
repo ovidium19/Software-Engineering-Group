@@ -101,8 +101,17 @@ public class CheckInSessionUI {
         CheckHBox.getChildren().addAll(CheckLabel, EmailText);
         CheckHBox.setAlignment(Pos.TOP_CENTER);
         
+        Label PhoneLabel= new Label();
+        PhoneLabel.setText("Enter Customers Phone:");
+        PhoneLabel.setAlignment(Pos.TOP_CENTER);
+        PhoneLabel.setTextAlignment(TextAlignment.CENTER);
         
+        TextField PhoneText= new TextField();
+        PhoneText.setAlignment(Pos.TOP_CENTER);
         
+        HBox PhoneHBox= new HBox() ;
+        PhoneHBox.getChildren().addAll(PhoneLabel, PhoneText);
+        PhoneHBox.setAlignment(Pos.TOP_CENTER);
         
         
         Label  customerStatusLabel=new Label();
@@ -142,9 +151,7 @@ public class CheckInSessionUI {
         searchButton.setTextAlignment(TextAlignment.CENTER);
        
         
-        
-        // When button is pressed, recieves a boolean from the customer controller, to see
-        // whether the customer exists or not. If they are registered, rest of the UI is shown
+       
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
            
             
@@ -177,15 +184,63 @@ public class CheckInSessionUI {
             }
         });
        
-          
+         
+        Button searchhButton= new Button();
+        searchhButton.setText("Search");
+        searchhButton.setAlignment(Pos.TOP_CENTER);
+        searchhButton.setTextAlignment(TextAlignment.CENTER);
+        searchhButton.setOnAction(new EventHandler<ActionEvent>() {
         
+           @Override
+            public void handle(ActionEvent event) {
+                
+                // Retrieve the customer ID that was typed in
+                
+                String theEmail  = EmailText.getText();
+               
+                    try {
+                    tempCustomer = customerRepo.findCustomerbyEmail(conn, theEmail);
+                    Scene lastScene=theStage.getScene();
+                    theStage.setScene(makeDetailsScene(lastScene));
+                    //theStage.show();
+                }
+                          
+                 catch (Exception ex) {
+                    System.out.println(ex);
+                }
+                }
+            
+        });
        
+     Button searchhhButton= new Button();
+        searchhhButton.setText("Search");
+        searchhhButton.setAlignment(Pos.TOP_CENTER);
+        searchhhButton.setTextAlignment(TextAlignment.CENTER);
+        searchhhButton.setOnAction(new EventHandler<ActionEvent>() {
+        
+           @Override
+            public void handle(ActionEvent event) {
+                
+                // Retrieve the customer ID that was typed in
+                
+                String thePhone  = PhoneText.getText();
+               
+                    try {
+                    tempCustomer = customerRepo.findCustomerbyPhone(conn, thePhone);
+                    Scene lastScene=theStage.getScene();
+                    theStage.setScene(makeDetailsScene(lastScene));
+                    //theStage.show();
+                }
+                          
+                 catch (Exception ex) {
+                    System.out.println(ex);
+                }
+                }
+            
+        });       
         
         
         
-        
-        
-		
 		
 		Button BackButton= new Button () ;
 		BackButton.setText("Back") ;
@@ -201,13 +256,13 @@ public class CheckInSessionUI {
 		
 	
         HBox buttons = new HBox();
-        buttons.getChildren().addAll(searchButton,BackButton);
+        buttons.getChildren().addAll(searchButton);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(10);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         
         VBox root = new VBox();
-        root.getChildren().addAll(TitleText, EnterHBox, buttons,customerStatusLabel,CheckHBox);
+        root.getChildren().addAll(TitleText, EnterHBox, buttons,customerStatusLabel,CheckHBox,searchhButton,PhoneHBox,searchhhButton,BackButton);
         root.setPadding(new Insets(50,50,50,50));
         root.setAlignment(Pos.TOP_CENTER);
         root.setSpacing(25);
@@ -235,6 +290,8 @@ public class CheckInSessionUI {
         Label email=new Label("Email:");
         Label tphone = new Label("Telephone:");
         Label membership = new Label("member:");
+       
+        
         Label sessionLabel=new Label("Sessions: ");
         Label fnameFromDb=new Label(tempCustomer.getFirstName());
         Label lnameFromDb=new Label(tempCustomer.getLastName());
@@ -263,9 +320,7 @@ public class CheckInSessionUI {
             }
         });
         
-        
-      
-          
+       
         
        Button exitButton=new Button();
        exitButton.setText("Back");
@@ -292,9 +347,9 @@ public class CheckInSessionUI {
         centerRoot.add(membFromDb,1,4);
         centerRoot.add(sessionLabel,0,5);
         centerRoot.add(sessionsComboBox,1,5);
-        centerRoot.add(checkInCustomerButton,0,8);
-        centerRoot.add(exitButton,1,8);
-        centerRoot.add(success, 0, 10, 2, 1);
+        centerRoot.add(checkInCustomerButton,0,9);
+        centerRoot.add(exitButton,1,9);
+        centerRoot.add(success, 0, 11, 2, 1);
         
        
         BorderPane.setAlignment(title, Pos.CENTER);
