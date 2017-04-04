@@ -22,6 +22,8 @@ public interface CustomerRepo {
     public ResultSet findCustomerByPhone(Connection con, String phone);
     //Michael Sofroni
     public Customer readByID(Connection conn,int customerID);
+    public Customer findCustomerbyEmail(Connection con, String email);
+    public Customer findCustomerbyPhone(Connection conn,String phone);
     //----------------------------------------------------------
     public ArrayList getAllCustomers();
     public void setCustomers(ArrayList list);
