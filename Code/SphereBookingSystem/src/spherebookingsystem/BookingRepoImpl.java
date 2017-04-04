@@ -37,20 +37,25 @@ public class BookingRepoImpl implements BookingRepo {
     @Override
     public List read(Connection conn){
         
+        // Show that it is reading from the database
         System.out.println("Reading from the database... ");
         
+        // Declare a list for the results to be added to
         List resultsList = new ArrayList();
         
         try {   
-                
+                // Declare a statement to be run
                 Statement st;
                 st = conn.createStatement();
                 
+                // SQL statement is just to read all the bookings
                 String sql = "SELECT * FROM BOOKINGS";
                 
                 rs = st.executeQuery(sql);
                 
                 while (rs.next()) {
+                // While there is a next booking in the result set,
+                // take the attributes and save them as a result
                 
                     int bookingID = rs.getInt("BOOKINGID");
                     int customerID = rs.getInt("CUSTOMERID");
@@ -60,7 +65,7 @@ public class BookingRepoImpl implements BookingRepo {
                 // Save the results                
                 String result = bookingID + "," + customerID+ "," +sessionID+ "," + checkIn;
                 
-                
+                // Add it to the list of results
                 resultsList.add(result);
                 
                 // Clear the result for the next one to be added to the string
@@ -117,6 +122,7 @@ public class BookingRepoImpl implements BookingRepo {
         }         
         
     }
+    
     //Michael Sofroni
     public ArrayList<Session> readSessionsForCustomer(Connection con,Customer cust){
         ArrayList<Session> temp=new ArrayList();
@@ -144,6 +150,7 @@ public class BookingRepoImpl implements BookingRepo {
         }catch(Exception ex){System.out.println(ex);}
         return temp;
         }
+    
     //Michael Sofroni
     public void checkInCustomer(Connection conn, Session tempSession, Customer tempCustomer){
         try{

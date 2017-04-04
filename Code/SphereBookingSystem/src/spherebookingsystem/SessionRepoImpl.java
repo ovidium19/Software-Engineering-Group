@@ -1,4 +1,3 @@
-
 package spherebookingsystem;
 
 import java.util.ArrayList;
@@ -11,6 +10,14 @@ import java.time.LocalDate;
  * @author Ovidiu Mitroi
  *         SID: 6832432
  *         FUNCTIONALITY: ADD A SESSION
+ * 
+ * @author Genaro Bedenko
+ *         SID: 7060234
+ *         FUNCTIONALITY: BOOK A SESSION
+ *   
+ * @author Munir Ahmed yushau
+ *         SID: 6900188
+ *         FUNCTIONALITY: VIEW A SESSION
  */
 public class SessionRepoImpl implements SessionRepo {
     private ResultSet sessionsForThisDay;
@@ -99,6 +106,7 @@ public class SessionRepoImpl implements SessionRepo {
         return count;
     }
     
+    // Function to find all sessions that meet the criteria
     @Override
     public ResultSet findSessions(Connection conn, LocalDate date, String sessionType, int numberOfSkiers) {
                
@@ -111,6 +119,7 @@ public class SessionRepoImpl implements SessionRepo {
             try {   
                 Statement st = conn.createStatement();
                 
+                // SQL statement to select all with chosen date, group size, and where there is an instructor
                 String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  MaxBookings >= " + numberOfSkiers + " AND InstructorID IS NOT NULL";
                 System.out.println(sql);
                 sessionsForThisDay = st.executeQuery(sql);
@@ -127,7 +136,8 @@ public class SessionRepoImpl implements SessionRepo {
            try {   
                 Statement st = conn.createStatement();
                 
-                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  InstructorID IS NULL";
+                // SQL statement to select all with chosen date, group size, and where there is not an instructor
+                String sql = "SELECT * FROM SESSION WHERE Date = '" + date + "' AND  MaxBookings >= " + numberOfSkiers + " AND  InstructorID IS NULL";
                 System.out.println(sql);
                 sessionsForThisDay = st.executeQuery(sql);
 
@@ -141,6 +151,8 @@ public class SessionRepoImpl implements SessionRepo {
         return(sessionsForThisDay);
     }
     
+    // Function takes a session id for the one that the user has chosen
+    // and retrieves all of it details
     @Override
     public ResultSet findChosenSession(Connection con, int sessionIDInt) {
         
@@ -149,6 +161,7 @@ public class SessionRepoImpl implements SessionRepo {
         try {   
                 Statement st = con.createStatement();
                 
+                // SQL statement is to select the session that has the chosen session id
                 String sql = "SELECT * FROM SESSION WHERE ID = " + sessionIDInt + "";
                 System.out.println(sql);
                 foundSession = st.executeQuery(sql);
@@ -160,6 +173,7 @@ public class SessionRepoImpl implements SessionRepo {
         
         return(foundSession);
     }
+    
     //Munir
     @Override
     public ArrayList<Session> read(Connection con, LocalDate date){
