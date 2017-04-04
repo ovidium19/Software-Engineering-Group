@@ -5,8 +5,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
+ * @author Rishi Mehangra
+ *         SID: 
+ *         FUNCTIONALITY: REGISTER A CUSTOMER
+ * 
  * @author Genaro Bedenko
+ *         SID: 7060234
+ *         FUNCTIONALITY: BOOK A SESSION
+ * 
+ * @author Michael Sofroni
+ *         SID: 
+ *         FUNCTIONALITY: CHECK IN CUSTOMER
  */
 public class CustomerRepoImpl implements CustomerRepo {
     private ArrayList customers;
@@ -36,7 +46,7 @@ public class CustomerRepoImpl implements CustomerRepo {
         try {   
                 
                 Statement st = conn.createStatement();
-                String sql = "SELECT * FROM BOOKINGS";
+                String sql = "SELECT * FROM CUSTOMERS";
                 
                 rs = st.executeQuery(sql);
                    
@@ -88,27 +98,34 @@ public class CustomerRepoImpl implements CustomerRepo {
     public boolean checkCustomerID(Connection conn, int customerID) {
         
         try {   
-            
+                // Declare a statement to be used on the database
                 Statement st;
                 st = conn.createStatement();
                 
+                // Declare a counter to see how many customers will be found in the resultset
                 int count = 0;
+                
+                // SQL statement to find customer that has the input customerID
                 String sql = "SELECT * FROM CUSTOMERS WHERE CustomerID =" + customerID;
                 System.out.println(sql);
                 ResultSet rs = st.executeQuery(sql);
                 
                 while(rs.next()){
+                // For every record in the database (which should be 1) increase the counter
+                
                     count++;
                 }
                                 
                 st.close();
                 
                 if(count == 1) {
-                    
+                // If counter equals 1 then a customer was found, therefore return true
+                
                     return(true);
                 }
                 else {
-                    
+                // If counter isn't 1 then return false
+                
                     return(false);
                 }
 
@@ -122,14 +139,18 @@ public class CustomerRepoImpl implements CustomerRepo {
        return(false);
     }
     
+    // Function to find the customer by their customerID so that it can get all
+    // of that customers details from the record
     @Override
     public ResultSet findCustomer(Connection con, int customerID) {
         
         System.out.println("Reading from database...");
         
         try {   
+                // Declare a statement to be run on the database
                 Statement st = con.createStatement();
                 
+                // SQL statement to select the customer that has the customerID
                 String sql = "SELECT * FROM CUSTOMERS WHERE CustomerID = " + customerID + "";
                 System.out.println(sql);
                 customerDetails = st.executeQuery(sql);
@@ -142,14 +163,18 @@ public class CustomerRepoImpl implements CustomerRepo {
         return(customerDetails);
     }
     
+    // Function that returns a resultset of the record in the database for a customer
+    // based on the input of their email address
     @Override
     public ResultSet findCustomerByEmail(Connection con, String email) {
 
         System.out.println("Reading from database...");
         
         try {   
+                // Declare a statement to run on the database
                 Statement st = con.createStatement();
                 
+                // SQL statement to select the customer that has the input email address
                 String sql = "SELECT * FROM CUSTOMERS WHERE Email = '" + email + "'";
                 System.out.println(sql);
                 customerDetails = st.executeQuery(sql);
@@ -162,14 +187,18 @@ public class CustomerRepoImpl implements CustomerRepo {
         return(customerDetails);   
     }
     
+    // Function that returns a resultset of the record in the database for a customer
+    // based on the input of their telephone number
     @Override
     public ResultSet findCustomerByPhone(Connection con, String phone) {
         
         System.out.println("Reading from database...");
         
         try {   
+                // Declare a statement to be run on the database
                 Statement st = con.createStatement();
                 
+                // SQL statement to find the customer that has the input telephone number
                 String sql = "SELECT * FROM CUSTOMERS WHERE TelephoneNo = '" + phone + "'";
                 System.out.println(sql);
                 customerDetails = st.executeQuery(sql);

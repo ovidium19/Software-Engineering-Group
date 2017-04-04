@@ -12,6 +12,10 @@ import javafx.scene.control.Toggle;
  * @author Ovidiu Mitroi
  *         SID: 6832432
  *         FUNCTIONALITY: ADD A SESSION
+ * 
+ * @author Genaro Bedenko
+ *         SID: 7060234
+ *         FUNCTIONALITY: BOOK A SESSION
  */
 public class SessionController {
     /*
@@ -62,9 +66,8 @@ public class SessionController {
     }
     
     
-    /*
-    Implemented by Genaro Bedenko for his functionality
-    */
+    
+    
     // Function that takes in a date and session type
     // Calls the session repo to retieve a resultset from the SQL database table
     // Returns a list of strings for all sessions that match the entered date and session type
@@ -72,68 +75,91 @@ public class SessionController {
                     
             List<String> sessions = new ArrayList<String>();
         
+            // Calls the sessionRepo to find all sessions that match the input criteria
+            // Returns a resultset of records from the database table
             ResultSet sessionsResults = sessionRepo.findSessions(conn, date, sessionType, numberOfSkiers);
                         
             while (sessionsResults.next()) {
             // While there is a next record on the resultset, add it to the array of timeslots
             
+                    // Save the session id to a string
                     int sessionID = sessionsResults.getInt("ID");
                     Integer.toString(sessionID);
                     
+                    // Save the other fields from the resultset to strings
                     String startTime = sessionsResults.getString("STARTTIME");
                     String endTime = sessionsResults.getString("ENDTIME");
                     String price = sessionsResults.getString("PRICE");
                     
+                    // Timeslot is shown as a string with all the variables linked together
                     String overallTime = "Session ID " + sessionID + ": " + startTime + " - " + endTime + " (£" + price + ")";
+                    
+                    // Add the timeslot to the list of sessions that meet the criteria
                     sessions.add(overallTime);
             }
             
+            // Return the list of timeslots as the result
             return(sessions);
     }
     
+    // Function that takes in the id number of a specific session, and returns a Session
+    // object with all of that specific session's attributes
     public Session findChosenSession(Connection conn, String sessionID) throws SQLException {
             
+            // Declare a new empty Session object
             Session foundSession = new Session();
             
+            // Convert the session id into an integer so we can use it
             int sessionIDInt = Integer.parseInt(sessionID);
         
+            // Call the sessionRepo to return the resultset with the session id and its record
+            // in the database table
             ResultSet sessionResult = sessionRepo.findChosenSession(conn, sessionIDInt);
                         
             while (sessionResult.next()) {
             // While there is a next record on the resultset, add it to the array of timeslots
-            
+                    
+                    // Save the id number and add it to the object
                     int foundSessionID = sessionResult.getInt("ID");
                     foundSession.setId(foundSessionID);
                     
+                    // Save the start time and save it to the object
                     String foundStartTime = sessionResult.getString("STARTTIME");
                     foundSession.setStartTime(foundStartTime);
                     
+                    // Save the end time and save it to the object
                     String foundEndTime = sessionResult.getString("ENDTIME");
                     foundSession.setEndTime(foundEndTime);
                     
+                    // Save the date, convert to a LocalDate datatype and save it to the object
                     Date foundDate = sessionResult.getDate("DATE");
                     LocalDate foundDateLocalDate = new java.sql.Date(foundDate.getTime()).toLocalDate();
                     foundSession.setDate(foundDateLocalDate);
                     
+                    // Save the maxbookings and save it to the object
                     int foundMaxBookings = sessionResult.getInt("MAXBOOKINGS");
                     foundSession.setMaxBookings(foundMaxBookings);
                     
+                    // Save the slope id and save it to the object
                     int foundSlopeID = sessionResult.getInt("SLOPEID");
                     foundSession.setSlopeId(foundSlopeID);
                     
+                    // Save the instructor id and save it to the object
                     int foundInstructorID = sessionResult.getInt("INSTRUCTORID");
                     foundSession.setInstructorId(foundInstructorID);
                     
+                    // Save the session price and save it to the object
                     float foundPrice = sessionResult.getFloat("PRICE");
                     foundSession.setPrice(foundPrice);
                     
+                    // Save the session description and save it to the object
                     String foundDescription = sessionResult.getString("DESCRIPTION");
                     foundSession.setDescription(foundDescription);
             
             }
             
+            // Return the new Session object as the result
             return(foundSession);
     }
-    
     
 }

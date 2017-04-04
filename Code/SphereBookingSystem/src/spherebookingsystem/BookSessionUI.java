@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package spherebookingsystem;
 
 import java.sql.Connection;
@@ -39,8 +34,9 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
- *
  * @author Genaro Bedenko
+ *         SID: 7060234
+ *         FUNCTIONALITY: BOOK A SESSION
  */
 public class BookSessionUI {
     

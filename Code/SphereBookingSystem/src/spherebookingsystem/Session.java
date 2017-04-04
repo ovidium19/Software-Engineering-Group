@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package spherebookingsystem;
 
 import java.time.LocalDate;
@@ -11,7 +6,13 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
- * @author BOCU
+ * @author Ovidiu Mitroi
+ *         SID: 6832432
+ *         FUNCTIONALITY: ADD A SESSION
+ * 
+ * @author Genaro Bedenko
+ *         SID: 7060234
+ *         FUNCTIONALITY: BOOK A SESSION
  */
 public class Session {
     private int id;
@@ -118,11 +119,5 @@ public class Session {
     public String toString(){
         return this.id+" "+this.startTime+":"+this.endTime;
     }
-   
-    
-    
-    
-    
-    
     
 }

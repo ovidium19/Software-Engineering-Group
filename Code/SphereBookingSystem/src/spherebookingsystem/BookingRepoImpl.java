@@ -1,4 +1,5 @@
 package spherebookingsystem;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.sql.*;
@@ -6,8 +7,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- *
  * @author Genaro Bedenko
+ *         SID: 7060234
+ *         FUNCTIONALITY: BOOK A SESSION
+ * 
+ * @author Michael Sofroni
+ *         SID: 
+ *         FUNCTIONALITY: CHECK IN CUSTOMER
  */
 public class BookingRepoImpl implements BookingRepo {
     private ArrayList<Booking> bookings;
@@ -34,6 +40,7 @@ public class BookingRepoImpl implements BookingRepo {
         write(conn,booking);
     }
     
+    // Reads all of the records from the booking database table
     @Override
     public List read(Connection conn){
         
